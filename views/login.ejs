@@ -1,0 +1,122 @@
+<!-- Wappler include head-page="layouts/securityLayout" bootstrap5="local" id="login" fontawesome_6="local" components="{dmxValidator:{},dmxBootstrap5Alert:{},dmxBrowser:{},dmxBootstrap5Modal:{},dmxNotifications:{},dmxFormatter:{}}" is="dmx-app" appConnect="local" -->
+<meta name="ac:route" content="/login">
+
+
+<style>
+    main {
+        margin-left: 0 !important;
+    }
+
+    #toggle {
+        cursor: pointer;
+    }
+</style>
+<main class="p-4 style1" id="loginPage">
+    <div class="container card card-body shadow" id="loginForm">
+        <div class="row p-4 justify-content-center">
+            <div class="col">
+                <form id="scfLogin" method="post" is="dmx-serverconnect-form" action="/api/security/login" dmx-on:success="browser1.goto('/dashboard')" dmx-on:unauthorized="alertmessage.setTextContent('Unauthorized!');alertmessage.show()">
+                    <div class="row">
+                        <div class="col">
+                            <div class="row">
+                                <div class="col text-center">
+                                    <a href="/"><img class="img-fluid" width="80px" dmx-bind:src="sc_security_app_data.data.query.where(`field_name`, 'logo', '==')[0].field_value"></a>
+
+                                </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col text-center">
+                                    <h1>Login</h1>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="alert" id="alertmessage" is="dmx-bs5-alert" role="alert" type="danger">
+                                        <p>Alert message</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col ">
+                                    <label for="inp_email" class="col-form-label col-form-label-lg">Email</label>
+                                    <input type="email" id="inp_email" name="email" class="form-control form-control-lg" placeholder="name@domain.com" required="" data-msg-required="email is required.">
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col">
+                                    <label for="inp_password" class="col-form-label col-form-label-lg">Password</label>
+
+
+                                    <div class="input-group mb-3">
+
+                                        <input type="password" id="inp_password" name="password" class="form-control form-control-lg" placeholder="*************" aria-describedby="basic-addon-password" aria-label="password" required="" data-msg-required="password is required.">
+                                        <span class="input-group-text hide-show-password" id="basic-addon-password">
+                                            <i class="fas fa-eye-slash"></i>
+                                        </span>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <small class="text-muted"><a id="forgotPassword" href="/request-password-reset">Forgot Password?</a></small>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col">
+                                    <button id="login_submit" class="btn btn-primary w-100 text-light btn-lg" type="submit">Login</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<script>
+    // const password = document.getElementById("inp_password");
+    // let toggle = document.getElementById("toggle");
+       
+    // toggle.addEventListener("click", function(e) {
+    //     let icon = $(this).is("i");
+    //     icon ? toggle = $(this)[0] : toggle = $(this).find("i")[0]
+    //     if (password.type === "password") {
+    //     password.type = "text";
+    //     toggle.classList.remove("fa-eye-slash");
+    //     toggle.classList.add("fa-eye");
+    //     } else {
+    //     password.type = "password";
+    //     toggle.classList.remove("fa-eye");
+    //     toggle.classList.add("fa-eye-slash");
+    //     }
+    
+    // });
+
+  
+
+    $(".hide-show-password").each(function(){
+
+       $(this).on("click", function(e) {
+            let password = $(this).parent().find("input");
+            let icon = $(this).find("i");          
+            if (password[0].type === "password") {
+                password[0].type = "text";
+                icon.removeClass("fa-eye-slash");
+                icon.addClass("fa-eye");
+            } else {
+                password[0].type = "password";
+                icon.removeClass("fa-eye");
+                icon.addClass("fa-eye-slash");
+            }        
+        });
+    
+    })
+      
+   
+</script>
+
+
+<meta name="ac:route" content="/Login">

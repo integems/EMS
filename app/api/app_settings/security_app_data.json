@@ -1,0 +1,126 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "query",
+      "module": "dbconnector",
+      "action": "select",
+      "options": {
+        "connection": "conn_db",
+        "sql": {
+          "type": "select",
+          "columns": [
+            {
+              "table": "app_settings",
+              "column": "*"
+            }
+          ],
+          "params": [],
+          "table": {
+            "name": "app_settings"
+          },
+          "primary": "id",
+          "joins": [],
+          "query": "select * from `app_settings` where `app_settings`.`field_name` = ? or `app_settings`.`field_name` = ? or `app_settings`.`field_name` = ?",
+          "wheres": {
+            "condition": "OR",
+            "rules": [
+              {
+                "id": "app_settings.field_name",
+                "field": "app_settings.field_name",
+                "type": "string",
+                "operator": "equal",
+                "value": "organisation_name",
+                "data": {
+                  "table": "app_settings",
+                  "column": "field_name",
+                  "type": "text",
+                  "columnObj": {
+                    "type": "string",
+                    "default": "",
+                    "maxLength": 255,
+                    "primary": false,
+                    "nullable": true,
+                    "name": "field_name"
+                  }
+                },
+                "operation": "="
+              },
+              {
+                "id": "app_settings.field_name",
+                "field": "app_settings.field_name",
+                "type": "string",
+                "operator": "equal",
+                "value": "logo",
+                "data": {
+                  "table": "app_settings",
+                  "column": "field_name",
+                  "type": "text",
+                  "columnObj": {
+                    "type": "string",
+                    "default": "",
+                    "maxLength": 255,
+                    "primary": false,
+                    "nullable": true,
+                    "name": "field_name"
+                  }
+                },
+                "operation": "="
+              },
+              {
+                "id": "app_settings.field_name",
+                "field": "app_settings.field_name",
+                "type": "string",
+                "operator": "equal",
+                "value": "favicon",
+                "data": {
+                  "table": "app_settings",
+                  "column": "field_name",
+                  "type": "text",
+                  "columnObj": {
+                    "type": "string",
+                    "default": "",
+                    "maxLength": 255,
+                    "primary": false,
+                    "nullable": true,
+                    "name": "field_name"
+                  }
+                },
+                "operation": "="
+              }
+            ],
+            "conditional": null,
+            "valid": true
+          }
+        }
+      },
+      "output": true,
+      "meta": [
+        {
+          "type": "number",
+          "name": "id"
+        },
+        {
+          "type": "text",
+          "name": "field_name"
+        },
+        {
+          "type": "text",
+          "name": "field_value"
+        }
+      ],
+      "outputType": "array"
+    }
+  }
+}

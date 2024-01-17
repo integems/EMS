@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+
+<head>
+  <script src="/dmxAppConnect/dmxAppConnect.js"></script>
+  <base href="/">
+  <meta charset="UTF-8">
+  <title><%=_('query.where(\'field_name\', \'==\', \'organisation_name\')[0].field_value+\' - Environmental Monitoring System\'')%></title>
+
+  <link rel="icon" type="image/ico" href="/favicon.ico" dmx-bind:href="sc_security_app_data.data.query.where(`field_name`, 'favicon', '==')[0].field_value">
+
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="theme-color" content="#ffffff">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="/bootstrap/5/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/fontawesome6/css/all.min.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <script src="/js/jquery-3.5.1.slim.min.js"></script>
+  <script src="/dmxAppConnect/dmxRouting/dmxRouting.js" defer></script>
+  <link rel="stylesheet" href="/dmxAppConnect/dmxNotifications/dmxNotifications.css" />
+  <script src="/dmxAppConnect/dmxNotifications/dmxNotifications.js" defer></script>
+  <script src="/dmxAppConnect/dmxBrowser/dmxBrowser.js" defer></script>
+  <link rel="stylesheet" href="/dmxAppConnect/dmxValidator/dmxValidator.css" />
+  <script src="/dmxAppConnect/dmxValidator/dmxValidator.js" defer></script>
+  <script src="/dmxAppConnect/dmxBootstrap5Alert/dmxBootstrap5Alert.js" defer></script>
+  <script src="/dmxAppConnect/dmxBootstrap5Modal/dmxBootstrap5Modal.js" defer></script>
+
+  <script src="/dmxAppConnect/dmxFormatter/dmxFormatter.js" defer></script>
+</head>
+
+<body id="securityLayout" is="dmx-app">
+  <dmx-serverconnect id="sc_security_app_data" url="/api/app_settings/security_app_data"></dmx-serverconnect>
+
+  <div is="dmx-browser" id="browser"></div>
+  <dmx-notifications id="notification"></dmx-notifications>
+  <div is="dmx-view" id="content">
+    <%- await include(content, locals); %>
+
+  </div>
+  <script src="/bootstrap/5/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

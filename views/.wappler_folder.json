@@ -1,0 +1,10 @@
+{
+  "login.ejs": {
+    "layoutPage": "securityLayout",
+    "description": ""
+  },
+  "request-password-reset.ejs": {
+    "layoutPage": "securityLayout",
+    "description": ""
+  }
+}

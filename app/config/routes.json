@@ -5,6 +5,30 @@
       "page": "index",
       "routeType": "page",
       "layout": "main"
+    },
+    {
+      "path": "/login",
+      "page": "login",
+      "layout": "securityLayout",
+      "data": {
+        "organisation_name": "INTEGEMS"
+      }
+    },
+    {
+      "path": "/request-password-reset",
+      "page": "request-password-reset",
+      "layout": "securityLayout"
     }
-  ]
+  ],
+  "layouts": {
+    "securityLayout": {
+      "meta": [
+        {
+          "type": "text",
+          "name": "organisation_name"
+        }
+      ],
+      "exec": "/api/app_settings/security_app_data"
+    }
+  }
 }

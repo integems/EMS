@@ -1,0 +1,20 @@
+{
+  "name": "conn_db",
+  "module": "dbconnector",
+  "action": "connect",
+  "options": {
+    "client": "mysql",
+    "connection": {
+      "host": "ems.integems.com",
+      "user": "ems_admin",
+      "password": "Admin@EMS_db",
+      "database": "emsdb",
+      "charset": "utf8mb4"
+    },
+    "tz": "utc",
+    "meta": {}
+  },
+  "fileName": "conn_db.json",
+  "actionFilePath": "file:///C:/Users/Joel%20OK%20Anthony/Documents/Joel/WebProjects/EMS/app/modules/connections/conn_db.json",
+  "serverType": "node"
+}
