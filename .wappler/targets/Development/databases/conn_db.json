@@ -10,6 +10,41 @@
   "direct": true,
   "schema": {
     "tables": {
+      "app_settings": {
+        "columns": {
+          "id": {
+            "db": {
+              "type": "increments",
+              "primary": true,
+              "nullable": false
+            }
+          },
+          "field_name": {
+            "db": {
+              "type": "string",
+              "default": "",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "field_value": {
+            "db": {
+              "type": "string",
+              "default": "",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          }
+        },
+        "db": {
+          "engine": "InnoDB",
+          "schema": "emsdb",
+          "collation": "utf8mb4_general_ci",
+          "system_versioned": false
+        }
+      },
       "users": {
         "columns": {
           "user_id": {
@@ -70,25 +105,8 @@
               "primary": false,
               "nullable": true
             }
-          }
-        },
-        "db": {
-          "engine": "InnoDB",
-          "schema": "emsdb",
-          "collation": "utf8mb4_general_ci",
-          "system_versioned": false
-        }
-      },
-      "app_settings": {
-        "columns": {
-          "id": {
-            "db": {
-              "type": "increments",
-              "primary": true,
-              "nullable": false
-            }
           },
-          "field_name": {
+          "firstname": {
             "db": {
               "type": "string",
               "default": "",
@@ -97,11 +115,28 @@
               "nullable": true
             }
           },
-          "field_value": {
+          "lastname": {
             "db": {
               "type": "string",
               "default": "",
               "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "reset_code": {
+            "db": {
+              "type": "string",
+              "default": "",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "reset_code_valid_date": {
+            "db": {
+              "type": "datetime",
+              "default": "",
               "primary": false,
               "nullable": true
             }

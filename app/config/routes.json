@@ -18,6 +18,16 @@
       "path": "/request-password-reset",
       "page": "request-password-reset",
       "layout": "securityLayout"
+    },
+    {
+      "path": "/reset-password",
+      "page": "reset-password",
+      "layout": "securityLayout"
+    },
+    {
+      "path": "/dashboard",
+      "page": "dashboard",
+      "layout": "main"
     }
   ],
   "layouts": {

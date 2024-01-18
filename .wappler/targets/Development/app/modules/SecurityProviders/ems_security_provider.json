@@ -1,0 +1,46 @@
+{
+  "name": "ems_security_provider",
+  "module": "auth",
+  "action": "provider",
+  "options": {
+    "secret": "37nDR0RvCXCbc0h",
+    "provider": "Database",
+    "connection": "conn_db",
+    "users": {
+      "table": "users",
+      "identity": "user_id",
+      "username": "email",
+      "password": "password"
+    },
+    "permissions": {
+      "Admin": {
+        "table": "users",
+        "identity": "user_id",
+        "conditions": [
+          {
+            "column": "role",
+            "operator": "=",
+            "value": "Admin"
+          }
+        ]
+      },
+      "User": {
+        "table": "users",
+        "identity": "user_id",
+        "conditions": [
+          {
+            "column": "role",
+            "operator": "=",
+            "value": "User"
+          }
+        ]
+      }
+    }
+  },
+  "meta": [
+    {
+      "name": "identity",
+      "type": "text"
+    }
+  ]
+}

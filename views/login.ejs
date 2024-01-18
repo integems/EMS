@@ -15,7 +15,7 @@
     <div class="container card card-body shadow" id="loginForm">
         <div class="row p-4 justify-content-center">
             <div class="col">
-                <form id="scfLogin" method="post" is="dmx-serverconnect-form" action="/api/security/login" dmx-on:success="browser1.goto('/dashboard')" dmx-on:unauthorized="alertmessage.setTextContent('Unauthorized!');alertmessage.show()">
+                <form id="scfLogin" method="post" is="dmx-serverconnect-form" action="/api/security/login" dmx-on:success="browser.goto('/dashboard')" dmx-on:unauthorized="alertmessage.setTextContent(lastError.response);alertmessage.show()">
                     <div class="row">
                         <div class="col">
                             <div class="row">
@@ -59,7 +59,7 @@
                             </div>
                             <div class="row">
                                 <div class="col">
-                                    <small class="text-muted"><a id="forgotPassword" href="/request-password-reset">Forgot Password?</a></small>
+                                    <small class="text-muted"><a id="forgotPassword" href="/request-password-reset" internal="true">Forgot Password?</a></small>
                                 </div>
                             </div>
                             <div class="row mt-3">

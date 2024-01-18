@@ -1,0 +1,296 @@
+{
+  "meta": {
+    "options": {
+      "linkedFile": "/views/login.ejs",
+      "linkedForm": "scfLogin"
+    },
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ],
+    "$_POST": [
+      {
+        "type": "text",
+        "fieldName": "email",
+        "options": {
+          "rules": {
+            "core:required": {
+              "param": "",
+              "message": "email is required."
+            },
+            "core:email": {}
+          }
+        },
+        "name": "email"
+      },
+      {
+        "type": "text",
+        "fieldName": "password",
+        "options": {
+          "rules": {
+            "core:required": {
+              "param": "",
+              "message": "password is required."
+            }
+          }
+        },
+        "name": "password"
+      },
+      {
+        "type": "number",
+        "name": "user_id"
+      }
+    ]
+  },
+  "exec": {
+    "steps": [
+      {
+        "name": "user",
+        "module": "dbconnector",
+        "action": "single",
+        "options": {
+          "connection": "conn_db",
+          "sql": {
+            "type": "select",
+            "columns": [
+              {
+                "table": "users",
+                "column": "user_id"
+              },
+              {
+                "table": "users",
+                "column": "email"
+              },
+              {
+                "table": "users",
+                "column": "password"
+              },
+              {
+                "table": "users",
+                "column": "role"
+              },
+              {
+                "table": "users",
+                "column": "status"
+              }
+            ],
+            "params": [
+              {
+                "operator": "equal",
+                "type": "expression",
+                "name": ":P1",
+                "value": "{{$_POST.email}}",
+                "test": ""
+              }
+            ],
+            "table": {
+              "name": "users"
+            },
+            "primary": "user_id",
+            "joins": [],
+            "wheres": {
+              "condition": "AND",
+              "rules": [
+                {
+                  "id": "users.email",
+                  "field": "users.email",
+                  "type": "string",
+                  "operator": "equal",
+                  "value": "{{$_POST.email}}",
+                  "data": {
+                    "table": "users",
+                    "column": "email",
+                    "type": "text",
+                    "columnObj": {
+                      "type": "string",
+                      "default": "",
+                      "maxLength": 255,
+                      "primary": false,
+                      "nullable": true,
+                      "name": "email"
+                    }
+                  },
+                  "operation": "=",
+                  "table": "users"
+                }
+              ],
+              "conditional": null,
+              "valid": true
+            },
+            "query": "select `user_id`, `email`, `password`, `role`, `status` from `users` where `users`.`email` = ?"
+          }
+        },
+        "meta": [
+          {
+            "type": "number",
+            "name": "user_id"
+          },
+          {
+            "type": "text",
+            "name": "email"
+          },
+          {
+            "type": "text",
+            "name": "password"
+          },
+          {
+            "type": "text",
+            "name": "role"
+          },
+          {
+            "type": "text",
+            "name": "status"
+          }
+        ],
+        "outputType": "object"
+      },
+      {
+        "name": "",
+        "module": "core",
+        "action": "condition",
+        "options": {
+          "if": "{{$_POST.email==user.email}}",
+          "then": {
+            "steps": {
+              "name": "",
+              "module": "core",
+              "action": "condition",
+              "options": {
+                "if": "{{user.status=='Active'}}",
+                "then": {
+                  "steps": {
+                    "name": "",
+                    "module": "core",
+                    "action": "condition",
+                    "options": {
+                      "if": "{{user.password==$_POST.password.sha512(user.email)}}",
+                      "then": {
+                        "steps": [
+                          {
+                            "name": "update",
+                            "module": "dbupdater",
+                            "action": "update",
+                            "options": {
+                              "connection": "conn_db",
+                              "sql": {
+                                "type": "update",
+                                "values": [
+                                  {
+                                    "table": "users",
+                                    "column": "last_login",
+                                    "type": "datetime",
+                                    "value": "{{NOW}}"
+                                  }
+                                ],
+                                "table": "users",
+                                "wheres": {
+                                  "condition": "AND",
+                                  "rules": [
+                                    {
+                                      "id": "email",
+                                      "field": "email",
+                                      "type": "string",
+                                      "operator": "equal",
+                                      "value": "{{$_POST.email}}",
+                                      "data": {
+                                        "column": "email"
+                                      },
+                                      "operation": "="
+                                    }
+                                  ],
+                                  "conditional": null,
+                                  "valid": true
+                                },
+                                "returning": "user_id",
+                                "query": "update `users` set `last_login` = ? where `email` = ?",
+                                "params": [
+                                  {
+                                    "name": ":P1",
+                                    "type": "expression",
+                                    "value": "{{NOW}}",
+                                    "test": ""
+                                  },
+                                  {
+                                    "operator": "equal",
+                                    "type": "expression",
+                                    "name": ":P2",
+                                    "value": "{{$_POST.email}}",
+                                    "test": ""
+                                  }
+                                ]
+                              }
+                            },
+                            "meta": [
+                              {
+                                "name": "affected",
+                                "type": "number"
+                              }
+                            ]
+                          },
+                          {
+                            "name": "identity",
+                            "module": "auth",
+                            "action": "login",
+                            "options": {
+                              "provider": "ems_security_provider",
+                              "username": "{{$_POST.email}}",
+                              "password": "{{$_POST.password.sha512(user.email)}}"
+                            },
+                            "output": true,
+                            "meta": []
+                          }
+                        ]
+                      },
+                      "else": {
+                        "steps": {
+                          "name": "Unauthorised",
+                          "module": "core",
+                          "action": "response",
+                          "options": {
+                            "status": 401,
+                            "data": "Your password is incorrect."
+                          }
+                        }
+                      }
+                    },
+                    "outputType": "boolean"
+                  }
+                },
+                "else": {
+                  "steps": {
+                    "name": "Unauthorised",
+                    "module": "core",
+                    "action": "response",
+                    "options": {
+                      "status": 401,
+                      "data": "Your account is disabled."
+                    }
+                  }
+                }
+              },
+              "outputType": "boolean"
+            }
+          },
+          "else": {
+            "steps": {
+              "name": "Unauthorised",
+              "module": "core",
+              "action": "response",
+              "options": {
+                "status": 401,
+                "data": "Account is not available"
+              }
+            }
+          }
+        },
+        "outputType": "boolean"
+      }
+    ]
+  }
+}

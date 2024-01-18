@@ -1,0 +1,12 @@
+{
+  "name": "ems_mail",
+  "module": "mail",
+  "action": "setup",
+  "options": {
+    "host": "smtp.livemail.co.uk",
+    "port": 465,
+    "useSSL": true,
+    "username": "jo.anthony@integems.com",
+    "password": "Jok@9221"
+  }
+}
