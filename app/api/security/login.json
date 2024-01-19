@@ -162,14 +162,14 @@
               "module": "core",
               "action": "condition",
               "options": {
-                "if": "{{user.status=='Active'}}",
+                "if": "{{user.password==$_POST.password.sha512(user.email)}}",
                 "then": {
                   "steps": {
                     "name": "",
                     "module": "core",
                     "action": "condition",
                     "options": {
-                      "if": "{{user.password==$_POST.password.sha512(user.email)}}",
+                      "if": "{{user.status=='Active'}}",
                       "then": {
                         "steps": [
                           {
@@ -254,7 +254,7 @@
                           "action": "response",
                           "options": {
                             "status": 401,
-                            "data": "Your password is incorrect."
+                            "data": "Your account is disabled, please contact support."
                           }
                         }
                       }
@@ -269,7 +269,7 @@
                     "action": "response",
                     "options": {
                       "status": 401,
-                      "data": "Your account is disabled."
+                      "data": "Incorrect credentials"
                     }
                   }
                 }

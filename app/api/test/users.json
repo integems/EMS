@@ -1,0 +1,88 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "query",
+      "module": "dbconnector",
+      "action": "select",
+      "options": {
+        "connection": "conn_db",
+        "sql": {
+          "type": "select",
+          "columns": [
+            {
+              "table": "users",
+              "column": "*"
+            }
+          ],
+          "params": [],
+          "table": {
+            "name": "users"
+          },
+          "primary": "user_id",
+          "joins": [],
+          "query": "select * from `users`"
+        }
+      },
+      "output": true,
+      "meta": [
+        {
+          "type": "number",
+          "name": "user_id"
+        },
+        {
+          "type": "text",
+          "name": "email"
+        },
+        {
+          "type": "text",
+          "name": "password"
+        },
+        {
+          "type": "text",
+          "name": "role"
+        },
+        {
+          "type": "text",
+          "name": "status"
+        },
+        {
+          "type": "datetime",
+          "name": "last_login"
+        },
+        {
+          "type": "datetime",
+          "name": "date_created"
+        },
+        {
+          "type": "text",
+          "name": "firstname"
+        },
+        {
+          "type": "text",
+          "name": "lastname"
+        },
+        {
+          "type": "text",
+          "name": "reset_code"
+        },
+        {
+          "type": "datetime",
+          "name": "reset_code_valid_date"
+        }
+      ],
+      "outputType": "array"
+    }
+  }
+}
