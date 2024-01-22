@@ -27,7 +27,7 @@
     {
       "path": "/dashboard",
       "page": "dashboard",
-      "layout": "main"
+      "layout": "portal_layout"
     }
   ],
   "layouts": {
@@ -38,6 +38,9 @@
           "name": "organisation_name"
         }
       ],
+      "exec": "/api/app_settings/security_app_data"
+    },
+    "portal_layout": {
       "exec": "/api/app_settings/security_app_data"
     }
   }

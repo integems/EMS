@@ -12,7 +12,7 @@
     "description": ""
   },
   "dashboard.ejs": {
-    "layoutPage": "main",
+    "layoutPage": "portal_layout",
     "description": ""
   },
   "reset-password.ejs": {

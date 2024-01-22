@@ -1,0 +1,109 @@
+[
+  "SecurityProviders/ems_security_provider",
+  {
+    "name": "logged_in_user",
+    "module": "dbconnector",
+    "action": "single",
+    "options": {
+      "connection": "conn_db",
+      "sql": {
+        "type": "select",
+        "columns": [
+          {
+            "table": "users",
+            "column": "user_id"
+          },
+          {
+            "table": "users",
+            "column": "email"
+          },
+          {
+            "table": "users",
+            "column": "role"
+          },
+          {
+            "table": "users",
+            "column": "status"
+          },
+          {
+            "table": "users",
+            "column": "firstname"
+          },
+          {
+            "table": "users",
+            "column": "lastname"
+          }
+        ],
+        "params": [
+          {
+            "operator": "equal",
+            "type": "expression",
+            "name": ":P1",
+            "value": "{{ems_security_provider.identity}}",
+            "test": ""
+          }
+        ],
+        "table": {
+          "name": "users"
+        },
+        "primary": "user_id",
+        "joins": [],
+        "wheres": {
+          "condition": "AND",
+          "rules": [
+            {
+              "id": "users.user_id",
+              "field": "users.user_id",
+              "type": "double",
+              "operator": "equal",
+              "value": "{{ems_security_provider.identity}}",
+              "data": {
+                "table": "users",
+                "column": "user_id",
+                "type": "number",
+                "columnObj": {
+                  "type": "increments",
+                  "primary": true,
+                  "nullable": false,
+                  "name": "user_id"
+                }
+              },
+              "operation": "="
+            }
+          ],
+          "conditional": null,
+          "valid": true
+        },
+        "query": "select `user_id`, `email`, `role`, `status`, `firstname`, `lastname` from `users` where `users`.`user_id` = ?"
+      }
+    },
+    "output": true,
+    "meta": [
+      {
+        "type": "number",
+        "name": "user_id"
+      },
+      {
+        "type": "text",
+        "name": "email"
+      },
+      {
+        "type": "text",
+        "name": "role"
+      },
+      {
+        "type": "text",
+        "name": "status"
+      },
+      {
+        "type": "text",
+        "name": "firstname"
+      },
+      {
+        "type": "text",
+        "name": "lastname"
+      }
+    ],
+    "outputType": "object"
+  }
+]

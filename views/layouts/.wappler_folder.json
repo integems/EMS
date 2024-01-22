@@ -4,5 +4,8 @@
   },
   "securityLayout.ejs": {
     "description": ""
+  },
+  "portal_layout.ejs": {
+    "description": ""
   }
 }
