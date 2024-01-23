@@ -1,0 +1,11 @@
+[
+  "SecurityProviders/ems_security_provider",
+  {
+    "name": "",
+    "module": "auth",
+    "action": "logout",
+    "options": {
+      "provider": "ems_security_provider"
+    }
+  }
+]

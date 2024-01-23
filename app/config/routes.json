@@ -15,8 +15,8 @@
       }
     },
     {
-      "path": "/request-password-reset",
-      "page": "request-password-reset",
+      "path": "/forgot-password",
+      "page": "forgot-password",
       "layout": "securityLayout"
     },
     {
@@ -28,6 +28,16 @@
       "path": "/dashboard",
       "page": "dashboard",
       "layout": "portal_layout"
+    },
+    {
+      "path": "/user-profile",
+      "page": "user-profile",
+      "layout": "main"
+    },
+    {
+      "path": "/change-password",
+      "page": "change-password",
+      "layout": "securityLayout"
     }
   ],
   "layouts": {

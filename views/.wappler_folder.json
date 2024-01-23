@@ -3,10 +3,6 @@
     "layoutPage": "securityLayout",
     "description": ""
   },
-  "request-password-reset.ejs": {
-    "layoutPage": "securityLayout",
-    "description": ""
-  },
   "register.ejs": {
     "layoutPage": "securityLayout",
     "description": ""
@@ -16,6 +12,18 @@
     "description": ""
   },
   "reset-password.ejs": {
+    "layoutPage": "securityLayout",
+    "description": ""
+  },
+  "forgot-password.ejs": {
+    "layoutPage": "securityLayout",
+    "description": ""
+  },
+  "user-profile.ejs": {
+    "layoutPage": "main",
+    "description": ""
+  },
+  "change-password.ejs": {
     "layoutPage": "securityLayout",
     "description": ""
   }

@@ -5,16 +5,24 @@
   "designFramework": "bootstrap5",
   "frameworks": [
     {
-      "name": "bootstrap5",
+      "name": "appConnect",
       "type": "local"
     },
     {
-      "name": "appConnect",
+      "name": "bootstrap5",
       "type": "local"
     },
     {
       "name": "fontawesome_6",
       "type": "local"
+    },
+    {
+      "name": "bootstrap_icons",
+      "type": "local"
+    },
+    {
+      "name": "jquery_slim_35",
+      "type": "cdn"
     }
   ],
   "hostingType": "wappler",
@@ -34,5 +42,6 @@
     }
   ],
   "activeTarget": "Development",
-  "projectType": "web"
+  "projectType": "web",
+  "extensions": []
 }

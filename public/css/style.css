@@ -519,6 +519,11 @@ body {
   max-width: 500px;
 }
 
+#change_password_form {
+  top: 30px;
+  max-width: 500px;
+}
+
 #loginLayout {
   background-image: linear-gradient(97deg, #20c997 0%, #ffc107 100%);
   height: 100vh;
