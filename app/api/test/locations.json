@@ -1,0 +1,68 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "query",
+      "module": "dbconnector",
+      "action": "select",
+      "options": {
+        "connection": "conn_db",
+        "sql": {
+          "type": "select",
+          "columns": [
+            {
+              "table": "monitoring_location",
+              "column": "*"
+            }
+          ],
+          "params": [],
+          "table": {
+            "name": "monitoring_location"
+          },
+          "primary": "location_id",
+          "joins": [],
+          "query": "select * from `monitoring_location`"
+        }
+      },
+      "output": true,
+      "meta": [
+        {
+          "type": "number",
+          "name": "location_id"
+        },
+        {
+          "type": "number",
+          "name": "latitude"
+        },
+        {
+          "type": "number",
+          "name": "longitude"
+        },
+        {
+          "type": "text",
+          "name": "org_specific_monitoring_id"
+        },
+        {
+          "type": "text",
+          "name": "location_type"
+        },
+        {
+          "type": "text",
+          "name": "description"
+        }
+      ],
+      "outputType": "array"
+    }
+  }
+}

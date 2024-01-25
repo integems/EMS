@@ -25,11 +25,6 @@
       "layout": "securityLayout"
     },
     {
-      "path": "/dashboard",
-      "page": "dashboard",
-      "layout": "portal_layout"
-    },
-    {
       "path": "/user-profile",
       "page": "user-profile",
       "layout": "main"
@@ -38,6 +33,26 @@
       "path": "/change-password",
       "page": "change-password",
       "layout": "securityLayout"
+    },
+    {
+      "path": "/dashboard",
+      "page": "dashboard",
+      "layout": "portal_layout"
+    },
+    {
+      "path": "/air-quality",
+      "page": "air-quality",
+      "layout": "portal_layout"
+    },
+    {
+      "path": "/noise",
+      "page": "noise",
+      "layout": "portal_layout"
+    },
+    {
+      "path": "/water-quality",
+      "page": "water-quality",
+      "layout": "portal_layout"
     }
   ],
   "layouts": {
@@ -51,6 +66,9 @@
       "exec": "/api/app_settings/security_app_data"
     },
     "portal_layout": {
+      "exec": "/api/app_settings/security_app_data"
+    },
+    "main": {
       "exec": "/api/app_settings/security_app_data"
     }
   }

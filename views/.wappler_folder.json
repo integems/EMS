@@ -26,5 +26,25 @@
   "change-password.ejs": {
     "layoutPage": "securityLayout",
     "description": ""
+  },
+  "air-quality.ejs": {
+    "layoutPage": "portal_layout",
+    "description": ""
+  },
+  "noise.ejs": {
+    "layoutPage": "portal_layout",
+    "description": ""
+  },
+  "water-quality.ejs": {
+    "layoutPage": "portal_layout",
+    "description": ""
+  },
+  "Soils.ejs": {
+    "layoutPage": "portal_layout",
+    "description": ""
+  },
+  "soils.ejs": {
+    "layoutPage": "portal_layout",
+    "description": ""
   }
 }

@@ -5,7 +5,7 @@
   <script src="/dmxAppConnect/dmxAppConnect.js"></script>
   <base href="/">
   <meta charset="UTF-8">
-  <title>Untitled Document</title>
+  <title><%=_('query.where(\'field_name\', \'==\', \'organisation_name\')[0].field_value+\' - Environmental Monitoring System \'')%></title>
 
   <script src="/dmxAppConnect/dmxBootstrap5Alert/dmxBootstrap5Alert.js" defer></script>
   <link rel="stylesheet" href="/dmxAppConnect/dmxValidator/dmxValidator.css" />
@@ -18,6 +18,7 @@
 </head>
 
 <body is="dmx-app" id="main">
+  <dmx-serverconnect id="sc_security_app_data" url="/api/app_settings/security_app_data"></dmx-serverconnect>
   <div is="dmx-view" id="content">
     <%- await include(content, locals); %>
   </div>
