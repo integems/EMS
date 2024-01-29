@@ -1,0 +1,40 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "time_of_day",
+      "module": "dbupdater",
+      "action": "custom",
+      "options": {
+        "connection": "conn_db",
+        "sql": {
+          "query": "select\n  case\n    when date_format(start_date_time, '%H:%i') between '06:29' and '19:00' then 'day'\n    else 'night'\n  end as time_of_day,\n  avg(LAeq)\nfrom noise_monitoring_data\ngroup by time_of_day;\n",
+          "params": []
+        }
+      },
+      "output": true,
+      "meta": [
+        {
+          "name": "time_of_day",
+          "type": "text"
+        },
+        {
+          "name": "avg(LAeq)",
+          "type": "text"
+        }
+      ],
+      "type": "dbcustom_query"
+    }
+  }
+}

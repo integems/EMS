@@ -22,10 +22,30 @@
   <link rel="shortcut icon" href="assets/images/logo/favicon.svg" type="image/x-icon" />
   <link rel="shortcut icon" href="assets/images/logo/favicon.png" type="image/png" />
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js" integrity="sha256-CutOzxCRucUsn6C6TcEYsauvvYilEniTXldPa6/wu0k=" crossorigin="anonymous"></script>
   <script src="/dmxAppConnect/dmxRouting/dmxRouting.js" defer></script>
   <script src="/dmxAppConnect/dmxBootstrap5Navigation/dmxBootstrap5Navigation.js" defer></script>
   <script src="/dmxAppConnect/dmxFormatter/dmxFormatter.js" defer></script>
   <script src="/dmxAppConnect/dmxBrowser/dmxBrowser.js" defer></script>
+
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/data.js"></script>
+
+  <link rel="stylesheet" href="/dmxAppConnect/dmxDatePicker/daterangepicker.min.css" />
+  <script src="/dmxAppConnect/dmxDatePicker/daterangepicker.min.js" defer></script>
+  <link rel="stylesheet" href="/dmxAppConnect/dmxDatePicker/dmxDatePicker.css" />
+  <script src="/dmxAppConnect/dmxDatePicker/dmxDatePicker.js" defer></script>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <script src="/dmxAppConnect/dmxBootstrap5Modal/dmxBootstrap5Modal.js" defer></script>
+  <link rel="stylesheet" href="/dmxAppConnect/dmxMediumEditor/medium-editor.css" />
+  <script src="/dmxAppConnect/dmxMediumEditor/medium-editor.js" defer></script>
+  <link rel="stylesheet" href="/dmxAppConnect/dmxMediumEditor/dmxMediumEditor.css" />
+  <script src="/dmxAppConnect/dmxMediumEditor/dmxMediumEditor.js" defer></script>
+  <link rel="stylesheet" href="/dmxAppConnect/dmxMediumEditor/themes/default.css" />
 </head>
 
 <body is="dmx-app" id="portal_layout">
@@ -70,29 +90,29 @@
           <ul class="menu">
             <!-- <li class="sidebar-title">Menu</li> -->
 
-            <li class="sidebar-item active">
-              <a class="sidebar-link" href="/dashboard" internal="true">
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="/dashboard">
                 <i class="bi bi-grid-fill"></i>
                 <span>Dashboard</span>
               </a>
             </li>
 
             <li class="sidebar-item">
-              <a class="sidebar-link" href="/air-quality" internal="true">
+              <a class="sidebar-link" href="/air-quality">
                 <i class="bi bi-cloud-fog2"></i>
                 <span>Air Quality</span>
               </a>
             </li>
 
             <li class="sidebar-item">
-              <a class="sidebar-link" href="/noise" internal="true">
+              <a class="sidebar-link" href="/noise">
                 <i class="bi bi-soundwave"></i>
                 <span>Noise</span>
               </a>
             </li>
 
             <li class="sidebar-item">
-              <a class="sidebar-link" href="/water-quality" internal="true">
+              <a class="sidebar-link" href="/water-quality">
                 <i class="bi bi-water"></i>
                 <span>Water Quality</span>
               </a>
@@ -284,12 +304,6 @@
                 <li class="submenu-item">
                   <a href="#">Settings</a>
                 </li>
-                <!-- <li class="submenu-item">
-                  <a href="form-editor-summernote.html">Summernote</a>
-                </li>
-                <li class="submenu-item">
-                  <a href="form-editor-tinymce.html">TinyMCE</a>
-                </li> -->
               </ul>
             </li>
 
@@ -464,20 +478,6 @@
                 <span>Documentation</span>
               </a>
             </li>
-
-            <!-- <li class="sidebar-item">
-              <a href="https://github.com/zuramai/mazer/blob/main/CONTRIBUTING.md" class="sidebar-link">
-                <i class="bi bi-puzzle"></i>
-                <span>Contribute</span>
-              </a>
-            </li>
-
-            <li class="sidebar-item">
-              <a href="https://github.com/zuramai/mazer#donation" class="sidebar-link">
-                <i class="bi bi-cash"></i>
-                <span>Donate</span>
-              </a>
-            </li> -->
           </ul>
         </div>
       </div>
@@ -728,6 +728,49 @@
 
 
   <script src="/bootstrap/5/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+  // Get all sidebar items
+  const sidebarItems = document.querySelectorAll(".sidebar-item");
+
+  // Function to set active class
+  const setActiveClass = (clickedItem) => {
+    // Remove "active" class from all sidebar items
+    sidebarItems.forEach(item => {
+      item.classList.remove("active");
+    });
+
+    // Add "active" class to the clicked sidebar item
+    clickedItem.classList.add("active");
+
+    // Store the active item in localStorage
+    localStorage.setItem("activeSidebarItem", clickedItem.querySelector(".sidebar-link").getAttribute("href"));
+  };
+
+  // Add click event listener to each sidebar item
+  sidebarItems.forEach(item => {
+    item.addEventListener("click", function() {
+      setActiveClass(this);
+    });
+  });
+
+  // Set "active" class to the Dashboard item on page load or retrieve from localStorage
+  const storedActiveItem = localStorage.getItem("activeSidebarItem");
+  const defaultActiveItem = '/dashboard';
+  const activeItem = storedActiveItem ? storedActiveItem : defaultActiveItem;
+
+  const initialActiveItem = document.querySelector(`.sidebar-link[href="${activeItem}"]`);
+  if (initialActiveItem) {
+    setActiveClass(initialActiveItem.closest('.sidebar-item'));
+  }
+});
+
+
+  </script>
+
+
+
 </body>
 
 </html>

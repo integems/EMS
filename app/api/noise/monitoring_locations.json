@@ -1,0 +1,165 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "locations",
+      "module": "dbconnector",
+      "action": "select",
+      "options": {
+        "connection": "conn_db",
+        "sql": {
+          "type": "select",
+          "columns": [
+            {
+              "table": "monitoring_location",
+              "column": "*"
+            },
+            {
+              "table": "monitoring location photos",
+              "column": "path"
+            },
+            {
+              "table": "monitoring location photos",
+              "column": "photo_id"
+            },
+            {
+              "table": "monitoring location data",
+              "column": "*"
+            }
+          ],
+          "params": [],
+          "table": {
+            "name": "monitoring_location"
+          },
+          "primary": "location_id",
+          "joins": [
+            {
+              "table": "monitoring_location_photos",
+              "column": "*",
+              "alias": "monitoring location photos",
+              "type": "LEFT",
+              "clauses": {
+                "condition": "AND",
+                "rules": [
+                  {
+                    "table": "monitoring location photos",
+                    "column": "location_id",
+                    "operator": "equal",
+                    "operation": "=",
+                    "value": {
+                      "table": "monitoring_location",
+                      "column": "location_id"
+                    }
+                  }
+                ]
+              },
+              "primary": "photo_id"
+            },
+            {
+              "table": "noise_monitoring_data",
+              "column": "*",
+              "alias": "monitoring location data",
+              "type": "INNER",
+              "clauses": {
+                "condition": "AND",
+                "rules": [
+                  {
+                    "table": "monitoring location data",
+                    "column": "location_id",
+                    "operator": "equal",
+                    "operation": "=",
+                    "value": {
+                      "table": "monitoring_location",
+                      "column": "location_id"
+                    }
+                  }
+                ]
+              },
+              "primary": "noise_id"
+            }
+          ],
+          "query": "select `monitoring_location`.*, `monitoring location photos`.`path`, `monitoring location photos`.`photo_id`, `monitoring location data`.* from `monitoring_location` left join `monitoring_location_photos` as `monitoring location photos` on `monitoring location photos`.`location_id` = `monitoring_location`.`location_id` inner join `noise_monitoring_data` as `monitoring location data` on `monitoring location data`.`location_id` = `monitoring_location`.`location_id`"
+        }
+      },
+      "output": true,
+      "meta": [
+        {
+          "type": "number",
+          "name": "location_id"
+        },
+        {
+          "type": "number",
+          "name": "latitude"
+        },
+        {
+          "type": "number",
+          "name": "longitude"
+        },
+        {
+          "type": "text",
+          "name": "org_specific_monitoring_id"
+        },
+        {
+          "type": "text",
+          "name": "location_type"
+        },
+        {
+          "type": "text",
+          "name": "description"
+        },
+        {
+          "type": "text",
+          "name": "path"
+        },
+        {
+          "type": "number",
+          "name": "photo_id"
+        },
+        {
+          "type": "number",
+          "name": "noise_id"
+        },
+        {
+          "type": "datetime",
+          "name": "start_date_time"
+        },
+        {
+          "type": "datetime",
+          "name": "end_date_time"
+        },
+        {
+          "type": "number",
+          "name": "LAeq"
+        },
+        {
+          "type": "number",
+          "name": "LA90"
+        },
+        {
+          "type": "number",
+          "name": "LA10"
+        },
+        {
+          "type": "number",
+          "name": "LAFMax"
+        },
+        {
+          "type": "number",
+          "name": "LAFMin"
+        }
+      ],
+      "outputType": "array"
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "location_type",
+      "module": "dbconnector",
+      "action": "select",
+      "options": {
+        "connection": "conn_db",
+        "sql": {
+          "type": "select",
+          "columns": [
+            {
+              "table": "location_type",
+              "column": "*"
+            }
+          ],
+          "params": [],
+          "table": {
+            "name": "location_type"
+          },
+          "primary": "location_type_id",
+          "joins": [],
+          "query": "select * from `location_type`"
+        }
+      },
+      "output": true,
+      "meta": [
+        {
+          "type": "number",
+          "name": "location_type_id"
+        },
+        {
+          "type": "text",
+          "name": "location_type"
+        }
+      ],
+      "outputType": "array"
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "monitoring_location_id",
+      "module": "dbconnector",
+      "action": "select",
+      "options": {
+        "connection": "conn_db",
+        "sql": {
+          "type": "select",
+          "columns": [
+            {
+              "table": "monitoring_location",
+              "column": "location_id"
+            },
+            {
+              "table": "monitoring_location",
+              "column": "org_specific_monitoring_id"
+            }
+          ],
+          "params": [],
+          "table": {
+            "name": "monitoring_location"
+          },
+          "primary": "location_id",
+          "joins": [],
+          "query": "select `location_id`, `org_specific_monitoring_id` from `monitoring_location`"
+        }
+      },
+      "output": true,
+      "meta": [
+        {
+          "type": "number",
+          "name": "location_id"
+        },
+        {
+          "type": "text",
+          "name": "org_specific_monitoring_id"
+        }
+      ],
+      "outputType": "array"
+    }
+  }
+}

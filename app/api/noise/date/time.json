@@ -1,0 +1,80 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "date_time",
+      "module": "dbconnector",
+      "action": "select",
+      "options": {
+        "connection": "conn_db",
+        "sql": {
+          "type": "select",
+          "columns": [
+            {
+              "table": "noise_monitoring_data",
+              "column": "*"
+            }
+          ],
+          "params": [],
+          "table": {
+            "name": "noise_monitoring_data"
+          },
+          "primary": "noise_id",
+          "joins": [],
+          "query": "select * from `noise_monitoring_data`"
+        }
+      },
+      "output": true,
+      "meta": [
+        {
+          "type": "number",
+          "name": "noise_id"
+        },
+        {
+          "type": "datetime",
+          "name": "start_date_time"
+        },
+        {
+          "type": "datetime",
+          "name": "end_date_time"
+        },
+        {
+          "type": "number",
+          "name": "LAeq"
+        },
+        {
+          "type": "number",
+          "name": "LA90"
+        },
+        {
+          "type": "number",
+          "name": "LA10"
+        },
+        {
+          "type": "number",
+          "name": "LAFMax"
+        },
+        {
+          "type": "number",
+          "name": "LAFMin"
+        },
+        {
+          "type": "number",
+          "name": "location_id"
+        }
+      ],
+      "outputType": "array"
+    }
+  }
+}

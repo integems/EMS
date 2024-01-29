@@ -258,13 +258,6 @@
               "maxLength": 255,
               "primary": false,
               "nullable": true
-            },
-            "db_edits": {
-              "default": "",
-              "type": "decimal"
-            },
-            "status": {
-              "modified": true
             }
           },
           "longitude": {
@@ -319,38 +312,46 @@
       },
       "monitoring_location_photos": {
         "columns": {
-          "id": {
-            "db_edits": {
-              "name": "photo_id",
-              "type": "increments"
-            },
-            "status": {
-              "new": true
+          "photo_id": {
+            "db": {
+              "type": "increments",
+              "primary": true,
+              "nullable": false
             }
           },
           "location_id": {
             "db_edits": {
-              "type": "reference",
               "name": "location_id",
-              "default": "",
-              "maxLength": "",
-              "inTable": "monitoring_location",
-              "references": "location_id",
-              "referenceType": "integer",
-              "onUpdate": "CASCADE",
-              "onDelete": "CASCADE"
+              "maxLength": ""
             },
             "status": {
               "new": true
+            },
+            "db": {
+              "type": "reference",
+              "default": "",
+              "primary": false,
+              "nullable": true,
+              "references": "location_id",
+              "inTable": "monitoring_location",
+              "referenceType": "integer",
+              "onUpdate": "CASCADE",
+              "onDelete": "CASCADE"
             }
           },
           "path": {
             "db_edits": {
-              "type": "string",
               "name": "path"
             },
             "status": {
               "new": true
+            },
+            "db": {
+              "type": "string",
+              "default": "",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
             }
           }
         },
@@ -361,6 +362,32 @@
           "system_versioned": false
         },
         "parent": "monitoring_location"
+      },
+      "location_type": {
+        "columns": {
+          "location_type_id": {
+            "db": {
+              "type": "increments",
+              "primary": true,
+              "nullable": false
+            }
+          },
+          "location_type": {
+            "db": {
+              "type": "string",
+              "default": "",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          }
+        },
+        "db": {
+          "engine": "InnoDB",
+          "schema": "emsdb",
+          "collation": "utf8mb4_general_ci",
+          "system_versioned": false
+        }
       }
     },
     "views": {},

@@ -1,0 +1,95 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "laeq_coordinates",
+      "module": "dbconnector",
+      "action": "select",
+      "options": {
+        "connection": "conn_db",
+        "sql": {
+          "type": "select",
+          "columns": [
+            {
+              "table": "noise_monitoring_data",
+              "column": "LAeq"
+            },
+            {
+              "table": "monitoring_location",
+              "column": "latitude"
+            },
+            {
+              "table": "monitoring_location",
+              "column": "longitude"
+            },
+            {
+              "table": "noise_monitoring_data",
+              "column": "location_id"
+            }
+          ],
+          "params": [],
+          "table": {
+            "name": "noise_monitoring_data"
+          },
+          "primary": "noise_id",
+          "joins": [
+            {
+              "table": "monitoring_location",
+              "column": "*",
+              "type": "INNER",
+              "clauses": {
+                "condition": "AND",
+                "rules": [
+                  {
+                    "table": "monitoring_location",
+                    "column": "location_id",
+                    "operation": "=",
+                    "operator": "equal",
+                    "value": {
+                      "table": "noise_monitoring_data",
+                      "column": "location_id",
+                      "type": "number"
+                    }
+                  }
+                ]
+              },
+              "primary": "location_id"
+            }
+          ],
+          "query": "select `noise_monitoring_data`.`LAeq`, `monitoring_location`.`latitude`, `monitoring_location`.`longitude`, `noise_monitoring_data`.`location_id` from `noise_monitoring_data` inner join `monitoring_location` on `monitoring_location`.`location_id` = `noise_monitoring_data`.`location_id`"
+        }
+      },
+      "output": true,
+      "meta": [
+        {
+          "type": "number",
+          "name": "LAeq"
+        },
+        {
+          "type": "number",
+          "name": "latitude"
+        },
+        {
+          "type": "number",
+          "name": "longitude"
+        },
+        {
+          "type": "number",
+          "name": "location_id"
+        }
+      ],
+      "outputType": "array"
+    }
+  }
+}
