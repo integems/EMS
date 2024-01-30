@@ -242,6 +242,75 @@
           "system_versioned": false
         }
       },
+      "monitoring_location_photos": {
+        "columns": {
+          "photo_id": {
+            "db": {
+              "type": "increments",
+              "primary": true,
+              "nullable": false
+            }
+          },
+          "location_id": {
+            "db": {
+              "type": "reference",
+              "default": "",
+              "primary": false,
+              "nullable": true,
+              "references": "location_id",
+              "inTable": "monitoring_location",
+              "referenceType": "integer",
+              "onUpdate": "CASCADE",
+              "onDelete": "CASCADE"
+            }
+          },
+          "path": {
+            "db": {
+              "type": "string",
+              "default": "",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          }
+        },
+        "db": {
+          "engine": "InnoDB",
+          "schema": "emsdb",
+          "collation": "utf8mb4_general_ci",
+          "system_versioned": false
+        },
+        "parent": "monitoring_location"
+      },
+      "location_type": {
+        "columns": {
+          "location_type_id": {
+            "db": {
+              "type": "increments",
+              "primary": true,
+              "nullable": false
+            }
+          },
+          "location_type": {
+            "db": {
+              "type": "string",
+              "default": "",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          }
+        },
+        "db": {
+          "engine": "InnoDB",
+          "schema": "emsdb",
+          "collation": "utf8mb4_general_ci",
+          "system_versioned": false
+        },
+        "refs": {
+          "monitoring_location": "location_type_id"
+        }
+      },
       "monitoring_location": {
         "columns": {
           "location_id": {
@@ -278,7 +347,7 @@
               "nullable": true
             }
           },
-          "location_type": {
+          "description": {
             "db": {
               "type": "string",
               "default": "",
@@ -287,13 +356,17 @@
               "nullable": true
             }
           },
-          "description": {
+          "location_type_id": {
             "db": {
-              "type": "string",
+              "type": "reference",
               "default": "",
-              "maxLength": 255,
               "primary": false,
-              "nullable": true
+              "nullable": true,
+              "references": "location_type_id",
+              "inTable": "location_type",
+              "referenceType": "integer",
+              "onUpdate": "CASCADE",
+              "onDelete": "CASCADE"
             }
           }
         },
@@ -304,29 +377,31 @@
           "system_versioned": false
         },
         "refs": {
-          "noise_monitoring_data": "location_id"
+          "noise_monitoring_data": "location_id",
+          "air_quality_monitoring_data": "location_id"
         },
         "sub": {
           "monitoring_location_photos": "location_id"
         }
       },
-      "monitoring_location_photos": {
+      "air_quality_monitoring_data": {
         "columns": {
-          "photo_id": {
+          "air_id": {
             "db": {
               "type": "increments",
               "primary": true,
               "nullable": false
             }
           },
+          "date_time": {
+            "db": {
+              "type": "datetime",
+              "default": "",
+              "primary": false,
+              "nullable": true
+            }
+          },
           "location_id": {
-            "db_edits": {
-              "name": "location_id",
-              "maxLength": ""
-            },
-            "status": {
-              "new": true
-            },
             "db": {
               "type": "reference",
               "default": "",
@@ -339,44 +414,58 @@
               "onDelete": "CASCADE"
             }
           },
-          "path": {
-            "db_edits": {
-              "name": "path"
-            },
-            "status": {
-              "new": true
-            },
+          "CO(ppm)": {
             "db": {
-              "type": "string",
+              "type": "decimal",
               "default": "",
-              "maxLength": 255,
               "primary": false,
               "nullable": true
             }
-          }
-        },
-        "db": {
-          "engine": "InnoDB",
-          "schema": "emsdb",
-          "collation": "utf8mb4_general_ci",
-          "system_versioned": false
-        },
-        "parent": "monitoring_location"
-      },
-      "location_type": {
-        "columns": {
-          "location_type_id": {
+          },
+          "NO2(ppm)": {
             "db": {
-              "type": "increments",
-              "primary": true,
-              "nullable": false
+              "type": "decimal",
+              "default": "",
+              "primary": false,
+              "nullable": true
             }
           },
-          "location_type": {
+          "PM10(ppm)": {
             "db": {
-              "type": "string",
+              "type": "decimal",
               "default": "",
-              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "PM2_5(ppm)": {
+            "db": {
+              "type": "decimal",
+              "default": "",
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "RH(%)": {
+            "db": {
+              "type": "decimal",
+              "default": "",
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "SO2(ppm)": {
+            "db": {
+              "type": "decimal",
+              "default": "",
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "temp(C)": {
+            "db": {
+              "type": "decimal",
+              "default": "",
               "primary": false,
               "nullable": true
             }

@@ -8,6 +8,18 @@
       {
         "type": "text",
         "name": "dir"
+      },
+      {
+        "type": "text",
+        "name": "location_id_filter"
+      },
+      {
+        "type": "text",
+        "name": "location_type_filter"
+      },
+      {
+        "type": "text",
+        "name": "date_range_picker"
       }
     ]
   },
@@ -36,6 +48,10 @@
             {
               "table": "monitoring location data",
               "column": "*"
+            },
+            {
+              "table": "location_type",
+              "column": "location_type"
             }
           ],
           "params": [],
@@ -87,9 +103,31 @@
                 ]
               },
               "primary": "noise_id"
+            },
+            {
+              "table": "location_type",
+              "column": "*",
+              "type": "INNER",
+              "clauses": {
+                "condition": "AND",
+                "rules": [
+                  {
+                    "table": "location_type",
+                    "column": "location_type_id",
+                    "operation": "=",
+                    "operator": "equal",
+                    "value": {
+                      "table": "monitoring_location",
+                      "column": "location_type_id",
+                      "type": "number"
+                    }
+                  }
+                ]
+              },
+              "primary": "location_type_id"
             }
           ],
-          "query": "select `monitoring_location`.*, `monitoring location photos`.`path`, `monitoring location photos`.`photo_id`, `monitoring location data`.* from `monitoring_location` left join `monitoring_location_photos` as `monitoring location photos` on `monitoring location photos`.`location_id` = `monitoring_location`.`location_id` inner join `noise_monitoring_data` as `monitoring location data` on `monitoring location data`.`location_id` = `monitoring_location`.`location_id`"
+          "query": "select `monitoring_location`.*, `monitoring location photos`.`path`, `monitoring location photos`.`photo_id`, `monitoring location data`.*, `location_type`.`location_type` from `monitoring_location` left join `monitoring_location_photos` as `monitoring location photos` on `monitoring location photos`.`location_id` = `monitoring_location`.`location_id` inner join `noise_monitoring_data` as `monitoring location data` on `monitoring location data`.`location_id` = `monitoring_location`.`location_id` inner join `location_type` on `location_type`.`location_type_id` = `monitoring_location`.`location_type_id`"
         }
       },
       "output": true,
@@ -112,11 +150,11 @@
         },
         {
           "type": "text",
-          "name": "location_type"
+          "name": "description"
         },
         {
-          "type": "text",
-          "name": "description"
+          "type": "number",
+          "name": "location_type_id"
         },
         {
           "type": "text",
@@ -157,6 +195,10 @@
         {
           "type": "number",
           "name": "LAFMin"
+        },
+        {
+          "type": "text",
+          "name": "location_type"
         }
       ],
       "outputType": "array"

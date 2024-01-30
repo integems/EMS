@@ -1,4 +1,49 @@
-<!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="noise" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Navigation:{},dmxDatePicker:{},dmxBootstrap5Modal:{}}" moment_2="cdn" -->
+<!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="noise" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Navigation:{},dmxDatePicker:{},dmxBootstrap5Modal:{},dmxValidator:{}}" moment_2="cdn" -->
+
+<dmx-serverconnect id="sc_monitoring_location_type" url="/api/location/monitoring_location_type"></dmx-serverconnect>
+<dmx-serverconnect id="sc_monitoring_location_id" url="/api/location/monitoring_location_id"></dmx-serverconnect>
+
+<dmx-serverconnect id="sc_noise_monitoring_date_time" url="/api/noise/date/time"></dmx-serverconnect>
+<dmx-serverconnect id="sc_monitoring_locations" url="/api/noise/monitoring_locations" dmx-param:location_id_filter="select_location_id.value" dmx-param:location_type_filter="select_location_type.value"></dmx-serverconnect>
+<dmx-serverconnect id="sc_avg_LAeq_location" url="/api/noise/average_LAeq_location"></dmx-serverconnect>
+
+<div class="modal" id="modal_add_data" is="dmx-bs5-modal" tabindex="-1" nocloseonclick="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Monitoring Data</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <section id="input-file-browser">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-12">
+                            <div class="mb-3">
+                                <label for="data_file" class="form-label col-form-label">Monitoring Data</label>
+                                <input class="form-control" type="file" id="data_file" accept=".csv">
+                            </div>
+
+                        </div>
+                        <div class="col-lg-6 col-md-12">
+
+                            <div>
+                                <label for="data_select" class="form-label col-form-label">Select Monitoring Location</label>
+                                <select id="data_select" class="form-select" name="location_id" dmx-bind:options="sc_monitoring_location_id.data.monitoring_location_id" optiontext="org_specific_monitoring_id" optionvalue="location_id">
+                                    <option value="">Choose a Location</option>
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Add Data</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="modal" id="modal_add_monitoring_location" is="dmx-bs5-modal" tabindex="-1" nocloseonclick="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -13,7 +58,7 @@
                             <div class="card">
                                 <div class="card-content">
                                     <div class="card-body">
-                                        <form class="form" is="dmx-form" novalidate="">
+                                        <form class="form" is="dmx-serverconnect-form" novalidate="" method="post" id="scf_add_monitoring_location" action="/api/location/add_monitoring_location" dmx-on:success="scf_add_monitoring_location.reset();modal_add_monitoring_location.hide()">
                                             <div class="row">
                                                 <div class="col-md-6 col-12">
                                                     <div class="form-group">
@@ -24,29 +69,41 @@
                                                 <div class="col-md-6 col-12">
                                                     <div class="form-group">
                                                         <label for="longitude" class="col-form-label">Longitude</label>
-                                                        <input type="text" id="longitude" class="form-control" placeholder="Longitude" name="longitude" is="dmx-input" value="">
+                                                        <input type="number" id="longitude" class="form-control" placeholder="Longitude" name="longitude" is="dmx-input" value="">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 col-12">
                                                     <div class="form-group">
                                                         <label for="monitoring_location_id" class="col-form-label">Monitoring Location ID</label>
-                                                        <input id="monitoring_location_id" class="form-control" placeholder="Monitoring Location ID" name="org_specific_monitoring_id" is="dmx-input" value="">
+                                                        <input id="text_monitoring_location" name="location_id" type="text" class="form-control">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 col-12">
                                                     <div class="form-group">
                                                         <label for="country-floating" class="col-form-label">Location Type</label>
-                                                        <select id="select_location_type" class="form-select form-control" name="location_type">
+                                                        <select id="modal_select_location_type" class="form-select form-control" name="location_type" dmx-bind:options="sc_monitoring_location_type.data.location_type" optiontext="location_type" optionvalue="location_type_id">
                                                             <option value="">All Location Types</option>
-                                                            <option value="2">Option Two</option>
-                                                            <option value="3">Option Three</option>
+
                                                         </select>
+
                                                     </div>
                                                 </div>
+
+
+                                            </div>
+                                            <div class="row">
                                                 <div class="col">
                                                     <div class="form-group">
                                                         <label for="company-column" class="col-form-label">Description</label>
                                                         <textarea id="text_location_description" class="form-control" name="location_description"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="form-group">
+                                                        <label for="company-column" class="col-form-label">Photos</label>
+                                                        <input id="file_location_photos" name="path[]" type="file" class="form-control" multiple="true">
                                                     </div>
                                                 </div>
                                             </div>
@@ -59,16 +116,12 @@
                 </section>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary btn-lg" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary btn-lg">Add</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" dmx-on:click="scf_add_monitoring_location.submit()">Add Location</button>
             </div>
         </div>
     </div>
 </div>
-<dmx-serverconnect id="sc_noise_monitoring_date_time" url="/api/noise/date/time"></dmx-serverconnect>
-<dmx-serverconnect id="sc_monitoring_locations" url="/api/noise/monitoring_locations"></dmx-serverconnect>
-<dmx-serverconnect id="sc_avg_LAeq_location" url="/api/noise/average_LAeq_location"></dmx-serverconnect>
-
 <section>
     <div class="row text-end">
 
@@ -80,30 +133,28 @@
             </div>
         </div>
         <div class="col text-end">
-            <button id="btn_add_location" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_add_monitoring_location">Add Monitoring Location</button><button id="btn_add_noise_data" class="btn btn-primary ms-3">Add Data</button>
+            <button id="btn_add_location" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_add_monitoring_location">Add Monitoring Location</button><button id="btn_add_noise_data" class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#modal_add_data">Add Data</button>
         </div>
     </div>
 </section>
-<section class="mt-3 mb-5">
+<section class="mt-1 mb-3">
     <div class="row">
         <div class="col">
-            <select id="select_location_id" class="form-select " name="location_id">
+            <select id="select_location_id" class="form-select " name="location_id" dmx-bind:options="sc_monitoring_location_id.data.monitoring_location_id" optiontext="org_specific_monitoring_id" optionvalue="location_id">
                 <option value="">All Location IDs</option>
-                <option value="2">Option Two</option>
-                <option value="3">Option Three</option>
+
             </select>
 
 
         </div>
-        <div class="col"><select id="select_location_type" class="form-select " name="location_type">
+        <div class="col"><select id="select_location_type" class="form-select " name="location_type" dmx-bind:options="sc_monitoring_location_type.data.location_type" optiontext="location_type" optionvalue="location_type_id">
                 <option value="">All Location Types</option>
-                <option value="2">Option Two</option>
-                <option value="3">Option Three</option>
+
             </select></div>
         <div class="col"><input id="date_noise_monitoring" name="date" is="dmx-date-range-picker" placeholder="Pick a Date Range" class="form-control "></div>
     </div>
 </section>
-<section class="mb-5">
+<section class="mb-3">
     <div class="row">
         <div class="col-9">
             <div class="card">
@@ -115,232 +166,29 @@
         </div>
         <div class="col">
             <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title">Card title</h4>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <div class="card-body" style="height: 400px;">
+                    <h4 class="card-title" id="cardTitle"></h4>
+                    <img id="cardImage">
+                    <p class="card-text" id="cardContent"></p>
+
                 </div>
             </div>
         </div>
     </div>
 </section>
-<section class="mb-5">
+<section class="mb-3">
     <div class="row">
         <div class="col" id="time_series_chart" style="height: 400px;"></div>
     </div>
 </section>
-<section>
+<!-- <section>
     <div class="row">
         <div class="col-md-6" id="noise_chart"></div>
         <div class="col-md-6" id="time_of_day_chart"></div>
     </div>
-</section>
+</section> -->
 
 
-
-<script defer>
-    document.addEventListener("DOMContentLoaded", function() {
-    // Fetch data from the server action
-    fetch('http://localhost:3000/api/noise/average_LAeq_location')
-        .then(response => response.json())
-        .then(data => {
-            // Check if 'noise' property exists and is an array
-            if (!data || !Array.isArray(data.noise)) {
-                console.error('Invalid data format. Expected an array under the "noise" property.');
-                return;
-            }
-
-            // Extract relevant data for the chart
-            const noiseData = data.noise;
-            const categories = noiseData.map(entry => entry.description);
-            const values = noiseData.map(entry => entry.avgLAeq);
-
-            // Create the Highcharts chart
-            Highcharts.chart('noise_chart', {
-                chart: {
-                    type: 'bar'
-                },
-                title: {
-                    text: 'Average Noise Levels (LAeq) by Location'
-                },
-                xAxis: {
-                    categories: categories,
-                    title: {
-                        text: 'Location'
-                    }
-                },
-                yAxis: {
-                    title: {
-                        text: 'Average LAeq'
-                    }
-                },
-                series: [{
-                    name: 'LAeq',
-                    data: values
-                }]
-            });
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-        });
-});
-//---------------------------------------------------------------------------------------
-
-//---------------------------------------------------------------------------------------
-
-
-document.addEventListener("DOMContentLoaded", function() {
-    // Fetch data from the server action
-    fetch('http://localhost:3000/api/noise/average_LAeq_timeofday')
-        .then(response => response.json())
-        .then(data => {
-            // Check if 'time_of_day' property exists and is an array
-            if (!data || !Array.isArray(data.time_of_day)) {
-                console.error('Invalid data format. Expected an array under the "time_of_day" property.');
-                return;
-            }
-
-            // Extract relevant data for the chart
-            const timeOfDayData = data.time_of_day;
-            const categories = timeOfDayData.map(entry => entry.time_of_day);
-            const values = timeOfDayData.map(entry => entry['avg(LAeq)']);
-
-            // Create the Highcharts chart for time of day
-            Highcharts.chart('time_of_day_chart', {
-                chart: {
-                    type: 'column' // Using column chart for time of day
-                },
-                title: {
-                    text: 'Average Noise Levels (LAeq) by Time of Day'
-                },
-                xAxis: {
-                    categories: categories,
-                    title: {
-                        text: 'Time of Day'
-                    }
-                },
-                yAxis: {
-                    title: {
-                        text: 'Average LAeq'
-                    }
-                },
-                series: [{
-                    name: 'LAeq',
-                    data: values
-                }]
-            });
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-        });
-});
-//---------------------------------------------------------------------------------------
-
-//---------------------------------------------------------------------------------------
-//Leaflet Map for Monitoring Locations
- var map = L.map("location_map").setView([8.4344, -12.3433], 7);
-
-  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19,
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-  }).addTo(map);
-
-  // Function to format date/time
-  function formatDateTime(dateTimeString) {
-    var options = { 
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
-    };
-    return new Date(dateTimeString).toLocaleDateString('en-GB', options);
-  }
-
-  // Fetch monitoring locations from the API endpoint
-  fetch('http://localhost:3000/api/noise/monitoring_locations')
-    .then(response => response.json())
-    .then(data => {
-      // Loop through locations and add markers with popups
-      data.locations.forEach(location => {
-        var formattedStartDate = formatDateTime(location.start_date_time);
-        var formattedEndDate = formatDateTime(location.end_date_time);
-
-        var marker = L.marker([location.latitude, location.longitude])
-          .addTo(map)
-          .bindPopup(`
-            <b>${location.org_specific_monitoring_id}</b><br>
-            Location Type: ${location.location_type}<br>
-            Description: ${location.description}<br>
-            Start Date/Time: ${formattedStartDate}<br>
-            End Date/Time: ${formattedEndDate}<br>
-            LAeq: ${location.LAeq}<br>
-            LA90: ${location.LA90}<br>
-            LA10: ${location.LA10}<br>
-            LAFMax: ${location.LAFMax}<br>
-            LAFMin: ${location.LAFMin}
-          `);
-      });
-    })
-    .catch(error => console.error('Error fetching data:', error));
-//---------------------------------------------------------------------------------------
-
-//---------------------------------------------------------------------------------------
-
-//Time series chart  - Noise Levels - 30 days - Highcharts
-document.addEventListener("DOMContentLoaded", function() {
-    // Fetch data from the server
-    fetch('http://localhost:3000/api/noise/date/time')
-        .then(response => response.json())
-        .then(data => {
-            // Check if 'date_time' property exists and is an array
-            if (!data || !Array.isArray(data.date_time)) {
-                console.error('Invalid data format. Expected an array under the "date_time" property.');
-                return;
-            }
-
-            // Extract relevant data for the chart
-            const dateData = data.date_time;
-
-            // Prepare data series for each parameter
-            const parameters = ['LAeq', 'LA90', 'LA10', 'LAFMax', 'LAFMin'];
-            const seriesData = parameters.map(parameter => ({
-                name: parameter,
-                data: dateData.map(entry => ({
-                    x: new Date(entry.start_date_time).getTime(),
-                    y: entry[parameter]
-                }))
-            }));
-
-            // Create the Highcharts time series chart
-            Highcharts.chart('time_series_chart', {
-                chart: {
-                    type: 'line'
-                },
-                title: {
-                    text: 'Noise Levels - Past 30 Days'
-                },
-                xAxis: {
-                    type: 'datetime',
-                    dateTimeLabelFormats: {
-                        day: '%d/%m/%Y %H:%M:%S'
-                    },
-                    title: {
-                        text: 'Date/Time'
-                    }
-                },
-                yAxis: {
-                    title: {
-                        text: 'Noise Levels'
-                    }
-                },
-                series: seriesData
-            });
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-        });
-});
-
-</script>
+<script src="/js/leaflet_maps/noise_monitoring_locations.js" defer="true"></script>
+<script src="/js/highcharts/highcharts_noise/noise_time_series_chart.js" defer="true"></script>
 <meta name="ac:route" content="/noise">

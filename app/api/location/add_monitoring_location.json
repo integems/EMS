@@ -1,0 +1,290 @@
+{
+  "meta": {
+    "options": {
+      "linkedFile": "/views/noise.ejs",
+      "linkedForm": "scf_add_monitoring_location"
+    },
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ],
+    "$_POST": [
+      {
+        "type": "number",
+        "fieldName": "latitude",
+        "options": {
+          "rules": {
+            "core:number": {}
+          }
+        },
+        "name": "latitude"
+      },
+      {
+        "type": "number",
+        "fieldName": "longitude",
+        "options": {
+          "rules": {
+            "core:number": {}
+          }
+        },
+        "name": "longitude"
+      },
+      {
+        "type": "text",
+        "fieldName": "location_id",
+        "options": {
+          "rules": {
+            "core:required": {}
+          }
+        },
+        "name": "location_id"
+      },
+      {
+        "type": "file",
+        "fieldName": "path[]",
+        "multiple": true,
+        "name": "path",
+        "sub": [
+          {
+            "name": "name",
+            "type": "text"
+          },
+          {
+            "name": "type",
+            "type": "text"
+          },
+          {
+            "name": "size",
+            "type": "number"
+          },
+          {
+            "name": "error",
+            "type": "text"
+          }
+        ],
+        "outputType": "array"
+      },
+      {
+        "type": "text",
+        "fieldName": "location_type",
+        "options": {
+          "rules": {
+            "core:required": {}
+          }
+        },
+        "name": "location_type"
+      },
+      {
+        "type": "text",
+        "fieldName": "location_description",
+        "name": "location_description"
+      },
+      {
+        "type": "text",
+        "name": "org_specific_monitoring_id"
+      },
+      {
+        "type": "text",
+        "name": "description"
+      },
+      {
+        "type": "number",
+        "name": "location_type_id"
+      }
+    ]
+  },
+  "exec": {
+    "steps": [
+      {
+        "name": "insert_monitoring_location",
+        "module": "dbupdater",
+        "action": "insert",
+        "options": {
+          "connection": "conn_db",
+          "sql": {
+            "type": "insert",
+            "values": [
+              {
+                "table": "monitoring_location",
+                "column": "latitude",
+                "type": "number",
+                "value": "{{$_POST.latitude}}"
+              },
+              {
+                "table": "monitoring_location",
+                "column": "longitude",
+                "type": "number",
+                "value": "{{$_POST.longitude}}"
+              },
+              {
+                "table": "monitoring_location",
+                "column": "org_specific_monitoring_id",
+                "type": "text",
+                "value": "{{$_POST.org_specific_monitoring_id}}"
+              },
+              {
+                "table": "monitoring_location",
+                "column": "description",
+                "type": "text",
+                "value": "{{$_POST.description}}"
+              },
+              {
+                "table": "monitoring_location",
+                "column": "location_type_id",
+                "type": "number",
+                "value": "{{$_POST.location_type_id}}"
+              }
+            ],
+            "table": "monitoring_location",
+            "returning": "location_id",
+            "query": "insert into `monitoring_location` (`description`, `latitude`, `location_type_id`, `longitude`, `org_specific_monitoring_id`) values (?, ?, ?, ?, ?)",
+            "params": [
+              {
+                "name": ":P1",
+                "type": "expression",
+                "value": "{{$_POST.latitude}}",
+                "test": ""
+              },
+              {
+                "name": ":P2",
+                "type": "expression",
+                "value": "{{$_POST.longitude}}",
+                "test": ""
+              },
+              {
+                "name": ":P3",
+                "type": "expression",
+                "value": "{{$_POST.org_specific_monitoring_id}}",
+                "test": ""
+              },
+              {
+                "name": ":P4",
+                "type": "expression",
+                "value": "{{$_POST.description}}",
+                "test": ""
+              },
+              {
+                "name": ":P5",
+                "type": "expression",
+                "value": "{{$_POST.location_type_id}}",
+                "test": ""
+              }
+            ]
+          }
+        },
+        "meta": [
+          {
+            "name": "identity",
+            "type": "text"
+          },
+          {
+            "name": "affected",
+            "type": "number"
+          }
+        ],
+        "output": true
+      },
+      {
+        "name": "repeat",
+        "module": "core",
+        "action": "repeat",
+        "options": {
+          "repeat": "{{$_POST.path}}",
+          "outputFields": [],
+          "outputFilter": "exclude",
+          "exec": {
+            "steps": {
+              "name": "upload",
+              "module": "upload",
+              "action": "upload",
+              "options": {
+                "fields": "{{$index}}",
+                "path": "/public/assets/images/monitoring_locations",
+                "template": "{guid}"
+              },
+              "meta": [],
+              "outputType": "array"
+            }
+          }
+        },
+        "meta": [
+          {
+            "name": "$index",
+            "type": "number"
+          },
+          {
+            "name": "$number",
+            "type": "number"
+          },
+          {
+            "name": "$name",
+            "type": "text"
+          },
+          {
+            "name": "$value",
+            "type": "object"
+          }
+        ],
+        "outputType": "array"
+      },
+      {
+        "name": "insert",
+        "module": "dbupdater",
+        "action": "insert",
+        "options": {
+          "connection": "conn_db",
+          "sql": {
+            "type": "insert",
+            "values": [
+              {
+                "table": "monitoring_location_photos",
+                "column": "location_id",
+                "type": "number",
+                "value": "{{$_POST.location_id}}"
+              },
+              {
+                "table": "monitoring_location_photos",
+                "column": "path",
+                "type": "text",
+                "value": "{{$_POST.path}}"
+              }
+            ],
+            "table": "monitoring_location_photos",
+            "returning": "photo_id",
+            "query": "insert into `monitoring_location_photos` (`location_id`, `path`) values (?, ?)",
+            "params": [
+              {
+                "name": ":P1",
+                "type": "expression",
+                "value": "{{$_POST.location_id}}",
+                "test": ""
+              },
+              {
+                "name": ":P2",
+                "type": "expression",
+                "value": "{{$_POST.path}}",
+                "test": ""
+              }
+            ]
+          }
+        },
+        "meta": [
+          {
+            "name": "identity",
+            "type": "text"
+          },
+          {
+            "name": "affected",
+            "type": "number"
+          }
+        ]
+      }
+    ]
+  }
+}
