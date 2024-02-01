@@ -1,0 +1,330 @@
+{
+  "meta": {
+    "options": {
+      "linkedFile": "/views/air-quality.ejs",
+      "linkedForm": "form_upload"
+    },
+    "$_POST": [
+      {
+        "type": "array",
+        "name": "record",
+        "sub": [
+          {
+            "type": "datetime",
+            "name": "date_time"
+          },
+          {
+            "type": "number",
+            "name": "location_id"
+          },
+          {
+            "type": "number",
+            "name": "COppm"
+          },
+          {
+            "type": "number",
+            "name": "NO2ppm"
+          },
+          {
+            "type": "number",
+            "name": "PM10ppm"
+          },
+          {
+            "type": "number",
+            "name": "PM2_5ppm"
+          },
+          {
+            "type": "number",
+            "name": "RH"
+          },
+          {
+            "type": "number",
+            "name": "SO2ppm"
+          },
+          {
+            "type": "number",
+            "name": "tempC"
+          }
+        ]
+      },
+      {
+        "type": "file",
+        "fieldName": "csv_file",
+        "name": "csv_file",
+        "sub": [
+          {
+            "name": "name",
+            "type": "text"
+          },
+          {
+            "name": "type",
+            "type": "text"
+          },
+          {
+            "name": "size",
+            "type": "number"
+          },
+          {
+            "name": "error",
+            "type": "text"
+          }
+        ],
+        "outputType": "file"
+      }
+    ]
+  },
+  "exec": {
+    "steps": [
+      {
+        "name": "upload",
+        "module": "upload",
+        "action": "upload",
+        "options": {
+          "fields": "{{$_POST.csv_file}}",
+          "path": "/public/assets/files",
+          "template": "{guid}"
+        },
+        "meta": [
+          {
+            "name": "name",
+            "type": "text"
+          },
+          {
+            "name": "path",
+            "type": "text"
+          },
+          {
+            "name": "url",
+            "type": "text"
+          },
+          {
+            "name": "type",
+            "type": "text"
+          },
+          {
+            "name": "size",
+            "type": "text"
+          },
+          {
+            "name": "error",
+            "type": "number"
+          }
+        ],
+        "outputType": "file"
+      },
+      {
+        "name": "csvImport",
+        "module": "import",
+        "action": "csv",
+        "options": {
+          "path": "{{upload}}",
+          "header": true
+        },
+        "meta": [],
+        "outputType": "array",
+        "output": true
+      },
+      {
+        "name": "record_repeat",
+        "module": "core",
+        "action": "repeat",
+        "options": {
+          "repeat": "{{$_POST.record}}",
+          "exec": {
+            "steps": {
+              "name": "record_insert",
+              "module": "dbupdater",
+              "action": "insert",
+              "options": {
+                "connection": "conn_db",
+                "sql": {
+                  "type": "insert",
+                  "values": [
+                    {
+                      "table": "air_quality_monitoring_data",
+                      "column": "date_time",
+                      "type": "datetime",
+                      "value": "{{date_time}}"
+                    },
+                    {
+                      "table": "air_quality_monitoring_data",
+                      "column": "location_id",
+                      "type": "number",
+                      "value": "{{location_id}}"
+                    },
+                    {
+                      "table": "air_quality_monitoring_data",
+                      "column": "CO(ppm)",
+                      "type": "number",
+                      "value": "{{COppm}}"
+                    },
+                    {
+                      "table": "air_quality_monitoring_data",
+                      "column": "NO2(ppm)",
+                      "type": "number",
+                      "value": "{{NO2ppm}}"
+                    },
+                    {
+                      "table": "air_quality_monitoring_data",
+                      "column": "PM10(ppm)",
+                      "type": "number",
+                      "value": "{{PM10ppm}}"
+                    },
+                    {
+                      "table": "air_quality_monitoring_data",
+                      "column": "PM2_5(ppm)",
+                      "type": "number",
+                      "value": "{{PM2_5ppm}}"
+                    },
+                    {
+                      "table": "air_quality_monitoring_data",
+                      "column": "RH(%)",
+                      "type": "number",
+                      "value": "{{RH}}"
+                    },
+                    {
+                      "table": "air_quality_monitoring_data",
+                      "column": "SO2(ppm)",
+                      "type": "number",
+                      "value": "{{SO2ppm}}"
+                    },
+                    {
+                      "table": "air_quality_monitoring_data",
+                      "column": "temp(C)",
+                      "type": "number",
+                      "value": "{{tempC}}"
+                    }
+                  ],
+                  "table": "air_quality_monitoring_data",
+                  "returning": "air_id",
+                  "query": "insert into `air_quality_monitoring_data` (`CO(ppm)`, `NO2(ppm)`, `PM10(ppm)`, `PM2_5(ppm)`, `RH(%)`, `SO2(ppm)`, `date_time`, `location_id`, `temp(C)`) values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                  "params": [
+                    {
+                      "name": ":P1",
+                      "type": "expression",
+                      "value": "{{date_time}}",
+                      "test": ""
+                    },
+                    {
+                      "name": ":P2",
+                      "type": "expression",
+                      "value": "{{location_id}}",
+                      "test": ""
+                    },
+                    {
+                      "name": ":P3",
+                      "type": "expression",
+                      "value": "{{COppm}}",
+                      "test": ""
+                    },
+                    {
+                      "name": ":P4",
+                      "type": "expression",
+                      "value": "{{NO2ppm}}",
+                      "test": ""
+                    },
+                    {
+                      "name": ":P5",
+                      "type": "expression",
+                      "value": "{{PM10ppm}}",
+                      "test": ""
+                    },
+                    {
+                      "name": ":P6",
+                      "type": "expression",
+                      "value": "{{PM2_5ppm}}",
+                      "test": ""
+                    },
+                    {
+                      "name": ":P7",
+                      "type": "expression",
+                      "value": "{{RH}}",
+                      "test": ""
+                    },
+                    {
+                      "name": ":P8",
+                      "type": "expression",
+                      "value": "{{SO2ppm}}",
+                      "test": ""
+                    },
+                    {
+                      "name": ":P9",
+                      "type": "expression",
+                      "value": "{{tempC}}",
+                      "test": ""
+                    }
+                  ]
+                }
+              },
+              "meta": [
+                {
+                  "name": "identity",
+                  "type": "text"
+                },
+                {
+                  "name": "affected",
+                  "type": "number"
+                }
+              ]
+            }
+          }
+        },
+        "meta": [
+          {
+            "name": "$index",
+            "type": "number"
+          },
+          {
+            "name": "$number",
+            "type": "number"
+          },
+          {
+            "name": "$name",
+            "type": "text"
+          },
+          {
+            "name": "$value",
+            "type": "object"
+          },
+          {
+            "name": "date_time",
+            "type": "datetime"
+          },
+          {
+            "name": "location_id",
+            "type": "number"
+          },
+          {
+            "name": "COppm",
+            "type": "number"
+          },
+          {
+            "name": "NO2ppm",
+            "type": "number"
+          },
+          {
+            "name": "PM10ppm",
+            "type": "number"
+          },
+          {
+            "name": "PM2_5ppm",
+            "type": "number"
+          },
+          {
+            "name": "RH",
+            "type": "number"
+          },
+          {
+            "name": "SO2ppm",
+            "type": "number"
+          },
+          {
+            "name": "tempC",
+            "type": "number"
+          }
+        ],
+        "outputType": "array"
+      }
+    ]
+  }
+}

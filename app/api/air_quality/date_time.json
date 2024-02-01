@@ -1,0 +1,84 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "date_time",
+      "module": "dbconnector",
+      "action": "select",
+      "options": {
+        "connection": "conn_db",
+        "sql": {
+          "type": "select",
+          "columns": [
+            {
+              "table": "air_quality_monitoring_data",
+              "column": "*"
+            }
+          ],
+          "params": [],
+          "table": {
+            "name": "air_quality_monitoring_data"
+          },
+          "primary": "air_id",
+          "joins": [],
+          "query": "select * from `air_quality_monitoring_data`"
+        }
+      },
+      "output": true,
+      "meta": [
+        {
+          "type": "number",
+          "name": "air_id"
+        },
+        {
+          "type": "datetime",
+          "name": "date_time"
+        },
+        {
+          "type": "number",
+          "name": "location_id"
+        },
+        {
+          "type": "number",
+          "name": "CO(ppm)"
+        },
+        {
+          "type": "number",
+          "name": "NO2(ppm)"
+        },
+        {
+          "type": "number",
+          "name": "PM10(ppm)"
+        },
+        {
+          "type": "number",
+          "name": "PM2_5(ppm)"
+        },
+        {
+          "type": "number",
+          "name": "RH(%)"
+        },
+        {
+          "type": "number",
+          "name": "SO2(ppm)"
+        },
+        {
+          "type": "number",
+          "name": "temp(C)"
+        }
+      ],
+      "outputType": "array"
+    }
+  }
+}

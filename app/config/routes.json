@@ -40,13 +40,13 @@
       "layout": "portal_layout"
     },
     {
-      "path": "/air-quality",
-      "page": "air-quality",
+      "path": "/noise",
+      "page": "noise",
       "layout": "portal_layout"
     },
     {
-      "path": "/noise",
-      "page": "noise",
+      "path": "/air-quality",
+      "page": "air-quality",
       "layout": "portal_layout"
     },
     {

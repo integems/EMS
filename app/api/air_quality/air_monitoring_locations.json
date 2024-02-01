@@ -1,0 +1,204 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "query_locations",
+      "module": "dbconnector",
+      "action": "select",
+      "options": {
+        "connection": "conn_db",
+        "sql": {
+          "type": "select",
+          "columns": [
+            {
+              "table": "monitoring_location",
+              "column": "*",
+              "recid": 1
+            },
+            {
+              "table": "location photos",
+              "column": "path",
+              "recid": 2
+            },
+            {
+              "table": "location photos",
+              "column": "photo_id",
+              "recid": 3
+            },
+            {
+              "table": "air_monitoring_data",
+              "column": "*",
+              "recid": 4
+            },
+            {
+              "table": "location_type",
+              "column": "location_type",
+              "recid": 5
+            }
+          ],
+          "params": [],
+          "table": {
+            "name": "monitoring_location"
+          },
+          "primary": "location_id",
+          "joins": [
+            {
+              "table": "monitoring_location_photos",
+              "column": "*",
+              "alias": "location photos",
+              "type": "LEFT",
+              "clauses": {
+                "condition": "AND",
+                "rules": [
+                  {
+                    "table": "location photos",
+                    "column": "location_id",
+                    "operator": "equal",
+                    "operation": "=",
+                    "value": {
+                      "table": "monitoring_location",
+                      "column": "location_id"
+                    }
+                  }
+                ]
+              },
+              "primary": "photo_id"
+            },
+            {
+              "table": "air_quality_monitoring_data",
+              "column": "*",
+              "alias": "air_monitoring_data",
+              "type": "INNER",
+              "clauses": {
+                "condition": "AND",
+                "rules": [
+                  {
+                    "table": "air_monitoring_data",
+                    "column": "location_id",
+                    "operator": "equal",
+                    "operation": "=",
+                    "value": {
+                      "table": "monitoring_location",
+                      "column": "location_id"
+                    }
+                  }
+                ]
+              },
+              "primary": "air_id"
+            },
+            {
+              "table": "location_type",
+              "column": "*",
+              "type": "INNER",
+              "clauses": {
+                "condition": "AND",
+                "rules": [
+                  {
+                    "table": "location_type",
+                    "column": "location_type_id",
+                    "operation": "=",
+                    "operator": "equal",
+                    "value": {
+                      "table": "monitoring_location",
+                      "column": "location_type_id",
+                      "type": "number"
+                    }
+                  }
+                ]
+              },
+              "primary": "location_type_id"
+            }
+          ],
+          "query": "select `monitoring_location`.*, `location photos`.`path`, `location photos`.`photo_id`, `air_monitoring_data`.*, `location_type`.`location_type` from `monitoring_location` left join `monitoring_location_photos` as `location photos` on `location photos`.`location_id` = `monitoring_location`.`location_id` inner join `air_quality_monitoring_data` as `air_monitoring_data` on `air_monitoring_data`.`location_id` = `monitoring_location`.`location_id` inner join `location_type` on `location_type`.`location_type_id` = `monitoring_location`.`location_type_id`"
+        }
+      },
+      "output": true,
+      "meta": [
+        {
+          "type": "number",
+          "name": "location_id"
+        },
+        {
+          "type": "number",
+          "name": "latitude"
+        },
+        {
+          "type": "number",
+          "name": "longitude"
+        },
+        {
+          "type": "text",
+          "name": "org_specific_monitoring_id"
+        },
+        {
+          "type": "text",
+          "name": "description"
+        },
+        {
+          "type": "number",
+          "name": "location_type_id"
+        },
+        {
+          "type": "text",
+          "name": "path"
+        },
+        {
+          "type": "number",
+          "name": "photo_id"
+        },
+        {
+          "type": "number",
+          "name": "air_id"
+        },
+        {
+          "type": "datetime",
+          "name": "date_time"
+        },
+        {
+          "type": "number",
+          "name": "CO(ppm)"
+        },
+        {
+          "type": "number",
+          "name": "NO2(ppm)"
+        },
+        {
+          "type": "number",
+          "name": "PM10(ppm)"
+        },
+        {
+          "type": "number",
+          "name": "PM2_5(ppm)"
+        },
+        {
+          "type": "number",
+          "name": "RH(%)"
+        },
+        {
+          "type": "number",
+          "name": "SO2(ppm)"
+        },
+        {
+          "type": "number",
+          "name": "temp(C)"
+        },
+        {
+          "type": "text",
+          "name": "location_type"
+        }
+      ],
+      "outputType": "array"
+    }
+  }
+}

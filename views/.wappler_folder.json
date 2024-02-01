@@ -46,5 +46,9 @@
   "soils.ejs": {
     "layoutPage": "portal_layout",
     "description": ""
+  },
+  "test.ejs": {
+    "layoutPage": "main",
+    "description": ""
   }
 }

@@ -24,24 +24,16 @@ function formatDateTime(dateTimeString) {
 function updateCardContent(data) {
     document.getElementById('cardTitle').textContent = data.org_specific_monitoring_id;
     document.getElementById('cardContent').innerHTML = `
-      Location Type: ${data.location_type}<br>
-      Description: ${data.description}<br>
-      Start Date/Time: ${formatDateTime(data.start_date_time)}<br>
-      End Date/Time: ${formatDateTime(data.end_date_time)}<br>
-      LAeq: ${data.LAeq}<br>
-      LA90: ${data.LA90}<br>
-      LA10: ${data.LA10}<br>
-      LAFMax: ${data.LAFMax}<br>
-      LAFMin: ${data.LAFMin}
+      <b>Location Type:</b> ${data.location_type}<br>
+      <b>Description:</b> ${data.description}<br>
+      <b>Start Date/Time:</b> ${formatDateTime(data.start_date_time)}<br>
+      <b>End Date/Time:</b> ${formatDateTime(data.end_date_time)}<br>
+      <b>LAeq:</b> ${data.LAeq}<br>
+      <b>LA90:</b> ${data.LA90}<br>
+      <b>LA10:</b> ${data.LA10}<br>
+      <b>LAFMax:</b> ${data.LAFMax}<br>
+      <b>LAFMin:</b> ${data.LAFMin}
     `;
-    // Check if 'path' data is available and update cardPath
-    if (data.path) {
-        document.getElementById('cardPath').innerHTML = `Path: ${data.path}`;
-        // Display the image
-        document.getElementById('cardImage').src = data.path;
-    } else {
-        document.getElementById('cardPath').innerHTML = 'No photo path available';
-    }
 }
 
 // Fetch monitoring locations from the API endpoint
@@ -57,15 +49,15 @@ fetch('http://localhost:3000/api/noise/monitoring_locations')
                 .addTo(map)
                 .bindPopup(`
             <b>${location.org_specific_monitoring_id}</b><br>
-            Location Type: ${location.location_type}<br>
-            Description: ${location.description}<br>
-            Start Date/Time: ${formattedStartDate}<br>
-            End Date/Time: ${formattedEndDate}<br>
-            LAeq: ${location.LAeq}<br>
-            LA90: ${location.LA90}<br>
-            LA10: ${location.LA10}<br>
-            LAFMax: ${location.LAFMax}<br>
-            LAFMin: ${location.LAFMin}
+            <b>Location Type:</b> ${location.location_type}<br>
+            <b>Description:</b> ${location.description}<br>
+            <b>Start Date/Time:</b> ${formattedStartDate}<br>
+            <b>End Date/Time:</b> ${formattedEndDate}<br>
+            <b>LAeq:</b> ${location.LAeq}<br>
+            <b>LA90:</b> ${location.LA90}<br>
+            <b>LA10:</b> ${location.LA10}<br>
+            <b>LAFMax:</b> ${location.LAFMax}<br>
+            <b>LAFMin:</b> ${location.LAFMin}
           `)
                 .on('click', function () {
                     // Update card content when marker is clicked

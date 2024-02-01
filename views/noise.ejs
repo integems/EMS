@@ -1,4 +1,4 @@
-<!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="noise" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Navigation:{},dmxDatePicker:{},dmxBootstrap5Modal:{},dmxValidator:{}}" moment_2="cdn" -->
+<!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="noise" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Navigation:{},dmxDatePicker:{},dmxBootstrap5Modal:{},dmxValidator:{},dmxDatastore:{}}" moment_2="cdn" -->
 
 <dmx-serverconnect id="sc_monitoring_location_type" url="/api/location/monitoring_location_type"></dmx-serverconnect>
 <dmx-serverconnect id="sc_monitoring_location_id" url="/api/location/monitoring_location_id"></dmx-serverconnect>
@@ -82,7 +82,7 @@
                                                     <div class="form-group">
                                                         <label for="country-floating" class="col-form-label">Location Type</label>
                                                         <select id="modal_select_location_type" class="form-select form-control" name="location_type" dmx-bind:options="sc_monitoring_location_type.data.location_type" optiontext="location_type" optionvalue="location_type_id">
-                                                            <option value="">All Location Types</option>
+                                                            <option value="">Select Location Types</option>
 
                                                         </select>
 
@@ -151,13 +151,13 @@
                 <option value="">All Location Types</option>
 
             </select></div>
-        <div class="col"><input id="date_noise_monitoring" name="date" is="dmx-date-range-picker" placeholder="Pick a Date Range" class="form-control "></div>
+        <div class="col"><input id="date_monitoring" name="date" is="dmx-date-range-picker" placeholder="Pick a Date Range" class="form-control "></div>
     </div>
 </section>
 <section class="mb-3">
     <div class="row">
         <div class="col-9">
-            <div class="card">
+            <div class="card ">
                 <div class="card-body">
                     <h4 class="card-title">Monitoring Locations</h4>
                     <div id="location_map" style="height: 400px;"></div>
@@ -165,10 +165,10 @@
             </div>
         </div>
         <div class="col">
-            <div class="card">
-                <div class="card-body" style="height: 400px;">
-                    <h4 class="card-title" id="cardTitle"></h4>
-                    <img id="cardImage">
+            <div class="card ">
+                <div class="card-body text-center">
+                    <h5 class="card-title" id="cardTitle"></h5>
+                    <img src="/assets/images/logo_icon.jpg" alt="Location Photos" width="118px" height="118px">
                     <p class="card-text" id="cardContent"></p>
 
                 </div>
@@ -178,7 +178,11 @@
 </section>
 <section class="mb-3">
     <div class="row">
-        <div class="col" id="time_series_chart" style="height: 400px;"></div>
+        <div class="card">
+            <div class="card-body">
+                <div class="col" id="time_series_chart" style="height: 400px;"></div>
+            </div>
+        </div>
     </div>
 </section>
 <!-- <section>

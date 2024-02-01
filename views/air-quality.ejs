@@ -1,10 +1,11 @@
-<!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="airquality" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" moment_2="cdn" components="{dmxBootstrap5Navigation:{},dmxDatePicker:{},dmxBootstrap5Modal:{}}" -->
+<!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="airquality" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Modal:{},dmxBootstrap5Navigation:{},dmxDatePicker:{}}" moment_2="cdn" -->
 <meta name="ac:route" content="/air-quality">
+
+
 <dmx-serverconnect id="sc_monitoring_location_type" url="/api/location/monitoring_location_type"></dmx-serverconnect>
 <dmx-serverconnect id="sc_monitoring_location_id" url="/api/location/monitoring_location_id"></dmx-serverconnect>
-
-
-
+<dmx-serverconnect id="sc_air_quality_date_time" url="/api/air_quality/date_time"></dmx-serverconnect>
+<dmx-serverconnect id="sc_air_monitoring_locations"></dmx-serverconnect>
 
 <div class="modal" id="modal_add_data" is="dmx-bs5-modal" tabindex="-1" nocloseonclick="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -16,30 +17,21 @@
             <div class="modal-body">
                 <section id="input-file-browser">
                     <div class="row">
-                        <div class="col-md-12">
-                            <div class="card">
+                        <div class="col-lg-6 col-md-12">
+                            <div class="mb-3">
+                                <label for="data_file" class="form-label col-form-label">Monitoring Data</label>
+                                <input class="form-control" type="file" id="data_file" accept=".csv">
+                            </div>
 
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-lg-6 col-md-12">
-                                            <div class="mb-3">
-                                                <label for="data_file" class="form-label col-form-label">Monitoring Data</label>
-                                                <input class="form-control" type="file" id="data_file" accept=".csv">
-                                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-12">
 
-                                        </div>
-                                        <div class="col-lg-6 col-md-12">
+                            <div>
+                                <label for="data_select" class="form-label col-form-label">Select Monitoring Location</label>
+                                <select id="data_select" class="form-select" name="location_id" dmx-bind:options="sc_monitoring_location_id.data.monitoring_location_id" optiontext="org_specific_monitoring_id" optionvalue="location_id">
+                                    <option value="">Choose a Location</option>
 
-                                            <div>
-                                                <label for="data_select" class="form-label col-form-label">Select Monitoring Location</label>
-                                                <select id="data_select" class="form-select" name="location_id" dmx-bind:options="sc_monitoring_location_id.data.monitoring_location_id" optiontext="org_specific_monitoring_id" optionvalue="location_id">
-                                                    <option value="">Choose a Location</option>
-
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -52,6 +44,8 @@
         </div>
     </div>
 </div>
+
+
 <div class="modal" id="modal_add_monitoring_location" is="dmx-bs5-modal" tabindex="-1" nocloseonclick="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -66,7 +60,7 @@
                             <div class="card">
                                 <div class="card-content">
                                     <div class="card-body">
-                                        <form class="form" is="dmx-form" novalidate="">
+                                        <form class="form" is="dmx-serverconnect-form" novalidate="" method="post" id="scf_add_monitoring_location" action="/api/location/add_monitoring_location" dmx-on:success="scf_add_monitoring_location.reset();modal_add_monitoring_location.hide()">
                                             <div class="row">
                                                 <div class="col-md-6 col-12">
                                                     <div class="form-group">
@@ -83,26 +77,35 @@
                                                 <div class="col-md-6 col-12">
                                                     <div class="form-group">
                                                         <label for="monitoring_location_id" class="col-form-label">Monitoring Location ID</label>
-                                                        <select id="modal_select_monitoring_location_id" class="form-select form-control" name="location_id" dmx-bind:options="sc_monitoring_location_id.data.monitoring_location_id" optiontext="org_specific_monitoring_id" optionvalue="location_id">
-
-                                                            <option value="">All Monitoring Locations ID</option>
-                                                        </select>
+                                                        <input id="text_monitoring_location" name="location_id" type="text" class="form-control">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 col-12">
                                                     <div class="form-group">
                                                         <label for="country-floating" class="col-form-label">Location Type</label>
                                                         <select id="modal_select_location_type" class="form-select form-control" name="location_type" dmx-bind:options="sc_monitoring_location_type.data.location_type" optiontext="location_type" optionvalue="location_type_id">
-                                                            <option value="">All Location Types</option>
+                                                            <option value="">Select Location Types</option>
 
                                                         </select>
 
                                                     </div>
                                                 </div>
+
+
+                                            </div>
+                                            <div class="row">
                                                 <div class="col">
                                                     <div class="form-group">
                                                         <label for="company-column" class="col-form-label">Description</label>
                                                         <textarea id="text_location_description" class="form-control" name="location_description"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="form-group">
+                                                        <label for="company-column" class="col-form-label">Photos</label>
+                                                        <input id="file_location_photos" name="path[]" type="file" class="form-control" multiple="true">
                                                     </div>
                                                 </div>
                                             </div>
@@ -116,27 +119,31 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Add Location</button>
+                <button type="button" class="btn btn-primary" dmx-on:click="scf_add_monitoring_location.submit()">Add Location</button>
             </div>
         </div>
     </div>
 </div>
+
+
 <section>
     <div class="row text-end">
 
         <div class="col text-start">
-            <h1 class="fw-normal fs-2">Air Quality Insights</h1>
+            <h1 class="fw-normal fs-2">Air Quality Data Insights</h1>
             <div class="breadcrumb">
                 <a class="breadcrumb-item breadcrumb-link fs-5 fw-light" href="/dashboard">Dashboard</a>
                 <a class="breadcrumb-item breadcrumb-link fs-5 fw-bold" href="/air-quality">Air Quality</a>
             </div>
         </div>
         <div class="col text-end">
-            <button id="btn_add_location" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_add_monitoring_location">Add Monitoring Location</button><button id="btn_add_data" class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#modal_add_data">Add Data</button>
+            <button id="btn_add_location" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_add_monitoring_location">Add Monitoring Location</button><button id="btn_add_noise_data" class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#modal_add_data">Add Data</button>
         </div>
     </div>
 </section>
-<section class="mt-3 mb-5">
+
+
+<section class="mt-1 mb-3">
     <div class="row">
         <div class="col">
             <select id="select_location_id" class="form-select " name="location_id" dmx-bind:options="sc_monitoring_location_id.data.monitoring_location_id" optiontext="org_specific_monitoring_id" optionvalue="location_id">
@@ -150,13 +157,14 @@
                 <option value="">All Location Types</option>
 
             </select></div>
-        <div class="col"><input id="date_air_quality_monitoring" name="date" is="dmx-date-range-picker" placeholder="Pick a Date Range" class="form-control "></div>
+        <div class="col"><input id="date_monitoring" name="date" is="dmx-date-range-picker" placeholder="Pick a Date Range" class="form-control "></div>
     </div>
 </section>
-<section class="mb-5">
+
+<section class="mb-3">
     <div class="row">
         <div class="col-9">
-            <div class="card">
+            <div class="card ">
                 <div class="card-body">
                     <h4 class="card-title">Monitoring Locations</h4>
                     <div id="location_map" style="height: 400px;"></div>
@@ -164,10 +172,10 @@
             </div>
         </div>
         <div class="col">
-            <div class="card">
-                <div class="card-body" style="height: 400px;">
-                    <h4 class="card-title" id="cardTitle"></h4>
-                    <img id="cardImage">
+            <div class="card ">
+                <div class="card-body text-center">
+                    <h5 class="card-title" id="cardTitle"></h5>
+                    <img src="/assets/images/logo_icon.jpg" alt="Location Photos" width="118px" height="118px">
                     <p class="card-text" id="cardContent"></p>
 
                 </div>
@@ -175,8 +183,17 @@
         </div>
     </div>
 </section>
-<section class="mb-5">
+
+<section class="mb-3">
     <div class="row">
-        <div class="col" id="time_series_chart" style="height: 400px;"></div>
+        <div class="card">
+            <div class="card-body">
+                <div class="col" id="air_quality_chart" style="height: 400px;"></div>
+            </div>
+        </div>
     </div>
 </section>
+
+<script src="/js/leaflet_maps/air_quality_monitoring_locations.js"></script>
+
+<script src="/js/highcharts/highcharts_air_quality/air_quality_time_series.js" defer="true"></script>
