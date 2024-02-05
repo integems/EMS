@@ -37,11 +37,12 @@ function updateCardContent(data) {
 }
 
 // Fetch monitoring locations from the API endpoint
-fetch('http://localhost:3000/api/noise/monitoring_locations')
+fetch('/api/noise/monitoring_locations')
     .then(response => response.json())
     .then(data => {
         // Loop through locations and add markers with popups
         data.locations.forEach(location => {
+            console.log(location)
             var formattedStartDate = formatDateTime(location.start_date_time);
             var formattedEndDate = formatDateTime(location.end_date_time);
 
@@ -57,7 +58,7 @@ fetch('http://localhost:3000/api/noise/monitoring_locations')
             <b>LA90:</b> ${location.LA90}<br>
             <b>LA10:</b> ${location.LA10}<br>
             <b>LAFMax:</b> ${location.LAFMax}<br>
-            <b>LAFMin:</b> ${location.LAFMin}
+            <b>LAFMin:<${location.LAFMin}
           `)
                 .on('click', function () {
                     // Update card content when marker is clicked

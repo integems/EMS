@@ -36,16 +36,6 @@
         "name": "longitude"
       },
       {
-        "type": "text",
-        "fieldName": "location_id",
-        "options": {
-          "rules": {
-            "core:required": {}
-          }
-        },
-        "name": "location_id"
-      },
-      {
         "type": "file",
         "fieldName": "path[]",
         "multiple": true,
@@ -72,16 +62,6 @@
       },
       {
         "type": "text",
-        "fieldName": "location_type",
-        "options": {
-          "rules": {
-            "core:required": {}
-          }
-        },
-        "name": "location_type"
-      },
-      {
-        "type": "text",
         "fieldName": "location_description",
         "name": "location_description"
       },
@@ -96,6 +76,20 @@
       {
         "type": "number",
         "name": "location_type_id"
+      },
+      {
+        "type": "array",
+        "name": "record",
+        "sub": [
+          {
+            "type": "number",
+            "name": "insert_monitoring_location"
+          },
+          {
+            "type": "text",
+            "name": "path"
+          }
+        ]
       }
     ]
   },
@@ -190,57 +184,25 @@
         ]
       },
       {
-        "name": "repeat",
-        "module": "core",
-        "action": "repeat",
+        "name": "upload",
+        "module": "upload",
+        "action": "upload",
         "options": {
-          "repeat": "{{$_POST.path}}",
-          "outputFields": [],
-          "outputFilter": "exclude",
-          "exec": {
-            "steps": [
-              {
-                "name": "location_id",
-                "module": "core",
-                "action": "setvalue",
-                "options": {},
-                "meta": [],
-                "outputType": "text"
-              },
-              {
-                "name": "upload",
-                "module": "upload",
-                "action": "upload",
-                "options": {
-                  "fields": "",
-                  "path": "/public/assets/images/monitoring_locations",
-                  "template": "{guid}"
-                },
-                "meta": [],
-                "outputType": "array"
-              }
-            ]
-          }
+          "fields": "{{$_POST.path}}",
+          "path": "/public/assets/images/monitoring_locations",
+          "template": "{guid}{ext}"
         },
         "meta": [
           {
-            "name": "$index",
-            "type": "number"
-          },
-          {
-            "name": "$number",
-            "type": "number"
-          },
-          {
-            "name": "$name",
+            "name": "name",
             "type": "text"
           },
           {
-            "name": "$value",
-            "type": "object"
+            "name": "path",
+            "type": "text"
           },
           {
-            "name": "name",
+            "name": "url",
             "type": "text"
           },
           {
@@ -249,66 +211,186 @@
           },
           {
             "name": "size",
-            "type": "number"
+            "type": "text"
           },
           {
             "name": "error",
-            "type": "text"
+            "type": "number"
           }
         ],
         "outputType": "array"
       },
       {
-        "name": "insert",
-        "module": "dbupdater",
-        "action": "insert",
+        "name": "",
+        "module": "core",
+        "action": "condition",
         "options": {
-          "connection": "conn_db",
-          "sql": {
-            "type": "insert",
-            "values": [
-              {
-                "table": "monitoring_location_photos",
-                "column": "location_id",
-                "type": "number",
-                "value": "{{$_POST.location_id}}"
+          "if": "{{!upload}}",
+          "then": {
+            "steps": {
+              "name": "insert_copy",
+              "module": "dbupdater",
+              "action": "insert",
+              "options": {
+                "connection": "conn_db",
+                "sql": {
+                  "type": "insert",
+                  "values": [
+                    {
+                      "table": "monitoring_location_photos",
+                      "column": "location_id",
+                      "type": "number",
+                      "value": "{{insert_monitoring_location.identity}}"
+                    },
+                    {
+                      "table": "monitoring_location_photos",
+                      "column": "path",
+                      "type": "text",
+                      "value": "{{path}}"
+                    }
+                  ],
+                  "table": "monitoring_location_photos",
+                  "returning": "photo_id",
+                  "query": "insert into `monitoring_location_photos` (`location_id`, `path`) values (?, ?)",
+                  "params": [
+                    {
+                      "name": ":P1",
+                      "type": "expression",
+                      "value": "{{insert_monitoring_location.identity}}",
+                      "test": ""
+                    },
+                    {
+                      "name": ":P2",
+                      "type": "expression",
+                      "value": "{{path}}",
+                      "test": ""
+                    }
+                  ]
+                }
               },
-              {
-                "table": "monitoring_location_photos",
-                "column": "path",
-                "type": "text",
-                "value": "{{$_POST.path}}"
-              }
-            ],
-            "table": "monitoring_location_photos",
-            "returning": "photo_id",
-            "query": "insert into `monitoring_location_photos` (`location_id`, `path`) values (?, ?)",
-            "params": [
-              {
-                "name": ":P1",
-                "type": "expression",
-                "value": "{{$_POST.location_id}}",
-                "test": ""
+              "meta": [
+                {
+                  "name": "identity",
+                  "type": "text"
+                },
+                {
+                  "name": "affected",
+                  "type": "number"
+                }
+              ]
+            }
+          },
+          "else": {
+            "steps": {
+              "name": "repeat",
+              "module": "core",
+              "action": "repeat",
+              "options": {
+                "repeat": "{{upload}}",
+                "outputFields": [],
+                "outputFilter": "exclude",
+                "exec": {
+                  "steps": {
+                    "name": "insert",
+                    "module": "dbupdater",
+                    "action": "insert",
+                    "options": {
+                      "connection": "conn_db",
+                      "sql": {
+                        "type": "insert",
+                        "values": [
+                          {
+                            "table": "monitoring_location_photos",
+                            "column": "location_id",
+                            "type": "number",
+                            "value": "{{insert_monitoring_location.identity}}"
+                          },
+                          {
+                            "table": "monitoring_location_photos",
+                            "column": "path",
+                            "type": "text",
+                            "value": "{{path}}"
+                          }
+                        ],
+                        "table": "monitoring_location_photos",
+                        "returning": "photo_id",
+                        "query": "insert into `monitoring_location_photos` (`location_id`, `path`) values (?, ?)",
+                        "params": [
+                          {
+                            "name": ":P1",
+                            "type": "expression",
+                            "value": "{{insert_monitoring_location.identity}}",
+                            "test": ""
+                          },
+                          {
+                            "name": ":P2",
+                            "type": "expression",
+                            "value": "{{path}}",
+                            "test": ""
+                          }
+                        ]
+                      }
+                    },
+                    "meta": [
+                      {
+                        "name": "identity",
+                        "type": "text"
+                      },
+                      {
+                        "name": "affected",
+                        "type": "number"
+                      }
+                    ]
+                  }
+                }
               },
-              {
-                "name": ":P2",
-                "type": "expression",
-                "value": "{{$_POST.path}}",
-                "test": ""
-              }
-            ]
+              "meta": [
+                {
+                  "name": "$index",
+                  "type": "number"
+                },
+                {
+                  "name": "$number",
+                  "type": "number"
+                },
+                {
+                  "name": "$name",
+                  "type": "text"
+                },
+                {
+                  "name": "$value",
+                  "type": "object"
+                },
+                {
+                  "name": "name",
+                  "type": "text"
+                },
+                {
+                  "name": "path",
+                  "type": "text"
+                },
+                {
+                  "name": "url",
+                  "type": "text"
+                },
+                {
+                  "name": "type",
+                  "type": "text"
+                },
+                {
+                  "name": "size",
+                  "type": "text"
+                },
+                {
+                  "name": "error",
+                  "type": "number"
+                }
+              ],
+              "outputType": "array"
+            }
           }
         },
-        "meta": [
-          {
-            "name": "identity",
-            "type": "text"
-          },
-          {
-            "name": "affected",
-            "type": "number"
-          }
-        ]
+        "outputType": "boolean"
       }
     ]
   }

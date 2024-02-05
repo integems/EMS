@@ -1,0 +1,110 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "monitoringLocations",
+      "module": "dbconnector",
+      "action": "select",
+      "options": {
+        "connection": "conn_db",
+        "sql": {
+          "type": "select",
+          "columns": [
+            {
+              "table": "monitoring_location",
+              "column": "location_id"
+            },
+            {
+              "table": "monitoring_location",
+              "column": "latitude"
+            },
+            {
+              "table": "monitoring_location",
+              "column": "longitude"
+            },
+            {
+              "table": "monitoring_location",
+              "column": "org_specific_monitoring_id"
+            },
+            {
+              "table": "monitoring_location",
+              "column": "description"
+            },
+            {
+              "table": "location_type",
+              "column": "location_type"
+            }
+          ],
+          "params": [],
+          "table": {
+            "name": "monitoring_location"
+          },
+          "primary": "location_id",
+          "joins": [
+            {
+              "table": "location_type",
+              "column": "*",
+              "type": "INNER",
+              "clauses": {
+                "condition": "AND",
+                "rules": [
+                  {
+                    "table": "location_type",
+                    "column": "location_type_id",
+                    "operator": "equal",
+                    "operation": "=",
+                    "value": {
+                      "table": "monitoring_location",
+                      "column": "location_type_id"
+                    }
+                  }
+                ]
+              },
+              "primary": "location_type_id"
+            }
+          ],
+          "query": "select `monitoring_location`.`location_id`, `monitoring_location`.`latitude`, `monitoring_location`.`longitude`, `monitoring_location`.`org_specific_monitoring_id`, `monitoring_location`.`description`, `location_type`.`location_type` from `monitoring_location` inner join `location_type` on `location_type`.`location_type_id` = `monitoring_location`.`location_type_id`"
+        }
+      },
+      "output": true,
+      "meta": [
+        {
+          "type": "number",
+          "name": "location_id"
+        },
+        {
+          "type": "number",
+          "name": "latitude"
+        },
+        {
+          "type": "number",
+          "name": "longitude"
+        },
+        {
+          "type": "text",
+          "name": "org_specific_monitoring_id"
+        },
+        {
+          "type": "text",
+          "name": "description"
+        },
+        {
+          "type": "text",
+          "name": "location_type"
+        }
+      ],
+      "outputType": "array"
+    }
+  }
+}

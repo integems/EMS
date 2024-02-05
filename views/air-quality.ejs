@@ -17,29 +17,32 @@
             <div class="modal-body">
                 <section id="input-file-browser">
                     <div class="row">
-                        <div class="col-lg-6 col-md-12">
-                            <div class="mb-3">
-                                <label for="data_file" class="form-label col-form-label">Monitoring Data</label>
-                                <input class="form-control" type="file" id="data_file" accept=".csv">
+                        <form action="/api/test/database_multi_insert" method="post" is="dmx-serverconnect-form" id="sc_add_air_data" dmx-on:success="sc_add_air_data.reset();notifies1.success('Data successfully added.');modal_add_data.hide()">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="data_file" class="form-label col-form-label">Monitoring Data</label>
+                                    <input class="form-control" type="file" id="data_file" accept=".csv">
+                                </div>
+
                             </div>
+                            <div class="col">
 
-                        </div>
-                        <div class="col-lg-6 col-md-12">
+                                <div>
+                                    <label for="data_select" class="form-label col-form-label">Select Monitoring Location</label>
+                                    <select id="data_select" class="form-select" name="location_id" dmx-bind:options="sc_monitoring_location_id.data.monitoring_location_id" optiontext="org_specific_monitoring_id" optionvalue="location_id">
+                                        <option value="">Choose a Location</option>
 
-                            <div>
-                                <label for="data_select" class="form-label col-form-label">Select Monitoring Location</label>
-                                <select id="data_select" class="form-select" name="location_id" dmx-bind:options="sc_monitoring_location_id.data.monitoring_location_id" optiontext="org_specific_monitoring_id" optionvalue="location_id">
-                                    <option value="">Choose a Location</option>
-
-                                </select>
+                                    </select>
+                                    <input id="inp_location_id" name="location_id" type="hidden" class="form-control" dmx-bind:value="data_select.selectedValue">
+                                </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </section>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Add Data</button>
+                <button type="button" class="btn btn-primary" dmx-on:click="sc_add_air_data.submit()">Add Data</button>
             </div>
         </div>
     </div>
@@ -166,7 +169,7 @@
         <div class="col-9">
             <div class="card ">
                 <div class="card-body">
-                    <h4 class="card-title">Monitoring Locations</h4>
+                    <h4 class="card-title mt-2">Monitoring Locations</h4>
                     <div id="location_map" style="height: 400px;"></div>
                 </div>
             </div>
@@ -174,7 +177,7 @@
         <div class="col">
             <div class="card ">
                 <div class="card-body text-center">
-                    <h5 class="card-title" id="cardTitle"></h5>
+                    <h5 class="card-title mt-2" id="cardTitle"></h5>
                     <img src="/assets/images/logo_icon.jpg" alt="Location Photos" width="118px" height="118px">
                     <p class="card-text" id="cardContent"></p>
 
@@ -193,6 +196,100 @@
         </div>
     </div>
 </section>
+
+
+<!-- <section>
+    <div class="row">
+        <div class="col">
+            <div id="parameterCarousel" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner" style="height: 400px;"></div>
+                <a class="carousel-control-prev" href="#parameterCarousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#parameterCarousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section> -->
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    // Fetch data from the server
+    fetch('http://localhost:3000/api/air_quality/date_time')
+        .then(response => response.json())
+        .then(data => {
+            // Check if 'date_time' property exists and is an array
+            if (!data || !Array.isArray(data.date_time)) {
+                console.error('Invalid data format. Expected an array under the "date_time" property.');
+                return;
+            }
+
+            // Extract relevant data for the charts
+            const airQualityData = data.date_time;
+
+            // Sort the data by date_time in ascending order
+            airQualityData.sort((a, b) => new Date(a.date_time) - new Date(b.date_time));
+
+            // Prepare data series for each parameter
+            const parameters = ['CO(ppm)', 'NO2(ppm)', 'PM10(ppm)', 'PM2_5(ppm)', 'RH(%)', 'SO2(ppm)', 'temp(C)'];
+
+            // Create charts and add to the carousel
+            parameters.forEach((parameter, index) => {
+                const chartContainer = document.createElement('div');
+                chartContainer.className = 'carousel-item' + (index === 0 ? ' active' : '');
+                chartContainer.style.height = '100%';
+                document.querySelector('.carousel-inner').appendChild(chartContainer);
+
+                const seriesData = airQualityData.map(entry => ({
+                    x: new Date(entry.date_time).getTime(),
+                    y: entry[parameter]
+                }));
+
+                Highcharts.chart(chartContainer, {
+                    chart: {
+                        type: 'line'
+                    },
+                    title: {
+                        text: `${parameter} Time Series Chart`
+                    },
+                    xAxis: {
+                        type: 'datetime',
+                        dateTimeLabelFormats: {
+                            day: '%Y-%m-%d'
+                        },
+                        title: {
+                            text: 'Date'
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Air Quality Values'
+                        }
+                    },
+                    series: [{
+                        name: parameter,
+                        data: seriesData,
+                        color: Highcharts.getOptions().colors[index]
+                    }],
+                    // Include accessibility module
+                    accessibility: {
+                        enabled: true
+                    }
+                });
+            });
+
+            // Initialize the Bootstrap carousel
+            $('.carousel').carousel();
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
+});
+</script>
 
 <script src="/js/leaflet_maps/air_quality_monitoring_locations.js"></script>
 

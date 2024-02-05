@@ -31,7 +31,7 @@ function updateCardContent(data) {
         <b>NO2(ppm):</b> ${data['NO2(ppm)']}<br>
         <b>CO(ppm):</b> ${data['CO(ppm)']}<br>
         <b>PM10(ppm):</b> ${data['PM10(ppm)']}<br>
-        <b>PM2_5(ppm):</b> ${data['PM2_5(ppm)']}<br>
+        <b>PM2.5(ppm):</b> ${data['PM2_5(ppm)']}<br>
         <b>RH(%):</b> ${data['RH(%)']}<br>
         <b>SO2(ppm):</b> ${data['SO2(ppm)']}<br>
         <b>Temp(C):</b> ${data['temp(C)']}<br>

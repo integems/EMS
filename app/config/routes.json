@@ -53,6 +53,11 @@
       "path": "/water-quality",
       "page": "water-quality",
       "layout": "portal_layout"
+    },
+    {
+      "path": "/add-monitoring-location",
+      "page": "add-monitoring-location",
+      "layout": "portal_layout"
     }
   ],
   "layouts": {

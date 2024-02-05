@@ -50,5 +50,9 @@
   "test.ejs": {
     "layoutPage": "main",
     "description": ""
+  },
+  "add-monitoring-location.ejs": {
+    "layoutPage": "portal_layout",
+    "description": ""
   }
 }

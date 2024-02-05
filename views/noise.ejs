@@ -32,6 +32,7 @@
                                     <option value="">Choose a Location</option>
 
                                 </select>
+                                <small class="text-muted">Can't see your Monitoring Location?<a href="/add-monitoring-location">Add Location.</a></small>
                             </div>
                         </div>
                     </div>
@@ -44,7 +45,7 @@
         </div>
     </div>
 </div>
-<div class="modal" id="modal_add_monitoring_location" is="dmx-bs5-modal" tabindex="-1" nocloseonclick="true">
+<div class="modal fade" id="modal_add_monitoring_location" is="dmx-bs5-modal" tabindex="-1" nocloseonclick="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -75,13 +76,13 @@
                                                 <div class="col-md-6 col-12">
                                                     <div class="form-group">
                                                         <label for="monitoring_location_id" class="col-form-label">Monitoring Location ID</label>
-                                                        <input id="text_monitoring_location" name="location_id" type="text" class="form-control">
+                                                        <input id="text_monitoring_location" name="org_specific_monitoring_id" type="text" class="form-control">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 col-12">
                                                     <div class="form-group">
                                                         <label for="country-floating" class="col-form-label">Location Type</label>
-                                                        <select id="modal_select_location_type" class="form-select form-control" name="location_type" dmx-bind:options="sc_monitoring_location_type.data.location_type" optiontext="location_type" optionvalue="location_type_id">
+                                                        <select id="modal_select_location_type" class="form-select form-control" name="location_type_id" dmx-bind:options="sc_monitoring_location_type.data.location_type" optiontext="location_type" optionvalue="location_type_id">
                                                             <option value="">Select Location Types</option>
 
                                                         </select>
@@ -95,7 +96,7 @@
                                                 <div class="col">
                                                     <div class="form-group">
                                                         <label for="company-column" class="col-form-label">Description</label>
-                                                        <textarea id="text_location_description" class="form-control" name="location_description"></textarea>
+                                                        <textarea id="text_location_description" class="form-control" name="description"></textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -117,7 +118,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" dmx-on:click="scf_add_monitoring_location.submit()">Add Location</button>
+                <button type="button" class="btn btn-primary" dmx-on:click="scf_add_monitoring_location.submit()">Add Location &nbsp;<span class="spinner-border spinner-border-sm" role="status" dmx-show="scf_add_monitoring_location.state.executing"></span></button>
             </div>
         </div>
     </div>
@@ -159,7 +160,7 @@
         <div class="col-9">
             <div class="card ">
                 <div class="card-body">
-                    <h4 class="card-title">Monitoring Locations</h4>
+                    <h4 class="card-title ">Monitoring Locations</h4>
                     <div id="location_map" style="height: 400px;"></div>
                 </div>
             </div>
@@ -167,7 +168,7 @@
         <div class="col">
             <div class="card ">
                 <div class="card-body text-center">
-                    <h5 class="card-title" id="cardTitle"></h5>
+                    <h5 class="card-title " id="cardTitle"></h5>
                     <img src="/assets/images/logo_icon.jpg" alt="Location Photos" width="118px" height="118px">
                     <p class="card-text" id="cardContent"></p>
 
