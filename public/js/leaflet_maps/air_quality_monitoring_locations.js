@@ -39,7 +39,7 @@ function updateCardContent(data) {
 }
 
 // Fetch air quality monitoring locations from the API endpoint
-fetch('http://localhost:3000/api/air_quality/air_monitoring_locations')
+fetch('/api/air_quality/air_monitoring_locations')
     .then(response => response.json())
     .then(data => {
         // Loop through locations and add markers with popups

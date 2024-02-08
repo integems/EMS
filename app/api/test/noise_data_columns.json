@@ -1,0 +1,56 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "query",
+      "module": "dbupdater",
+      "action": "custom",
+      "options": {
+        "connection": "conn_db",
+        "sql": {
+          "query": "SHOW COLUMNS FROM noise_monitoring_data WHERE Field NOT IN ('noise_id', 'location_id');\n",
+          "params": []
+        }
+      },
+      "output": true,
+      "meta": [
+        {
+          "name": "Field",
+          "type": "text"
+        },
+        {
+          "name": "Type",
+          "type": "file"
+        },
+        {
+          "name": "Null",
+          "type": "text"
+        },
+        {
+          "name": "Key",
+          "type": "text"
+        },
+        {
+          "name": "Default",
+          "type": "file"
+        },
+        {
+          "name": "Extra",
+          "type": "text"
+        }
+      ],
+      "type": "dbcustom_query"
+    }
+  }
+}
