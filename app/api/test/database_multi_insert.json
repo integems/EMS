@@ -6,104 +6,6 @@
     },
     "$_POST": [
       {
-        "type": "array",
-        "name": "record",
-        "sub": [
-          {
-            "type": "datetime",
-            "name": "date_time"
-          },
-          {
-            "type": "number",
-            "name": "location_id"
-          },
-          {
-            "type": "number",
-            "name": "COppm"
-          },
-          {
-            "type": "number",
-            "name": "NO2ppm"
-          },
-          {
-            "type": "number",
-            "name": "PM10ppm"
-          },
-          {
-            "type": "number",
-            "name": "PM2_5ppm"
-          },
-          {
-            "type": "number",
-            "name": "RH"
-          },
-          {
-            "type": "number",
-            "name": "SO2ppm"
-          },
-          {
-            "type": "number",
-            "name": "tempC"
-          },
-          {
-            "type": "number",
-            "name": "$_POST"
-          },
-          {
-            "type": "number",
-            "name": "_['CO(ppm)']"
-          },
-          {
-            "type": "number",
-            "name": "_['NO2(ppm)']"
-          },
-          {
-            "type": "number",
-            "name": "_['PM10(ppm)']"
-          },
-          {
-            "type": "number",
-            "name": "_['PM2_5(ppm)']"
-          },
-          {
-            "type": "number",
-            "name": "_['RH("
-          },
-          {
-            "type": "number",
-            "name": "_['SO2(ppm)']"
-          },
-          {
-            "type": "number",
-            "name": "_['temp(C)']"
-          }
-        ]
-      },
-      {
-        "type": "file",
-        "fieldName": "csv_file",
-        "name": "csv_file",
-        "sub": [
-          {
-            "type": "text",
-            "name": "name"
-          },
-          {
-            "type": "text",
-            "name": "type"
-          },
-          {
-            "type": "number",
-            "name": "size"
-          },
-          {
-            "type": "text",
-            "name": "error"
-          }
-        ],
-        "outputType": "file"
-      },
-      {
         "type": "file",
         "fieldName": "data_file",
         "options": {
@@ -138,310 +40,240 @@
         "type": "text",
         "fieldName": "location_id",
         "name": "location_id"
+      },
+      {
+        "type": "array",
+        "name": "record",
+        "sub": [
+          {
+            "type": "datetime",
+            "name": "start_date_time"
+          },
+          {
+            "type": "datetime",
+            "name": "end_date_time"
+          },
+          {
+            "type": "number",
+            "name": "LAeq"
+          },
+          {
+            "type": "number",
+            "name": "LA90"
+          },
+          {
+            "type": "number",
+            "name": "LA10"
+          },
+          {
+            "type": "number",
+            "name": "LAFMax"
+          },
+          {
+            "type": "number",
+            "name": "LAFMin"
+          },
+          {
+            "type": "number",
+            "name": "$_POST"
+          }
+        ]
       }
     ]
   },
   "exec": {
-    "steps": [
-      {
-        "name": "upload",
-        "module": "upload",
-        "action": "upload",
-        "options": {
-          "fields": "{{$_POST.data_file}}",
-          "path": "/public/assets/files",
-          "template": "{guid}{ext}"
-        },
-        "meta": [
-          {
-            "name": "name",
-            "type": "text"
-          },
-          {
-            "name": "path",
-            "type": "text"
-          },
-          {
-            "name": "url",
-            "type": "text"
-          },
-          {
-            "name": "type",
-            "type": "text"
-          },
-          {
-            "name": "size",
-            "type": "text"
-          },
-          {
-            "name": "error",
-            "type": "number"
-          }
-        ],
-        "outputType": "file"
-      },
-      {
-        "name": "csvImport",
-        "module": "import",
-        "action": "csv",
-        "options": {
-          "path": "{{upload.path}}",
-          "header": true,
-          "fields": [
-            "date_time",
-            "location_id",
-            "CO(ppm)",
-            "NO2(ppm)",
-            "PM10(ppm)",
-            "PM2_5(ppm)",
-            "RH(%)",
-            "SO2(ppm)",
-            "temp(C)"
-          ]
-        },
-        "meta": [
-          {
-            "name": "date_time",
-            "type": "text"
-          },
-          {
-            "name": "location_id",
-            "type": "text"
-          },
-          {
-            "name": "CO(ppm)",
-            "type": "text"
-          },
-          {
-            "name": "NO2(ppm)",
-            "type": "text"
-          },
-          {
-            "name": "PM10(ppm)",
-            "type": "text"
-          },
-          {
-            "name": "PM2_5(ppm)",
-            "type": "text"
-          },
-          {
-            "name": "RH(%)",
-            "type": "text"
-          },
-          {
-            "name": "SO2(ppm)",
-            "type": "text"
-          },
-          {
-            "name": "temp(C)",
-            "type": "text"
-          }
-        ],
-        "outputType": "array",
-        "output": true
-      },
-      {
-        "name": "record_repeat",
-        "module": "core",
-        "action": "repeat",
-        "options": {
-          "repeat": "{{csvImport}}",
-          "outputFields": [],
-          "exec": {
-            "steps": {
-              "name": "record_insert",
-              "module": "dbupdater",
-              "action": "insert",
-              "options": {
-                "connection": "conn_db",
-                "sql": {
-                  "type": "insert",
-                  "values": [
-                    {
-                      "table": "air_quality_monitoring_data",
-                      "column": "date_time",
-                      "type": "datetime",
-                      "value": "{{date_time}}"
-                    },
-                    {
-                      "table": "air_quality_monitoring_data",
-                      "column": "location_id",
-                      "type": "number",
-                      "value": "{{$_POST.location_id}}"
-                    },
-                    {
-                      "table": "air_quality_monitoring_data",
-                      "column": "CO(ppm)",
-                      "type": "number",
-                      "value": "{{_['CO(ppm)']}}"
-                    },
-                    {
-                      "table": "air_quality_monitoring_data",
-                      "column": "NO2(ppm)",
-                      "type": "number",
-                      "value": "{{_['NO2(ppm)']}}"
-                    },
-                    {
-                      "table": "air_quality_monitoring_data",
-                      "column": "PM10(ppm)",
-                      "type": "number",
-                      "value": "{{_['PM10(ppm)']}}"
-                    },
-                    {
-                      "table": "air_quality_monitoring_data",
-                      "column": "PM2_5(ppm)",
-                      "type": "number",
-                      "value": "{{_['PM2_5(ppm)']}}"
-                    },
-                    {
-                      "table": "air_quality_monitoring_data",
-                      "column": "RH(%)",
-                      "type": "number",
-                      "value": "{{_['RH(%)']}}"
-                    },
-                    {
-                      "table": "air_quality_monitoring_data",
-                      "column": "SO2(ppm)",
-                      "type": "number",
-                      "value": "{{_['SO2(ppm)']}}"
-                    },
-                    {
-                      "table": "air_quality_monitoring_data",
-                      "column": "temp(C)",
-                      "type": "number",
-                      "value": "{{_['temp(C)']}}"
-                    }
-                  ],
-                  "table": "air_quality_monitoring_data",
-                  "returning": "air_id",
-                  "query": "insert into `air_quality_monitoring_data` (`CO(ppm)`, `NO2(ppm)`, `PM10(ppm)`, `PM2_5(ppm)`, `RH(%)`, `SO2(ppm)`, `date_time`, `location_id`, `temp(C)`) values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                  "params": [
-                    {
-                      "name": ":P1",
-                      "type": "expression",
-                      "value": "{{date_time}}",
-                      "test": ""
-                    },
-                    {
-                      "name": ":P2",
-                      "type": "expression",
-                      "value": "{{$_POST.location_id}}",
-                      "test": ""
-                    },
-                    {
-                      "name": ":P3",
-                      "type": "expression",
-                      "value": "{{_['CO(ppm)']}}",
-                      "test": ""
-                    },
-                    {
-                      "name": ":P4",
-                      "type": "expression",
-                      "value": "{{_['NO2(ppm)']}}",
-                      "test": ""
-                    },
-                    {
-                      "name": ":P5",
-                      "type": "expression",
-                      "value": "{{_['PM10(ppm)']}}",
-                      "test": ""
-                    },
-                    {
-                      "name": ":P6",
-                      "type": "expression",
-                      "value": "{{_['PM2_5(ppm)']}}",
-                      "test": ""
-                    },
-                    {
-                      "name": ":P7",
-                      "type": "expression",
-                      "value": "{{_['RH(%)']}}",
-                      "test": ""
-                    },
-                    {
-                      "name": ":P8",
-                      "type": "expression",
-                      "value": "{{_['SO2(ppm)']}}",
-                      "test": ""
-                    },
-                    {
-                      "name": ":P9",
-                      "type": "expression",
-                      "value": "{{_['temp(C)']}}",
-                      "test": ""
-                    }
-                  ]
-                }
+    "steps": {
+      "name": "record_repeat",
+      "module": "core",
+      "action": "repeat",
+      "options": {
+        "repeat": "{{$_POST.record}}",
+        "exec": {
+          "steps": {
+            "name": "record_insert",
+            "module": "dbupdater",
+            "action": "insert",
+            "options": {
+              "connection": "conn_db",
+              "sql": {
+                "type": "insert",
+                "values": [
+                  {
+                    "table": "noise_monitoring_data",
+                    "column": "start_date_time",
+                    "type": "datetime",
+                    "value": "{{start_date_time}}",
+                    "recid": 1
+                  },
+                  {
+                    "table": "noise_monitoring_data",
+                    "column": "end_date_time",
+                    "type": "datetime",
+                    "value": "{{end_date_time}}",
+                    "recid": 2
+                  },
+                  {
+                    "table": "noise_monitoring_data",
+                    "column": "LAeq",
+                    "type": "number",
+                    "value": "{{LAeq}}",
+                    "recid": 3
+                  },
+                  {
+                    "table": "noise_monitoring_data",
+                    "column": "LA90",
+                    "type": "number",
+                    "value": "{{LA90}}",
+                    "recid": 4
+                  },
+                  {
+                    "table": "noise_monitoring_data",
+                    "column": "LA10",
+                    "type": "number",
+                    "value": "{{LA10}}",
+                    "recid": 5
+                  },
+                  {
+                    "table": "noise_monitoring_data",
+                    "column": "LAFMax",
+                    "type": "number",
+                    "value": "{{LAFMax}}",
+                    "recid": 6
+                  },
+                  {
+                    "table": "noise_monitoring_data",
+                    "column": "LAFMin",
+                    "type": "number",
+                    "value": "{{LAFMin}}",
+                    "recid": 7
+                  },
+                  {
+                    "table": "noise_monitoring_data",
+                    "column": "location_id",
+                    "type": "number",
+                    "value": "{{$_POST.location_id}}",
+                    "recid": 8
+                  }
+                ],
+                "table": "noise_monitoring_data",
+                "returning": "noise_id",
+                "query": "insert into `noise_monitoring_data` (`LA10`, `LA90`, `LAFMax`, `LAFMin`, `LAeq`, `end_date_time`, `location_id`, `start_date_time`) values (?, ?, ?, ?, ?, ?, ?, ?)",
+                "params": [
+                  {
+                    "name": ":P1",
+                    "type": "expression",
+                    "value": "{{start_date_time}}",
+                    "test": ""
+                  },
+                  {
+                    "name": ":P2",
+                    "type": "expression",
+                    "value": "{{end_date_time}}",
+                    "test": ""
+                  },
+                  {
+                    "name": ":P3",
+                    "type": "expression",
+                    "value": "{{LAeq}}",
+                    "test": ""
+                  },
+                  {
+                    "name": ":P4",
+                    "type": "expression",
+                    "value": "{{LA90}}",
+                    "test": ""
+                  },
+                  {
+                    "name": ":P5",
+                    "type": "expression",
+                    "value": "{{LA10}}",
+                    "test": ""
+                  },
+                  {
+                    "name": ":P6",
+                    "type": "expression",
+                    "value": "{{LAFMax}}",
+                    "test": ""
+                  },
+                  {
+                    "name": ":P7",
+                    "type": "expression",
+                    "value": "{{LAFMin}}",
+                    "test": ""
+                  },
+                  {
+                    "name": ":P8",
+                    "type": "expression",
+                    "value": "{{$_POST.location_id}}",
+                    "test": ""
+                  }
+                ]
+              }
+            },
+            "meta": [
+              {
+                "name": "identity",
+                "type": "text"
               },
-              "meta": [
-                {
-                  "name": "identity",
-                  "type": "text"
-                },
-                {
-                  "name": "affected",
-                  "type": "number"
-                }
-              ]
-            }
+              {
+                "name": "affected",
+                "type": "number"
+              }
+            ]
           }
+        }
+      },
+      "meta": [
+        {
+          "name": "$index",
+          "type": "number"
         },
-        "meta": [
-          {
-            "name": "$index",
-            "type": "number"
-          },
-          {
-            "name": "$number",
-            "type": "number"
-          },
-          {
-            "name": "$name",
-            "type": "text"
-          },
-          {
-            "name": "$value",
-            "type": "object"
-          },
-          {
-            "name": "date_time",
-            "type": "text"
-          },
-          {
-            "name": "location_id",
-            "type": "text"
-          },
-          {
-            "name": "CO(ppm)",
-            "type": "text"
-          },
-          {
-            "name": "NO2(ppm)",
-            "type": "text"
-          },
-          {
-            "name": "PM10(ppm)",
-            "type": "text"
-          },
-          {
-            "name": "PM2_5(ppm)",
-            "type": "text"
-          },
-          {
-            "name": "RH(%)",
-            "type": "text"
-          },
-          {
-            "name": "SO2(ppm)",
-            "type": "text"
-          },
-          {
-            "name": "temp(C)",
-            "type": "text"
-          }
-        ],
-        "outputType": "array"
-      }
-    ]
+        {
+          "name": "$number",
+          "type": "number"
+        },
+        {
+          "name": "$name",
+          "type": "text"
+        },
+        {
+          "name": "$value",
+          "type": "object"
+        },
+        {
+          "name": "start_date_time",
+          "type": "datetime"
+        },
+        {
+          "name": "end_date_time",
+          "type": "datetime"
+        },
+        {
+          "name": "LAeq",
+          "type": "number"
+        },
+        {
+          "name": "LA90",
+          "type": "number"
+        },
+        {
+          "name": "LA10",
+          "type": "number"
+        },
+        {
+          "name": "LAFMax",
+          "type": "number"
+        },
+        {
+          "name": "LAFMin",
+          "type": "number"
+        },
+        {
+          "name": "$_POST",
+          "type": "number"
+        }
+      ],
+      "outputType": "array"
+    }
   }
 }

@@ -8,46 +8,47 @@
 <dmx-serverconnect id="sc_monitoring_locations" url="/api/noise/monitoring_locations" dmx-param:location_id_filter="select_location_id.value" dmx-param:location_type_filter="select_location_type.value"></dmx-serverconnect>
 <dmx-serverconnect id="sc_avg_LAeq_location" url="/api/noise/average_LAeq_location"></dmx-serverconnect>
 
-<div class="modal" id="modal_add_data" is="dmx-bs5-modal" tabindex="-1" nocloseonclick="true">
+<div class="modal fade" id="modal_add_data" is="dmx-bs5-modal" tabindex="-1" nocloseonclick="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Add Monitoring Data</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body m-2">
                 <section id="input-file-browser">
                     <div class="row">
-                        <form action="" method="post" id="add_noise_data" is="dmx-serverconnect-form">
+                        <div class="col">
+                            <form action="" method="post" id="add_noise_data" is="dmx-serverconnect-form">
 
-                            <div class="col-lg-6 col-md-12">
+                                <div class="form-group mb-3 row">
+                                    <label for="input1" class="col-sm-4 col-form-label">Select Monitoring Location</label>
+                                    <div class="col-sm-8">
+                                        <select id="data_select" class="form-select" name="location_id" dmx-bind:options="sc_monitoring_location_id.data.monitoring_location_id" optiontext="org_specific_monitoring_id" optionvalue="location_id" required="">
+                                            <option value="">Choose a Location</option>
 
-                                <div>
-                                    <label for="data_select" class="form-label col-form-label">Select Monitoring Location</label>
-                                    <select id="data_select" class="form-select" name="location_id" dmx-bind:options="sc_monitoring_location_id.data.monitoring_location_id" optiontext="org_specific_monitoring_id" optionvalue="location_id" required="">
-                                        <option value="">Choose a Location</option>
-
-                                    </select>
-                                    <small class="text-muted">Can't see your Monitoring Location? &nbsp;<a href="/add-monitoring-location">Add Location.</a></small>
-
-                                </div>
-                            </div>
-
-                            <div class="col-lg-6 col-md-12">
-                                <div class="mb-3">
-                                    <label for="data_file" class="form-label col-form-label">Monitoring Data</label>
-                                    <input class="form-control" type="file" id="data_file" accept=".csv" required="">
+                                        </select><small class="text-muted">Can't see your Monitoring Location? &nbsp;<a href="/add-monitoring-location">Add Location.</a></small>
+                                    </div>
                                 </div>
 
-                            </div>
-                        </form>
+
+                                <div class="form-group mb-3 row">
+                                    <label for="data_file" class="col-sm-4 col-form-label">Monitoring Data</label>
+                                    <div class="col-sm-8">
+                                        <input class="form-control" type="file" id="data_file" accept=".csv" required="" dmx-on:change="onFileChange($event)">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
                     </div>
                 </section>
-                <div id="mapping-container"></div>
+                <div id="mapping-container">
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Add Data</button>
+                <button type="button" class="btn btn-primary" id="btn_add_data">Add Data</button>
             </div>
         </div>
     </div>
@@ -202,6 +203,7 @@
 
 
 <script>
+    //  const databaseColumns
     // Function to handle parsed data and generate mapping rows
 function handleParsedData(data, databaseColumns) {
    const mappingContainer = document.getElementById('mapping-container');
@@ -210,22 +212,30 @@ function handleParsedData(data, databaseColumns) {
    mappingContainer.innerHTML = '';
 
    // Create a row for each database column
-   databaseColumns.forEach(dbColumn => {
+   databaseColumns.forEach(dbColumn =>{
+    //console.log(dbColumn);
       const row = document.createElement('div');
       row.classList.add('row');
+      row.classList.add('mb-2');
       const csvColumn = findCsvColumn(data, dbColumn.Field);
 
       row.innerHTML = `
-         <div class="col-lg-6 col-md-12">
-            <label for="${dbColumn.Field}_mapping" class="form-label col-form-label">${dbColumn.Field}</label>
+         <div class="col-sm-4">
+            <label for="${dbColumn.Field}_mapping" class="form-label col-form-label">${dbColumn.Field}</label>            
+         </div>
+         <div class="col">           
             <select class="form-select" id="${dbColumn.Field}_mapping">
+            <option value=""></option>
                ${getDropdownOptions(data[0], csvColumn)}
             </select>
          </div>
       `;
+      const csvData = data;
 
       mappingContainer.appendChild(row);
+      handleAddData(csvData, databaseColumns)
    });
+
 }
 
 // Function to find CSV column for a given database column
@@ -243,21 +253,37 @@ function getDropdownOptions(csvColumns, selectedCsvColumn) {
 }
 
 // Function to add data
-function addData() {
-   
-   const mappedData = {};
+function handleAddData(csvData, databaseColumns) {
+        $("#btn_add_data").off("click")
+        $("#btn_add_data").on("click", function (){
+            const mappedColumns = {}; 
+            let mappedData = [];
 
-   
-   databaseColumns.forEach(dbColumn => {
-      const dropdownValue = document.getElementById(`${dbColumn.Field}_mapping`).value;
-      mappedData[dbColumn.Field] = dropdownValue;
-   });
+        
+            databaseColumns.forEach(dbColumn => {
+                const dropdownValue = document.getElementById(`${dbColumn.Field}_mapping`).value;
+                mappedColumns[dropdownValue] = dbColumn.Field;
+            });
+            
+            for (record of csvData) {
+                let mappedRecord = {}
+                for (key of Object.keys(mappedColumns)) {
+                    let mappedKey = mappedColumns[key]
+                    mappedRecord[mappedKey] = record[key]
+                }
+                mappedData.push(mappedRecord)
+            }
+            //console.log(mappedData);
+            //console.log(csvData);
+            //console.log(Object.keys(mappedColumns))
+   })
+  
 
 }
 
 // Function to fetch database columns from the server
 function fetchDatabaseColumns() {
-   return fetch('/api/test/noise_data_columns')
+   return fetch('/api/noise/noise_data_columns')
       .then(response => response.json())
       .then(data => data.query);
 }
@@ -288,6 +314,7 @@ function parseCSV(databaseColumns) {
       }
    });
 }
+
 
 
 </script>
