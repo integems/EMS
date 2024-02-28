@@ -1,0 +1,244 @@
+{
+  "meta": {
+    "options": {
+      "linkedFile": "/views/noise.ejs",
+      "linkedForm": "add_noise_data"
+    },
+    "$_POST": [
+      {
+        "type": "array",
+        "options": {
+          "rules": {
+            "core:required": {}
+          }
+        },
+        "name": "record",
+        "sub": [
+          {
+            "type": "datetime",
+            "name": "start_date_time"
+          },
+          {
+            "type": "datetime",
+            "name": "end_date_time"
+          },
+          {
+            "type": "number",
+            "name": "LAeq"
+          },
+          {
+            "type": "number",
+            "name": "LA90"
+          },
+          {
+            "type": "number",
+            "name": "LA10"
+          },
+          {
+            "type": "number",
+            "name": "LAFMax"
+          },
+          {
+            "type": "number",
+            "name": "LAFMin"
+          },
+          {
+            "type": "text",
+            "name": "location_id"
+          },
+          {
+            "type": "number",
+            "name": "$_POST"
+          }
+        ]
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "record_repeat",
+      "module": "core",
+      "action": "repeat",
+      "options": {
+        "repeat": "{{$_POST.record}}",
+        "exec": {
+          "steps": {
+            "name": "record_insert",
+            "module": "dbupdater",
+            "action": "insert",
+            "options": {
+              "connection": "conn_db",
+              "sql": {
+                "type": "insert",
+                "values": [
+                  {
+                    "table": "noise_monitoring_data",
+                    "column": "start_date_time",
+                    "type": "datetime",
+                    "value": "{{start_date_time}}"
+                  },
+                  {
+                    "table": "noise_monitoring_data",
+                    "column": "end_date_time",
+                    "type": "datetime",
+                    "value": "{{end_date_time}}"
+                  },
+                  {
+                    "table": "noise_monitoring_data",
+                    "column": "LAeq",
+                    "type": "number",
+                    "value": "{{LAeq}}"
+                  },
+                  {
+                    "table": "noise_monitoring_data",
+                    "column": "LA90",
+                    "type": "number",
+                    "value": "{{LA90}}"
+                  },
+                  {
+                    "table": "noise_monitoring_data",
+                    "column": "LA10",
+                    "type": "number",
+                    "value": "{{LA10}}"
+                  },
+                  {
+                    "table": "noise_monitoring_data",
+                    "column": "LAFMax",
+                    "type": "number",
+                    "value": "{{LAFMax}}"
+                  },
+                  {
+                    "table": "noise_monitoring_data",
+                    "column": "LAFMin",
+                    "type": "number",
+                    "value": "{{LAFMin}}"
+                  },
+                  {
+                    "table": "noise_monitoring_data",
+                    "column": "location_id",
+                    "type": "number",
+                    "value": "{{location_id}}"
+                  }
+                ],
+                "table": "noise_monitoring_data",
+                "returning": "noise_id",
+                "query": "insert into `noise_monitoring_data` (`LA10`, `LA90`, `LAFMax`, `LAFMin`, `LAeq`, `end_date_time`, `location_id`, `start_date_time`) values (?, ?, ?, ?, ?, ?, ?, ?)",
+                "params": [
+                  {
+                    "name": ":P1",
+                    "type": "expression",
+                    "value": "{{start_date_time}}",
+                    "test": ""
+                  },
+                  {
+                    "name": ":P2",
+                    "type": "expression",
+                    "value": "{{end_date_time}}",
+                    "test": ""
+                  },
+                  {
+                    "name": ":P3",
+                    "type": "expression",
+                    "value": "{{LAeq}}",
+                    "test": ""
+                  },
+                  {
+                    "name": ":P4",
+                    "type": "expression",
+                    "value": "{{LA90}}",
+                    "test": ""
+                  },
+                  {
+                    "name": ":P5",
+                    "type": "expression",
+                    "value": "{{LA10}}",
+                    "test": ""
+                  },
+                  {
+                    "name": ":P6",
+                    "type": "expression",
+                    "value": "{{LAFMax}}",
+                    "test": ""
+                  },
+                  {
+                    "name": ":P7",
+                    "type": "expression",
+                    "value": "{{LAFMin}}",
+                    "test": ""
+                  },
+                  {
+                    "name": ":P8",
+                    "type": "expression",
+                    "value": "{{location_id}}",
+                    "test": ""
+                  }
+                ]
+              }
+            },
+            "meta": [
+              {
+                "name": "identity",
+                "type": "text"
+              },
+              {
+                "name": "affected",
+                "type": "number"
+              }
+            ]
+          }
+        }
+      },
+      "meta": [
+        {
+          "name": "$index",
+          "type": "number"
+        },
+        {
+          "name": "$number",
+          "type": "number"
+        },
+        {
+          "name": "$name",
+          "type": "text"
+        },
+        {
+          "name": "$value",
+          "type": "object"
+        },
+        {
+          "name": "start_date_time",
+          "type": "datetime"
+        },
+        {
+          "name": "end_date_time",
+          "type": "datetime"
+        },
+        {
+          "name": "LAeq",
+          "type": "number"
+        },
+        {
+          "name": "LA90",
+          "type": "number"
+        },
+        {
+          "name": "LA10",
+          "type": "number"
+        },
+        {
+          "name": "LAFMax",
+          "type": "number"
+        },
+        {
+          "name": "LAFMin",
+          "type": "number"
+        },
+        {
+          "name": "$_POST",
+          "type": "number"
+        }
+      ],
+      "outputType": "array"
+    }
+  }
+}

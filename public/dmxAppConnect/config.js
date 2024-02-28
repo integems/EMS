@@ -10,5 +10,13 @@ dmx.config({
         "name": "token"
       }
     ]
+  },
+  "noise": {
+    "query": [
+      {
+        "type": "array",
+        "name": "mappedData"
+      }
+    ]
   }
 });

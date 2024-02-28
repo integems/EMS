@@ -1,4 +1,4 @@
-<!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="noise" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Navigation:{},dmxDatePicker:{},dmxBootstrap5Modal:{},dmxValidator:{},dmxDatastore:{}}" moment_2="cdn" -->
+<!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="noise" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Navigation:{},dmxDatePicker:{},dmxBootstrap5Modal:{},dmxValidator:{},dmxDatastore:{},dmxStateManagement:{}}" moment_2="cdn" -->
 <dmx-serverconnect id="sc_noise_data_columns" url="/api/test/noise_data_columns"></dmx-serverconnect>
 
 <dmx-serverconnect id="sc_monitoring_location_type" url="/api/location/monitoring_location_type"></dmx-serverconnect>
@@ -19,12 +19,12 @@
                 <section id="input-file-browser">
                     <div class="row">
                         <div class="col">
-                            <form action="" method="post" id="add_noise_data" is="dmx-serverconnect-form">
+                            <form action="/api/noise/validate_noise_data" method="post" id="add_noise_data" is="dmx-serverconnect-form" onsuccess="addMappedData()">
 
                                 <div class="form-group mb-3 row">
                                     <label for="input1" class="col-sm-4 col-form-label">Select Monitoring Location</label>
                                     <div class="col-sm-8">
-                                        <select id="data_select" class="form-select" name="location_id" dmx-bind:options="sc_monitoring_location_id.data.monitoring_location_id" optiontext="org_specific_monitoring_id" optionvalue="location_id" required="">
+                                        <select id="select_location" class="form-select" name="location_id" dmx-bind:options="sc_monitoring_location_id.data.monitoring_location_id" optiontext="org_specific_monitoring_id" optionvalue="location_id" required="">
                                             <option value="">Choose a Location</option>
 
                                         </select><small class="text-muted">Can't see your Monitoring Location? &nbsp;<a href="/add-monitoring-location">Add Location.</a></small>
@@ -35,7 +35,7 @@
                                 <div class="form-group mb-3 row">
                                     <label for="data_file" class="col-sm-4 col-form-label">Monitoring Data</label>
                                     <div class="col-sm-8">
-                                        <input class="form-control" type="file" id="data_file" accept=".csv" required="" dmx-on:change="onFileChange($event)">
+                                        <input class="form-control" type="file" id="data_file" accept=".csv" required="" dmx-on:change="onFileChange($event)" name="data_file">
                                     </div>
                                 </div>
                             </form>
@@ -48,7 +48,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="btn_add_data">Add Data</button>
+                <button type="button" class="btn btn-primary" id="btn_add_data" dmx-on:click="add_noise_data.submit()">Add Data</button>
             </div>
         </div>
     </div>
@@ -203,7 +203,11 @@
 
 
 <script>
-    //  const databaseColumns
+    let databaseColumns;
+    let csvData;
+    function addMappedData(){
+        handleAddData(csvData, databaseColumns)
+    }
     // Function to handle parsed data and generate mapping rows
 function handleParsedData(data, databaseColumns) {
    const mappingContainer = document.getElementById('mapping-container');
@@ -233,7 +237,7 @@ function handleParsedData(data, databaseColumns) {
       const csvData = data;
 
       mappingContainer.appendChild(row);
-      handleAddData(csvData, databaseColumns)
+     // handleAddData(csvData, databaseColumns)
    });
 
 }
@@ -252,13 +256,13 @@ function getDropdownOptions(csvColumns, selectedCsvColumn) {
    }).join('');
 }
 
+
+
 // Function to add data
 function handleAddData(csvData, databaseColumns) {
-        $("#btn_add_data").off("click")
-        $("#btn_add_data").on("click", function (){
+       
             const mappedColumns = {}; 
             let mappedData = [];
-
         
             databaseColumns.forEach(dbColumn => {
                 const dropdownValue = document.getElementById(`${dbColumn.Field}_mapping`).value;
@@ -269,17 +273,40 @@ function handleAddData(csvData, databaseColumns) {
                 let mappedRecord = {}
                 for (key of Object.keys(mappedColumns)) {
                     let mappedKey = mappedColumns[key]
-                    mappedRecord[mappedKey] = record[key]
+                    if(mappedKey == "start_date_time" || mappedKey == "end_date_time"){
+                       // let convertedDate = Date(record[key]);
+                        let convertedDate = moment(record[key], "DD/MM/YYYY HH:mm").format("YYYY-MM-DD HH:mm")
+                         mappedRecord[mappedKey] = convertedDate;
+
+                    } else {
+                            mappedRecord[mappedKey] = record[key]
+                    }
+                    
                 }
+                mappedRecord.location_id = $("#select_location").val()
                 mappedData.push(mappedRecord)
             }
-            //console.log(mappedData);
-            //console.log(csvData);
-            //console.log(Object.keys(mappedColumns))
-   })
-  
+            console.log(mappedData);
 
+            
+            fetch('/api/noise/insert_noise_data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ record: mappedData }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Data added successfully:', data);
+            })
+            .catch(error => {
+                console.error('Error adding data:', error);
+            });
+                     
 }
+
+
 
 // Function to fetch database columns from the server
 function fetchDatabaseColumns() {
@@ -292,8 +319,9 @@ function fetchDatabaseColumns() {
 document.getElementById('data_file').addEventListener('change', () => {
    // Fetch database columns and handle parsed data when a file is selected
    fetchDatabaseColumns()
-      .then(databaseColumns => {
-         parseCSV(databaseColumns);
+      .then(dbColumns => {
+         parseCSV(dbColumns);
+         databaseColumns = dbColumns
       })
       .catch(error => console.error('Error fetching database columns:', error));
 });
@@ -308,6 +336,7 @@ function parseCSV(databaseColumns) {
       complete: function(results) {
          // Handle parsed data
          handleParsedData(results.data, databaseColumns);
+         csvData = results.data;
       },
       error: function(error) {
          console.error('CSV parsing error:', error.message);
