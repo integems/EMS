@@ -19,7 +19,7 @@
                 <section id="input-file-browser">
                     <div class="row">
                         <div class="col">
-                            <form action="/api/noise/validate_noise_data" method="post" id="add_noise_data" is="dmx-serverconnect-form" onsuccess="addMappedData()">
+                            <form action="/api/noise/validate_noise_data" method="post" id="add_noise_data" is="dmx-serverconnect-form" onsuccess="addMappedData()" dmx-on:success="notifies1.success('Noise Monitoring Data Added Successfully.');add_noise_data.reset();modal_add_data.hide();browser.goto('/noise')">
 
                                 <div class="form-group mb-3 row">
                                     <label for="input1" class="col-sm-4 col-form-label">Select Monitoring Location</label>
@@ -163,9 +163,9 @@
         <div class="col"><input id="date_monitoring" name="date" is="dmx-date-range-picker" placeholder="Pick a Date Range" class="form-control "></div>
     </div>
 </section>
-<section class="mb-3">
+<section class="mb-3 h-auto">
     <div class="row">
-        <div class="col-9">
+        <div class="col-8">
             <div class="card ">
                 <div class="card-body">
                     <h4 class="card-title ">Monitoring Locations</h4>
@@ -175,7 +175,7 @@
         </div>
         <div class="col">
             <div class="card ">
-                <div class="card-body text-center">
+                <div class="card-body text-justify">
                     <h5 class="card-title " id="cardTitle"></h5>
                     <img src="/assets/images/logo_icon.jpg" alt="Location Photos" width="118px" height="118px">
                     <p class="card-text" id="cardContent"></p>
@@ -189,6 +189,9 @@
     <div class="row">
         <div class="card">
             <div class="card-body">
+                <!-- <label for="orgMonitoringId">Select Monitoring ID:</label>
+                <select id="orgMonitoringId"></select> -->
+
                 <div class="col" id="time_series_chart" style="height: 400px;"></div>
             </div>
         </div>
@@ -202,153 +205,7 @@
 </section> -->
 
 
-<script>
-    let databaseColumns;
-    let csvData;
-    function addMappedData(){
-        handleAddData(csvData, databaseColumns)
-    }
-    // Function to handle parsed data and generate mapping rows
-function handleParsedData(data, databaseColumns) {
-   const mappingContainer = document.getElementById('mapping-container');
-
-   // Clear existing content
-   mappingContainer.innerHTML = '';
-
-   // Create a row for each database column
-   databaseColumns.forEach(dbColumn =>{
-    //console.log(dbColumn);
-      const row = document.createElement('div');
-      row.classList.add('row');
-      row.classList.add('mb-2');
-      const csvColumn = findCsvColumn(data, dbColumn.Field);
-
-      row.innerHTML = `
-         <div class="col-sm-4">
-            <label for="${dbColumn.Field}_mapping" class="form-label col-form-label">${dbColumn.Field}</label>            
-         </div>
-         <div class="col">           
-            <select class="form-select" id="${dbColumn.Field}_mapping">
-            <option value=""></option>
-               ${getDropdownOptions(data[0], csvColumn)}
-            </select>
-         </div>
-      `;
-      const csvData = data;
-
-      mappingContainer.appendChild(row);
-     // handleAddData(csvData, databaseColumns)
-   });
-
-}
-
-// Function to find CSV column for a given database column
-function findCsvColumn(data, dbColumnName) {
-   
-   return data[0][dbColumnName] ? dbColumnName : '';
-}
-
-// Function to get dropdown options
-function getDropdownOptions(csvColumns, selectedCsvColumn) {
-   return Object.keys(csvColumns).map(column => {
-      const isSelected = column === selectedCsvColumn ? 'selected' : '';
-      return `<option value="${column}" ${isSelected}>${column}</option>`;
-   }).join('');
-}
-
-
-
-// Function to add data
-function handleAddData(csvData, databaseColumns) {
-       
-            const mappedColumns = {}; 
-            let mappedData = [];
-        
-            databaseColumns.forEach(dbColumn => {
-                const dropdownValue = document.getElementById(`${dbColumn.Field}_mapping`).value;
-                mappedColumns[dropdownValue] = dbColumn.Field;
-            });
-            
-            for (record of csvData) {
-                let mappedRecord = {}
-                for (key of Object.keys(mappedColumns)) {
-                    let mappedKey = mappedColumns[key]
-                    if(mappedKey == "start_date_time" || mappedKey == "end_date_time"){
-                       // let convertedDate = Date(record[key]);
-                        let convertedDate = moment(record[key], "DD/MM/YYYY HH:mm").format("YYYY-MM-DD HH:mm")
-                         mappedRecord[mappedKey] = convertedDate;
-
-                    } else {
-                            mappedRecord[mappedKey] = record[key]
-                    }
-                    
-                }
-                mappedRecord.location_id = $("#select_location").val()
-                mappedData.push(mappedRecord)
-            }
-            console.log(mappedData);
-
-            
-            fetch('/api/noise/insert_noise_data', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ record: mappedData }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Data added successfully:', data);
-            })
-            .catch(error => {
-                console.error('Error adding data:', error);
-            });
-                     
-}
-
-
-
-// Function to fetch database columns from the server
-function fetchDatabaseColumns() {
-   return fetch('/api/noise/noise_data_columns')
-      .then(response => response.json())
-      .then(data => data.query);
-}
-
-// Event listener for file input change
-document.getElementById('data_file').addEventListener('change', () => {
-   // Fetch database columns and handle parsed data when a file is selected
-   fetchDatabaseColumns()
-      .then(dbColumns => {
-         parseCSV(dbColumns);
-         databaseColumns = dbColumns
-      })
-      .catch(error => console.error('Error fetching database columns:', error));
-});
-
-// Function to parse CSV using PapaParse
-function parseCSV(databaseColumns) {
-   const fileInput = document.getElementById('data_file');
-
-   Papa.parse(fileInput.files[0], {
-      header: true,
-      dynamicTyping: true,
-      complete: function(results) {
-         // Handle parsed data
-         handleParsedData(results.data, databaseColumns);
-         csvData = results.data;
-      },
-      error: function(error) {
-         console.error('CSV parsing error:', error.message);
-      }
-   });
-}
-
-
-
-</script>
-
-
+<script src="/js/Insert%20Monitoring%20Data/Noise/add_noise_data.js" defer="true"></script>
 <script src="/js/leaflet_maps/noise_monitoring_locations.js" defer="true"></script>
 <script src="/js/highcharts/highcharts_noise/noise_time_series_chart.js" defer="true"></script>
 <meta name="ac:route" content="/noise">

@@ -49,6 +49,14 @@
           {
             "type": "number",
             "name": "$_POST"
+          },
+          {
+            "type": "datetime",
+            "name": "NOW_UTC"
+          },
+          {
+            "type": "datetime",
+            "name": "NOW"
           }
         ]
       }
@@ -118,11 +126,17 @@
                     "column": "location_id",
                     "type": "number",
                     "value": "{{location_id}}"
+                  },
+                  {
+                    "table": "noise_monitoring_data",
+                    "column": "date_created",
+                    "type": "datetime",
+                    "value": "{{NOW}}"
                   }
                 ],
                 "table": "noise_monitoring_data",
                 "returning": "noise_id",
-                "query": "insert into `noise_monitoring_data` (`LA10`, `LA90`, `LAFMax`, `LAFMin`, `LAeq`, `end_date_time`, `location_id`, `start_date_time`) values (?, ?, ?, ?, ?, ?, ?, ?)",
+                "query": "insert into `noise_monitoring_data` (`LA10`, `LA90`, `LAFMax`, `LAFMin`, `LAeq`, `date_created`, `end_date_time`, `location_id`, `start_date_time`) values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 "params": [
                   {
                     "name": ":P1",
@@ -170,6 +184,12 @@
                     "name": ":P8",
                     "type": "expression",
                     "value": "{{location_id}}",
+                    "test": ""
+                  },
+                  {
+                    "name": ":P9",
+                    "type": "expression",
+                    "value": "{{NOW}}",
                     "test": ""
                   }
                 ]
@@ -234,8 +254,16 @@
           "type": "number"
         },
         {
+          "name": "location_id",
+          "type": "number"
+        },
+        {
           "name": "$_POST",
           "type": "number"
+        },
+        {
+          "name": "NOW_UTC",
+          "type": "datetime"
         }
       ],
       "outputType": "array"

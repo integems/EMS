@@ -149,99 +149,6 @@
           "system_versioned": false
         }
       },
-      "noise_monitoring_data": {
-        "columns": {
-          "noise_id": {
-            "db": {
-              "type": "increments",
-              "primary": true,
-              "nullable": false
-            }
-          },
-          "start_date_time": {
-            "db": {
-              "type": "datetime",
-              "default": "",
-              "maxLength": 255,
-              "primary": false,
-              "nullable": true
-            }
-          },
-          "end_date_time": {
-            "db": {
-              "type": "datetime",
-              "default": "",
-              "maxLength": 255,
-              "primary": false,
-              "nullable": true
-            }
-          },
-          "LAeq": {
-            "db": {
-              "type": "decimal",
-              "default": "",
-              "maxLength": 255,
-              "primary": false,
-              "nullable": true
-            }
-          },
-          "LA90": {
-            "db": {
-              "type": "decimal",
-              "default": "",
-              "maxLength": 255,
-              "primary": false,
-              "nullable": true
-            }
-          },
-          "LA10": {
-            "db": {
-              "type": "decimal",
-              "default": "",
-              "maxLength": 255,
-              "primary": false,
-              "nullable": true
-            }
-          },
-          "LAFMax": {
-            "db": {
-              "type": "decimal",
-              "default": "",
-              "maxLength": 255,
-              "primary": false,
-              "nullable": true
-            }
-          },
-          "LAFMin": {
-            "db": {
-              "type": "decimal",
-              "default": "",
-              "maxLength": 255,
-              "primary": false,
-              "nullable": true
-            }
-          },
-          "location_id": {
-            "db": {
-              "type": "reference",
-              "default": "",
-              "primary": false,
-              "nullable": true,
-              "references": "location_id",
-              "inTable": "monitoring_location",
-              "referenceType": "integer",
-              "onUpdate": "CASCADE",
-              "onDelete": "CASCADE"
-            }
-          }
-        },
-        "db": {
-          "engine": "InnoDB",
-          "schema": "emsdb",
-          "collation": "utf8mb4_general_ci",
-          "system_versioned": false
-        }
-      },
       "monitoring_location_photos": {
         "columns": {
           "photo_id": {
@@ -309,79 +216,6 @@
         },
         "refs": {
           "monitoring_location": "location_type_id"
-        }
-      },
-      "monitoring_location": {
-        "columns": {
-          "location_id": {
-            "db": {
-              "type": "increments",
-              "primary": true,
-              "nullable": false
-            }
-          },
-          "latitude": {
-            "db": {
-              "type": "decimal",
-              "default": "",
-              "maxLength": 255,
-              "primary": false,
-              "nullable": true
-            }
-          },
-          "longitude": {
-            "db": {
-              "type": "decimal",
-              "default": "",
-              "maxLength": 255,
-              "primary": false,
-              "nullable": true
-            }
-          },
-          "org_specific_monitoring_id": {
-            "db": {
-              "type": "string",
-              "default": "",
-              "maxLength": 255,
-              "primary": false,
-              "nullable": true
-            }
-          },
-          "description": {
-            "db": {
-              "type": "string",
-              "default": "",
-              "maxLength": 255,
-              "primary": false,
-              "nullable": true
-            }
-          },
-          "location_type_id": {
-            "db": {
-              "type": "reference",
-              "default": "",
-              "primary": false,
-              "nullable": true,
-              "references": "location_type_id",
-              "inTable": "location_type",
-              "referenceType": "integer",
-              "onUpdate": "CASCADE",
-              "onDelete": "CASCADE"
-            }
-          }
-        },
-        "db": {
-          "engine": "InnoDB",
-          "schema": "emsdb",
-          "collation": "utf8mb4_general_ci",
-          "system_versioned": false
-        },
-        "refs": {
-          "noise_monitoring_data": "location_id",
-          "air_quality_monitoring_data": "location_id"
-        },
-        "sub": {
-          "monitoring_location_photos": "location_id"
         }
       },
       "air_quality_monitoring_data": {
@@ -476,6 +310,194 @@
           "schema": "emsdb",
           "collation": "utf8mb4_general_ci",
           "system_versioned": false
+        }
+      },
+      "noise_monitoring_data": {
+        "columns": {
+          "noise_id": {
+            "db": {
+              "type": "increments",
+              "primary": true,
+              "nullable": false
+            }
+          },
+          "start_date_time": {
+            "db": {
+              "type": "datetime",
+              "default": "",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "end_date_time": {
+            "db": {
+              "type": "datetime",
+              "default": "",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "LAeq": {
+            "db": {
+              "type": "decimal",
+              "default": "",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "LA90": {
+            "db": {
+              "type": "decimal",
+              "default": "",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "LA10": {
+            "db": {
+              "type": "decimal",
+              "default": "",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "LAFMax": {
+            "db": {
+              "type": "decimal",
+              "default": "",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "LAFMin": {
+            "db": {
+              "type": "decimal",
+              "default": "",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "location_id": {
+            "db": {
+              "type": "reference",
+              "default": "",
+              "primary": false,
+              "nullable": true,
+              "references": "location_id",
+              "inTable": "monitoring_location",
+              "referenceType": "integer",
+              "onUpdate": "CASCADE",
+              "onDelete": "CASCADE"
+            }
+          },
+          "date_created": {
+            "db": {
+              "type": "datetime",
+              "default": "current_timestamp()",
+              "primary": false,
+              "nullable": true
+            },
+            "db_edits": {
+              "default": ""
+            },
+            "status": {
+              "modified": true
+            }
+          }
+        },
+        "db": {
+          "engine": "InnoDB",
+          "schema": "emsdb",
+          "collation": "utf8mb4_general_ci",
+          "system_versioned": false
+        }
+      },
+      "monitoring_location": {
+        "columns": {
+          "location_id": {
+            "db": {
+              "type": "increments",
+              "primary": true,
+              "nullable": false
+            }
+          },
+          "latitude": {
+            "db": {
+              "type": "decimal",
+              "default": "",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "longitude": {
+            "db": {
+              "type": "decimal",
+              "default": "",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "org_specific_monitoring_id": {
+            "db": {
+              "type": "string",
+              "default": "",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "description": {
+            "db": {
+              "type": "string",
+              "default": "",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "location_type_id": {
+            "db": {
+              "type": "reference",
+              "default": "",
+              "primary": false,
+              "nullable": true,
+              "references": "location_type_id",
+              "inTable": "location_type",
+              "referenceType": "integer",
+              "onUpdate": "CASCADE",
+              "onDelete": "CASCADE"
+            }
+          },
+          "date_created": {
+            "db": {
+              "type": "datetime",
+              "default": "",
+              "primary": false,
+              "nullable": true
+            }
+          }
+        },
+        "db": {
+          "engine": "InnoDB",
+          "schema": "emsdb",
+          "collation": "utf8mb4_general_ci",
+          "system_versioned": false
+        },
+        "sub": {
+          "monitoring_location_photos": "location_id"
+        },
+        "refs": {
+          "air_quality_monitoring_data": "location_id",
+          "noise_monitoring_data": "location_id"
         }
       }
     },

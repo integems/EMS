@@ -24,7 +24,7 @@
             <div class="card">
                 <div class="card-content">
                     <div class="card-body">
-                        <form class="form" novalidate="" method="post" dmx-on:success="scf_add_monitoring_location.reset()" is="dmx-serverconnect-form" id="scf_add_monitoring_location" action="/api/location/add_monitoring_location">
+                        <form class="form" novalidate="" method="post" dmx-on:success="scf_add_monitoring_location.reset();notifies1.success('Monitoring location successfully added.')" is="dmx-serverconnect-form" id="scf_add_monitoring_location" action="/api/location/add_monitoring_location">
                             <div class="row">
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">

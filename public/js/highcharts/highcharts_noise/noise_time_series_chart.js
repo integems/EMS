@@ -1,8 +1,8 @@
 // JavaScript Document
-//Time series chart  - Noise Levels - 30 days - Highcharts
+//Time series chart
 document.addEventListener("DOMContentLoaded", function () {
     // Fetch data from the server
-    fetch('http://localhost:3000/api/noise/date/time')
+    fetch('api/noise/data_by_date')
         .then(response => response.json())
         .then(data => {
             // Check if 'date_time' property exists and is an array
@@ -33,12 +33,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     type: 'line'
                 },
                 title: {
-                    text: 'Noise Levels - Past 30 Days'
+                    text: 'Noise Levels'
                 },
                 xAxis: {
                     type: 'datetime',
                     dateTimeLabelFormats: {
-                        day: '%d/%m/%Y %H:%M:%S'
+                        day: '%d/%m/%Y'
                     },
                     title: {
                         text: 'Date/Time'
@@ -59,3 +59,4 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error('Error fetching data:', error);
         });
 });
+

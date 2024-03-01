@@ -24,6 +24,10 @@
             {
               "table": "noise_monitoring_data",
               "column": "*"
+            },
+            {
+              "table": "monitoring_location",
+              "column": "org_specific_monitoring_id"
             }
           ],
           "params": [],
@@ -31,8 +35,31 @@
             "name": "noise_monitoring_data"
           },
           "primary": "noise_id",
-          "joins": [],
-          "query": "select * from `noise_monitoring_data`"
+          "joins": [
+            {
+              "table": "monitoring_location",
+              "column": "*",
+              "type": "INNER",
+              "clauses": {
+                "condition": "AND",
+                "rules": [
+                  {
+                    "table": "monitoring_location",
+                    "column": "location_id",
+                    "operation": "=",
+                    "operator": "equal",
+                    "value": {
+                      "table": "noise_monitoring_data",
+                      "column": "location_id",
+                      "type": "number"
+                    }
+                  }
+                ]
+              },
+              "primary": "location_id"
+            }
+          ],
+          "query": "select `noise_monitoring_data`.*, `monitoring_location`.`org_specific_monitoring_id` from `noise_monitoring_data` inner join `monitoring_location` on `monitoring_location`.`location_id` = `noise_monitoring_data`.`location_id`"
         }
       },
       "output": true,
@@ -72,6 +99,14 @@
         {
           "type": "number",
           "name": "location_id"
+        },
+        {
+          "type": "datetime",
+          "name": "date_created"
+        },
+        {
+          "type": "text",
+          "name": "org_specific_monitoring_id"
         }
       ],
       "outputType": "array"

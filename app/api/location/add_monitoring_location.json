@@ -133,11 +133,17 @@
                 "column": "location_type_id",
                 "type": "number",
                 "value": "{{$_POST.location_type_id}}"
+              },
+              {
+                "table": "monitoring_location",
+                "column": "date_created",
+                "type": "datetime",
+                "value": "{{NOW}}"
               }
             ],
             "table": "monitoring_location",
             "returning": "location_id",
-            "query": "insert into `monitoring_location` (`description`, `latitude`, `location_type_id`, `longitude`, `org_specific_monitoring_id`) values (?, ?, ?, ?, ?)",
+            "query": "insert into `monitoring_location` (`date_created`, `description`, `latitude`, `location_type_id`, `longitude`, `org_specific_monitoring_id`) values (?, ?, ?, ?, ?, ?)",
             "params": [
               {
                 "name": ":P1",
@@ -167,6 +173,12 @@
                 "name": ":P5",
                 "type": "expression",
                 "value": "{{$_POST.location_type_id}}",
+                "test": ""
+              },
+              {
+                "name": ":P6",
+                "type": "expression",
+                "value": "{{NOW}}",
                 "test": ""
               }
             ]
