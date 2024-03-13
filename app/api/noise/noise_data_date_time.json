@@ -8,6 +8,18 @@
       {
         "type": "text",
         "name": "dir"
+      },
+      {
+        "type": "text",
+        "name": "monitoring_location"
+      },
+      {
+        "type": "text",
+        "name": "location_type"
+      },
+      {
+        "type": "text",
+        "name": "date_time"
       }
     ]
   },
@@ -23,11 +35,18 @@
           "columns": [
             {
               "table": "noise_monitoring_data",
-              "column": "*"
+              "column": "*",
+              "recid": 1
             },
             {
               "table": "monitoring_location",
-              "column": "org_specific_monitoring_id"
+              "column": "org_specific_monitoring_id",
+              "recid": 2
+            },
+            {
+              "table": "location_type",
+              "column": "location_type",
+              "recid": 3
             }
           ],
           "params": [],
@@ -57,9 +76,31 @@
                 ]
               },
               "primary": "location_id"
+            },
+            {
+              "table": "location_type",
+              "column": "*",
+              "type": "INNER",
+              "clauses": {
+                "condition": "AND",
+                "rules": [
+                  {
+                    "table": "location_type",
+                    "column": "location_type_id",
+                    "operation": "=",
+                    "operator": "equal",
+                    "value": {
+                      "table": "monitoring_location",
+                      "column": "location_type_id",
+                      "type": "number"
+                    }
+                  }
+                ]
+              },
+              "primary": "location_type_id"
             }
           ],
-          "query": "select `noise_monitoring_data`.*, `monitoring_location`.`org_specific_monitoring_id` from `noise_monitoring_data` inner join `monitoring_location` on `monitoring_location`.`location_id` = `noise_monitoring_data`.`location_id`"
+          "query": "select `noise_monitoring_data`.*, `monitoring_location`.`org_specific_monitoring_id`, `location_type`.`location_type` from `noise_monitoring_data` inner join `monitoring_location` on `monitoring_location`.`location_id` = `noise_monitoring_data`.`location_id` inner join `location_type` on `location_type`.`location_type_id` = `monitoring_location`.`location_type_id`"
         }
       },
       "output": true,
@@ -107,6 +148,10 @@
         {
           "type": "text",
           "name": "org_specific_monitoring_id"
+        },
+        {
+          "type": "text",
+          "name": "location_type"
         }
       ],
       "outputType": "array"

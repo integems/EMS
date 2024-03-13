@@ -54,5 +54,9 @@
   "add-monitoring-location.ejs": {
     "layoutPage": "portal_layout",
     "description": ""
+  },
+  "noise-year.ejs": {
+    "layoutPage": "portal_layout",
+    "description": ""
   }
 }

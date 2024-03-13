@@ -69,18 +69,59 @@ function updateCardContent(data) {
     `;
 }
 
-// Fetch monitoring locations from the API endpoint
+//Fetch monitoring locations from the API endpoint
+// fetch('/api/noise/monitoring_locations')
+//     .then(response => response.json())
+//     .then(data => {
+//         // Group locations by location_id
+//         const groupedData = {};
+//         data.locations.forEach(location => {
+//             const locationId = location.location_id;
+//             if (!groupedData[locationId]) {
+//                 groupedData[locationId] = [];
+//             }
+//             groupedData[locationId].push(location);
+//         });
+
+//         // Loop through grouped data and add markers with popups
+//         Object.values(groupedData).forEach(locationGroup => {
+//             let marker = L.marker([locationGroup[0].latitude, locationGroup[0].longitude])
+//                 .addTo(map)
+//                 .bindPopup(`
+//             <b>${locationGroup[0].org_specific_monitoring_id}</b><br>
+//             <b>Location Type:</b> ${locationGroup[0].location_type}<br>
+//             <b>Description:</b> ${locationGroup[0].description}<br>
+//             <b>Start Date:</b> ${formatDateTime(locationGroup[0].start_date_time)}<br>
+//             <b>End Date:</b> ${formatDateTime(locationGroup[0].end_date_time)}<br>
+//             <b>Average LAeq:</b> ${calculateAverage(locationGroup.map(entry => entry.LAeq)).toFixed(2)}<br>
+//             <b>Average LA90:</b> ${calculateAverage(locationGroup.map(entry => entry.LA90)).toFixed(2)}<br>
+//             <b>Average LA10:</b> ${calculateAverage(locationGroup.map(entry => entry.LA10)).toFixed(2)}<br>
+//             <b>Highest LAFMax:</b> ${findExtremeValues(locationGroup, 'LAFMax').toFixed(2)}<br>
+//             <b>Lowest LAFMin:</b> ${findExtremeValues(locationGroup, 'LAFMin').toFixed(2)}
+//           `)
+//                 .on('click', function () {
+//                     // Update card content when marker is clicked
+//                     updateCardContent(locationGroup);
+//                 });
+//         });
+//     })
+//     .catch(error => console.error('Error fetching data:', error));
+
+//-------------------------------------------------------------------------------------------------------------------------------
+
 fetch('/api/noise/monitoring_locations')
     .then(response => response.json())
     .then(data => {
-        // Group locations by location_id
         const groupedData = {};
         data.locations.forEach(location => {
             const locationId = location.location_id;
-            if (!groupedData[locationId]) {
-                groupedData[locationId] = [];
+            const startDate = location.start_date_time.split('T')[0];
+            const key = `${locationId}_${startDate}`;
+
+            if (!groupedData[key]) {
+                groupedData[key] = [];
             }
-            groupedData[locationId].push(location);
+            groupedData[key].push(location);
         });
 
         // Loop through grouped data and add markers with popups
@@ -100,7 +141,6 @@ fetch('/api/noise/monitoring_locations')
             <b>Lowest LAFMin:</b> ${findExtremeValues(locationGroup, 'LAFMin').toFixed(2)}
           `)
                 .on('click', function () {
-                    // Update card content when marker is clicked
                     updateCardContent(locationGroup);
                 });
         });

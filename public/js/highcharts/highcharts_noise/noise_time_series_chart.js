@@ -1,62 +1,81 @@
 // JavaScript Document
 //Time series chart
-document.addEventListener("DOMContentLoaded", function () {
-    // Fetch data from the server
-    fetch('api/noise/data_by_date')
-        .then(response => response.json())
-        .then(data => {
-            // Check if 'date_time' property exists and is an array
-            if (!data || !Array.isArray(data.date_time)) {
-                console.error('Invalid data format. Expected an array under the "date_time" property.');
-                return;
+async function fetchData() {
+    try {
+        const response = await fetch('api/noise/noise_data_date_time');
+        const jsonData = await response.json();
+        return jsonData;
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        return null;
+    }
+}
+
+function renderChart(orgId, jsonData) {
+    const filteredData = jsonData.date_time.filter(entry => entry.org_specific_monitoring_id === orgId);
+
+    // Sort the data by start_date_time in ascending order
+    const dateData = filteredData.sort((a, b) => new Date(a.start_date_time) - new Date(b.start_date_time));
+
+    // Prepare data series for each parameter
+    const parameters = ['LAeq', 'LA90', 'LA10', 'LAFMax', 'LAFMin'];
+    const seriesData = parameters.map(parameter => ({
+        name: parameter,
+        data: dateData.map(entry => ({
+            x: new Date(entry.start_date_time).getTime(),
+            y: entry[parameter]
+        }))
+    }));
+
+    // Create the Highcharts time series chart
+    Highcharts.chart('time_series_chart_two', {
+        chart: {
+            type: 'line'
+        },
+        title: {
+            text: `Noise Levels for ${orgId}`
+        },
+        xAxis: {
+            type: 'datetime',
+            dateTimeLabelFormats: {
+                day: '%d/%m/%Y %H:%M:%S'
+            },
+            title: {
+                text: 'Date/Time'
             }
+        },
+        yAxis: {
+            title: {
+                text: 'Noise Levels (dB)'
+            }
+        },
+        series: seriesData,
+        accessibility: {
+            enabled: true
+        }
+    });
+}
 
-            // Extract relevant data for the chart
-            const dateData = data.date_time;
+function populateSelectOptions(uniqueOrgs) {
+    const orgSelect = $('#orgSelect');
+    uniqueOrgs.forEach(org => {
+        orgSelect.append(`<option value="${org}">${org}</option>`);
+    });
+}
 
-            // Sort the data by start_date_time in ascending order
-            dateData.sort((a, b) => new Date(a.start_date_time) - new Date(b.start_date_time));
+async function initializeChart() {
+    const jsonData = await fetchData();
+    if (jsonData) {
+        const uniqueOrgs = [...new Set(jsonData.date_time.map(entry => entry.org_specific_monitoring_id))];
+        populateSelectOptions(uniqueOrgs);
+        renderChart(uniqueOrgs[0], jsonData);
 
-            // Prepare data series for each parameter
-            const parameters = ['LAeq', 'LA90', 'LA10', 'LAFMax', 'LAFMin'];
-            const seriesData = parameters.map(parameter => ({
-                name: parameter,
-                data: dateData.map(entry => ({
-                    x: new Date(entry.start_date_time).getTime(),
-                    y: entry[parameter]
-                }))
-            }));
-
-            // Create the Highcharts time series chart
-            Highcharts.chart('time_series_chart', {
-                chart: {
-                    type: 'line'
-                },
-                title: {
-                    text: 'Noise Levels'
-                },
-                xAxis: {
-                    type: 'datetime',
-                    dateTimeLabelFormats: {
-                        day: '%d/%m/%Y'
-                    },
-                    title: {
-                        text: 'Date/Time'
-                    }
-                },
-                yAxis: {
-                    title: {
-                        text: 'Noise Levels (dB)'
-                    }
-                },
-                series: seriesData,
-                accessibility: {
-                    enabled: true
-                }
-            });
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
+        $('#orgSelect').on('change', function () {
+            const selectedOrg = $(this).val();
+            renderChart(selectedOrg, jsonData);
         });
-});
+    }
+}
+
+initializeChart();
 

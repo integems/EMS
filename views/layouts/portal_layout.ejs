@@ -10,7 +10,7 @@
   <link rel="icon" type="image/ico" href="/favicon.ico" dmx-bind:href="sc_security_app_data.data.query.where(`field_name`, 'favicon', '==')[0].field_value">
 
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="stylesheet" href="/bootstrap/5/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/bootstrap/5/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous" />
   <link rel="stylesheet" href="/fontawesome6/css/all.min.css" />
   <link rel="stylesheet" href="/css/bootstrap-icons.min.css" />
   <link rel="stylesheet" href="/css/style.css" />
@@ -56,9 +56,16 @@
   <link rel="stylesheet" href="/dmxAppConnect/dmxNotifications/dmxNotifications.css" />
   <script src="/dmxAppConnect/dmxNotifications/dmxNotifications.js" defer></script>
   <script src="/dmxAppConnect/dmxStateManagement/dmxStateManagement.js" defer></script>
+
+
+
+  <script src="/dmxAppConnect/dmxBootstrap4Navigation/dmxBootstrap4Navigation.js" defer></script>
+  <link rel="stylesheet" href="/dmxAppConnect/dmxBootstrap5TableGenerator/dmxBootstrap5TableGenerator.css" />
+  <script src="/dmxAppConnect/dmxBootstrap5PagingGenerator/dmxBootstrap5PagingGenerator.js" defer></script>
 </head>
 
 <body is="dmx-app" id="portal_layout">
+  <dmx-datetime id="var_datetime" interval="minutes"></dmx-datetime>
   <dmx-notifications id="notifies1"></dmx-notifications>
   <div is="dmx-browser" id="browser"></div>
   <dmx-serverconnect id="sc_logout" url="/api/security/logout"></dmx-serverconnect>
@@ -108,46 +115,167 @@
               </a>
             </li>
 
-            <li class="sidebar-item">
+            <li class="sidebar-item has-sub">
               <a class="sidebar-link" href="/air-quality">
                 <i class="bi bi-cloud-fog2"></i>
                 <span>Air Quality</span>
               </a>
+              <ul class="submenu">
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="/air-quality">Overview</a>
+                </li>
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="" dmx-bind:href="'/air-quality?year='+var_datetime.datetime.getYear()">{{var_datetime.datetime.getYear()}}</a>
+                </li>
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="#" dmx-bind:href="'/air-quality?year='+var_datetime.datetime.addYears(-1).getYear()">{{var_datetime.datetime.addYears(-1).getYear()}}</a>
+                </li>
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="#" dmx-bind:href="'/air-quality?year='+var_datetime.datetime.addYears(-2).getYear()">{{var_datetime.datetime.addYears(-2).getYear()}}</a>
+                </li>
+
+              </ul>
             </li>
 
-            <li class="sidebar-item">
+            <li class="sidebar-item has-sub">
               <a class="sidebar-link" href="/noise">
                 <i class="bi bi-soundwave"></i>
                 <span>Noise</span>
               </a>
+              <ul class="submenu">
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="/noise">Overview</a>
+                </li>
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="" dmx-bind:href="'/noise?year='+var_datetime.datetime.getYear()">{{var_datetime.datetime.getYear()}}</a>
+                </li>
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="#" dmx-bind:href="'/noise?year='+var_datetime.datetime.addYears(-1).getYear()">{{var_datetime.datetime.addYears(-1).getYear()}}</a>
+                </li>
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="#" dmx-bind:href="'/noise?year='+var_datetime.datetime.addYears(-2).getYear()">{{var_datetime.datetime.addYears(-2).getYear()}}</a>
+                </li>
+
+              </ul>
             </li>
 
-            <li class="sidebar-item">
+            <li class="sidebar-item has-sub">
               <a class="sidebar-link" href="/water-quality">
                 <i class="bi bi-water"></i>
                 <span>Water Quality</span>
               </a>
+              <ul class="submenu">
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="/water-quality">Overview</a>
+                </li>
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="" dmx-bind:href="'/water-quality?year='+var_datetime.datetime.getYear()">{{var_datetime.datetime.getYear()}}</a>
+                </li>
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="#" dmx-bind:href="'/water-quality?year='+var_datetime.datetime.addYears(-1).getYear()">{{var_datetime.datetime.addYears(-1).getYear()}}</a>
+                </li>
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="#" dmx-bind:href="'/water-quality?year='+var_datetime.datetime.addYears(-2).getYear()">{{var_datetime.datetime.addYears(-2).getYear()}}</a>
+                </li>
+
+              </ul>
             </li>
 
-            <li class="sidebar-item">
+            <li class="sidebar-item has-sub">
+              <a class="sidebar-link" href="#">
+                <i class="bi bi-water"></i>
+                <span>Water Usage</span>
+              </a>
+              <ul class="submenu">
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="#">Overview</a>
+                </li>
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="#">2024</a>
+                </li>
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="#">2023</a>
+                </li>
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="#">2022</a>
+                </li>
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="#">2021</a>
+                </li>
+              </ul>
+            </li>
+
+            <li class="sidebar-item has-sub">
               <a href="#" class="sidebar-link">
                 <i class="bi bi-tree-fill"></i>
                 <span>Soils</span>
               </a>
+              <ul class="submenu">
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="#">Overview</a>
+                </li>
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="#">2024</a>
+                </li>
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="#">2023</a>
+                </li>
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="#">2022</a>
+                </li>
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="#">2021</a>
+                </li>
+              </ul>
             </li>
 
-            <li class="sidebar-item">
+            <li class="sidebar-item has-sub">
               <a href="#" class="sidebar-link">
                 <i class="bi bi-tree-fill"></i>
                 <span>Biodiversity</span>
               </a>
+              <ul class="submenu">
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="#">Overview</a>
+                </li>
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="#">2024</a>
+                </li>
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="#">2023</a>
+                </li>
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="#">2022</a>
+                </li>
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="#">2021</a>
+                </li>
+              </ul>
             </li>
 
-            <li class="sidebar-item">
+            <li class="sidebar-item has-sub">
               <a href="#" class="sidebar-link">
                 <i class="bi bi-recycle"></i>
                 <span>Waste Management</span>
               </a>
+              <ul class="submenu">
+
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="#">Overview</a>
+                </li>
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="#">2024</a>
+                </li>
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="#">2023</a>
+                </li>
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="#">2022</a>
+                </li>
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="#">2021</a>
+                </li>
+              </ul>
             </li>
 
             <li class="sidebar-item has-sub">
@@ -264,79 +392,111 @@
       </div>
     </div>
   </div>
-  <script src="assets/js/bootstrap.js"></script>
-  <script src="assets/js/app.js"></script>
-
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
-
-
-  <script src="/bootstrap/5/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    //     document.addEventListener("DOMContentLoaded", function() {
+    //     $(document).ready(function() {
 //   // Get all sidebar items
-//   const sidebarItems = document.querySelectorAll(".sidebar-item, .submenu-item");
+//   var sidebarItems = $(".sidebar-item, .submenu-item");
 
 //   // Function to set active class
-//   const setActiveClass = (clickedItem) => {
+//   var setActiveClass = function(clickedItem) {
 //     // Remove "active" class from all sidebar items
-//     sidebarItems.forEach(item => {
-//       item.classList.remove("active");
-//     });
+//     sidebarItems.removeClass("active");
 
 //     // Add "active" class to the clicked sidebar item
-//     clickedItem.classList.add("active");
+//     clickedItem.addClass("active");
 
 //     // Store the active item in localStorage
-//     localStorage.setItem("activeSidebarItem", clickedItem.querySelector(".sidebar-link").getAttribute("href"));
+//     localStorage.setItem("activeSidebarItem", clickedItem.find(".sidebar-link").attr("href"));
 //   };
 
 //   // Add click event listener to each sidebar item
-//   sidebarItems.forEach(item => {
-//     item.addEventListener("click", function() {
-//       setActiveClass(this);
-//     });
+//   sidebarItems.on("click", function() {
+//     setActiveClass($(this));
 //   });
 
 //   // Set "active" class to the Dashboard item on page load or retrieve from localStorage
-//   const storedActiveItem = localStorage.getItem("activeSidebarItem");
-//   const defaultActiveItem = '/dashboard';
-//   const activeItem = storedActiveItem ? storedActiveItem : defaultActiveItem;
+//   var storedActiveItem = localStorage.getItem("activeSidebarItem");
+//   var defaultActiveItem = '/dashboard';
+//   var activeItem = storedActiveItem ? storedActiveItem : defaultActiveItem;
 
-//   const initialActiveItem = document.querySelector(`.sidebar-link[href="${activeItem}"]`);
-//   if (initialActiveItem) {
+//   var initialActiveItem = $(`.sidebar-link[href="${activeItem}"]`);
+//   if (initialActiveItem.length > 0) {
 //     setActiveClass(initialActiveItem.closest('.sidebar-item'));
 //   }
 // });
 
+//-----------------------------------------------------------------------------------
 
+// document.addEventListener("DOMContentLoaded", function () {
+//   // Function to add 'active' class to elements based on the current URL
+//   function setActiveClass() {
+//     var currentUrl = window.location.pathname;
+
+//     // Remove existing 'active' classes
+//     var allItems = document.querySelectorAll(".sidebar-item, .submenu-item");
+//     allItems.forEach(function (item) {
+//       item.classList.remove("active");
+//     });
+
+//     // Add 'active' class based on the current URL
+//     var activeItems = document.querySelectorAll(
+//       '.sidebar-link[href="' + currentUrl + '"]'
+//     );
+//     activeItems.forEach(function (item) {
+//       item.closest(".sidebar-item, .submenu-item").classList.add("active");
+//     });
+//   }
+
+//   // Initial call to set 'active' class on page load
+//   setActiveClass();
+
+//   // Set 'active' class when a link is clicked
+//   var sidebarLinks = document.querySelectorAll(".sidebar-link");
+//   sidebarLinks.forEach(function (link) {
+//     link.addEventListener("click", function () {
+//       // Allow the default behavior (navigation) to happen
+//       setTimeout(setActiveClass, 0);
+//     });
+//   });
+
+//   // Set 'active' class on page refresh
+//   window.addEventListener("popstate", function () {
+//     setActiveClass();
+//   });
+// });
+
+
+//------------------------------------------------------------------------------
 
 $(document).ready(function() {
-  // Get all sidebar items
-  var sidebarItems = $(".sidebar-item, .submenu-item");
-
   // Function to set active class
   var setActiveClass = function(clickedItem) {
     // Remove "active" class from all sidebar items
-    sidebarItems.removeClass("active");
+    $(".sidebar-item, .submenu-item").removeClass("active");
 
     // Add "active" class to the clicked sidebar item
     clickedItem.addClass("active");
+
+    // If it's a submenu item, also add "active" class to its parent sidebar item
+    if (clickedItem.hasClass("submenu-item")) {
+      clickedItem.closest(".sidebar-item").addClass("active");
+    }
 
     // Store the active item in localStorage
     localStorage.setItem("activeSidebarItem", clickedItem.find(".sidebar-link").attr("href"));
   };
 
   // Add click event listener to each sidebar item
-  sidebarItems.on("click", function() {
+  $(".sidebar-item, .submenu-item").on("click", function() {
     setActiveClass($(this));
   });
 
-  // Set "active" class to the Dashboard item on page load or retrieve from localStorage
+  // Set "active" class on page load based on localStorage or default to Dashboard
   var storedActiveItem = localStorage.getItem("activeSidebarItem");
   var defaultActiveItem = '/dashboard';
   var activeItem = storedActiveItem ? storedActiveItem : defaultActiveItem;
+  console.log(activeItem)
 
   var initialActiveItem = $(`.sidebar-link[href="${activeItem}"]`);
   if (initialActiveItem.length > 0) {
@@ -345,7 +505,22 @@ $(document).ready(function() {
 });
 
 
+
+
+
+
   </script>
+
+
+  <script src="assets/js/bootstrap.js"></script>
+  <script src="assets/js/app.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
+
+
+  <script src="/bootstrap/5/js/bootstrap.bundle.min.js"></script>
+
 
 
 

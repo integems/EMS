@@ -557,3 +557,7 @@ div.sidebar-wrapper.active{
 
 link{
 }
+
+#location_map{
+  z-index:1;
+}

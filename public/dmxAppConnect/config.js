@@ -18,5 +18,13 @@ dmx.config({
         "name": "mappedData"
       }
     ]
+  },
+  "noiseyear": {
+    "query": [
+      {
+        "type": "text",
+        "name": "Offset"
+      }
+    ]
   }
 });

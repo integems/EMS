@@ -4,9 +4,8 @@
 <dmx-serverconnect id="sc_monitoring_location_type" url="/api/location/monitoring_location_type"></dmx-serverconnect>
 <dmx-serverconnect id="sc_monitoring_location_id" url="/api/location/monitoring_location_id"></dmx-serverconnect>
 
-<dmx-serverconnect id="sc_noise_monitoring_date_time" url="/api/noise/date/time"></dmx-serverconnect>
-<dmx-serverconnect id="sc_monitoring_locations" url="/api/noise/monitoring_locations" dmx-param:location_id_filter="select_location_id.value" dmx-param:location_type_filter="select_location_type.value"></dmx-serverconnect>
-<dmx-serverconnect id="sc_avg_LAeq_location" url="/api/noise/average_LAeq_location"></dmx-serverconnect>
+<dmx-serverconnect id="sc_noise_monitoring_date_time" url="/api/noise/noise_data_date_time" dmx-param:monitoring_location="" dmx-param:location_type="" dmx-param:date_time=""></dmx-serverconnect>
+<dmx-serverconnect id="sc_monitoring_locations" url="/api/noise/monitoring_locations" dmx-param:location_id_filter="" dmx-param:location_type_filter=""></dmx-serverconnect>
 
 <div class="modal fade" id="modal_add_data" is="dmx-bs5-modal" tabindex="-1" nocloseonclick="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -163,7 +162,7 @@
         <div class="col"><input id="date_monitoring" name="date" is="dmx-date-range-picker" placeholder="Pick a Date Range" class="form-control "></div>
     </div>
 </section>
-<section class="mb-3 h-auto">
+<section class="mb-3 ">
     <div class="row">
         <div class="col-8">
             <div class="card ">
@@ -185,24 +184,22 @@
         </div>
     </div>
 </section>
+
 <section class="mb-3">
     <div class="row">
         <div class="card">
             <div class="card-body">
-                <!-- <label for="orgMonitoringId">Select Monitoring ID:</label>
-                <select id="orgMonitoringId"></select> -->
 
-                <div class="col" id="time_series_chart" style="height: 400px;"></div>
+                <div class="col">
+                    <label for="orgSelect">Select Monitoring Location:</label>
+                    <select id="orgSelect"></select>
+                    <div id="time_series_chart_two" style="height: 400px;"></div>
+                </div>
             </div>
         </div>
     </div>
 </section>
-<!-- <section>
-    <div class="row">
-        <div class="col-md-6" id="noise_chart"></div>
-        <div class="col-md-6" id="time_of_day_chart"></div>
-    </div>
-</section> -->
+
 
 
 <script src="/js/Insert%20Monitoring%20Data/Noise/add_noise_data.js" defer="true"></script>

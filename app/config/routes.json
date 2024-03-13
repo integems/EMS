@@ -58,6 +58,11 @@
       "path": "/add-monitoring-location",
       "page": "add-monitoring-location",
       "layout": "portal_layout"
+    },
+    {
+      "path": "/noise-year",
+      "page": "noise-year",
+      "layout": "portal_layout"
     }
   ],
   "layouts": {
