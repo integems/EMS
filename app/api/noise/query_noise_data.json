@@ -8,6 +8,18 @@
       {
         "type": "text",
         "name": "dir"
+      },
+      {
+        "type": "text",
+        "name": "monitoring_location"
+      },
+      {
+        "type": "text",
+        "name": "year"
+      },
+      {
+        "type": "text",
+        "name": "month"
       }
     ]
   },
@@ -85,8 +97,15 @@
               "primary": "location_type_id"
             }
           ],
-          "query": "select `noise_monitoring_data`.*, `location_type`.`location_type`, `monitoring_location`.`org_specific_monitoring_id` from `noise_monitoring_data` inner join `monitoring_location` on `monitoring_location`.`location_id` = `noise_monitoring_data`.`location_id` inner join `location_type` on `location_type`.`location_type_id` = `monitoring_location`.`location_type_id`",
-          "limit": 10
+          "query": "select `noise_monitoring_data`.*, `location_type`.`location_type`, `monitoring_location`.`org_specific_monitoring_id` from `noise_monitoring_data` inner join `monitoring_location` on `monitoring_location`.`location_id` = `noise_monitoring_data`.`location_id` inner join `location_type` on `location_type`.`location_type_id` = `monitoring_location`.`location_type_id` order by `noise_monitoring_data`.`start_date_time` DESC limit ?",
+          "limit": 25,
+          "orders": [
+            {
+              "table": "noise_monitoring_data",
+              "column": "start_date_time",
+              "direction": "DESC"
+            }
+          ]
         }
       },
       "output": true,

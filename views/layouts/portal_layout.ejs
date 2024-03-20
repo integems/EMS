@@ -122,16 +122,10 @@
               </a>
               <ul class="submenu">
                 <li class="submenu-item">
-                  <a class="sidebar-link" href="/air-quality">Overview</a>
+                  <a class="sidebar-link" href="/air-quality">Air Quality Data</a>
                 </li>
                 <li class="submenu-item">
                   <a class="sidebar-link" href="" dmx-bind:href="'/air-quality?year='+var_datetime.datetime.getYear()">{{var_datetime.datetime.getYear()}}</a>
-                </li>
-                <li class="submenu-item">
-                  <a class="sidebar-link" href="#" dmx-bind:href="'/air-quality?year='+var_datetime.datetime.addYears(-1).getYear()">{{var_datetime.datetime.addYears(-1).getYear()}}</a>
-                </li>
-                <li class="submenu-item">
-                  <a class="sidebar-link" href="#" dmx-bind:href="'/air-quality?year='+var_datetime.datetime.addYears(-2).getYear()">{{var_datetime.datetime.addYears(-2).getYear()}}</a>
                 </li>
 
               </ul>
@@ -144,17 +138,15 @@
               </a>
               <ul class="submenu">
                 <li class="submenu-item">
-                  <a class="sidebar-link" href="/noise">Overview</a>
+                  <a class="sidebar-link" href="/noise">Recent</a>
                 </li>
                 <li class="submenu-item">
-                  <a class="sidebar-link" href="" dmx-bind:href="'/noise?year='+var_datetime.datetime.getYear()">{{var_datetime.datetime.getYear()}}</a>
+                  <a class="sidebar-link" href="/noise-data">Noise Data</a>
                 </li>
                 <li class="submenu-item">
-                  <a class="sidebar-link" href="#" dmx-bind:href="'/noise?year='+var_datetime.datetime.addYears(-1).getYear()">{{var_datetime.datetime.addYears(-1).getYear()}}</a>
+                  <a class="sidebar-link" href="/noise-insights">Noise Insights </a>
                 </li>
-                <li class="submenu-item">
-                  <a class="sidebar-link" href="#" dmx-bind:href="'/noise?year='+var_datetime.datetime.addYears(-2).getYear()">{{var_datetime.datetime.addYears(-2).getYear()}}</a>
-                </li>
+
 
               </ul>
             </li>
@@ -166,17 +158,12 @@
               </a>
               <ul class="submenu">
                 <li class="submenu-item">
-                  <a class="sidebar-link" href="/water-quality">Overview</a>
+                  <a class="sidebar-link" href="/water-quality">Water Quality Data</a>
                 </li>
                 <li class="submenu-item">
-                  <a class="sidebar-link" href="" dmx-bind:href="'/water-quality?year='+var_datetime.datetime.getYear()">{{var_datetime.datetime.getYear()}}</a>
+                  <a class="sidebar-link" href="" dmx-bind:href="'/water-quality?year='+var_datetime.datetime.getYear()">{{var_datetime.datetime.getYear(var_datetime.datetime)-1}}</a>
                 </li>
-                <li class="submenu-item">
-                  <a class="sidebar-link" href="#" dmx-bind:href="'/water-quality?year='+var_datetime.datetime.addYears(-1).getYear()">{{var_datetime.datetime.addYears(-1).getYear()}}</a>
-                </li>
-                <li class="submenu-item">
-                  <a class="sidebar-link" href="#" dmx-bind:href="'/water-quality?year='+var_datetime.datetime.addYears(-2).getYear()">{{var_datetime.datetime.addYears(-2).getYear()}}</a>
-                </li>
+
 
               </ul>
             </li>
@@ -188,20 +175,12 @@
               </a>
               <ul class="submenu">
                 <li class="submenu-item">
-                  <a class="sidebar-link" href="#">Overview</a>
+                  <a class="sidebar-link" href="#">Water Usage Data</a>
                 </li>
                 <li class="submenu-item">
-                  <a class="sidebar-link" href="#">2024</a>
+                  <a class="sidebar-link" href="#">Water Usage Insights</a>
                 </li>
-                <li class="submenu-item">
-                  <a class="sidebar-link" href="#">2023</a>
-                </li>
-                <li class="submenu-item">
-                  <a class="sidebar-link" href="#">2022</a>
-                </li>
-                <li class="submenu-item">
-                  <a class="sidebar-link" href="#">2021</a>
-                </li>
+
               </ul>
             </li>
 
@@ -212,20 +191,12 @@
               </a>
               <ul class="submenu">
                 <li class="submenu-item">
-                  <a class="sidebar-link" href="#">Overview</a>
+                  <a class="sidebar-link" href="#">Soils Data</a>
                 </li>
                 <li class="submenu-item">
-                  <a class="sidebar-link" href="#">2024</a>
+                  <a class="sidebar-link" href="#">Soils Insights</a>
                 </li>
-                <li class="submenu-item">
-                  <a class="sidebar-link" href="#">2023</a>
-                </li>
-                <li class="submenu-item">
-                  <a class="sidebar-link" href="#">2022</a>
-                </li>
-                <li class="submenu-item">
-                  <a class="sidebar-link" href="#">2021</a>
-                </li>
+
               </ul>
             </li>
 
@@ -236,20 +207,12 @@
               </a>
               <ul class="submenu">
                 <li class="submenu-item">
-                  <a class="sidebar-link" href="#">Overview</a>
+                  <a class="sidebar-link" href="#">Biodiversity Data</a>
                 </li>
                 <li class="submenu-item">
-                  <a class="sidebar-link" href="#">2024</a>
+                  <a class="sidebar-link" href="#">Biodiversity Insights</a>
                 </li>
-                <li class="submenu-item">
-                  <a class="sidebar-link" href="#">2023</a>
-                </li>
-                <li class="submenu-item">
-                  <a class="sidebar-link" href="#">2022</a>
-                </li>
-                <li class="submenu-item">
-                  <a class="sidebar-link" href="#">2021</a>
-                </li>
+
               </ul>
             </li>
 
@@ -261,20 +224,12 @@
               <ul class="submenu">
 
                 <li class="submenu-item">
-                  <a class="sidebar-link" href="#">Overview</a>
+                  <a class="sidebar-link" href="#">Waste Management Data</a>
                 </li>
                 <li class="submenu-item">
-                  <a class="sidebar-link" href="#">2024</a>
+                  <a class="sidebar-link" href="#">Waste Management Insights</a>
                 </li>
-                <li class="submenu-item">
-                  <a class="sidebar-link" href="#">2023</a>
-                </li>
-                <li class="submenu-item">
-                  <a class="sidebar-link" href="#">2022</a>
-                </li>
-                <li class="submenu-item">
-                  <a class="sidebar-link" href="#">2021</a>
-                </li>
+
               </ul>
             </li>
 

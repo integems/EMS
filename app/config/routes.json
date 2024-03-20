@@ -60,8 +60,13 @@
       "layout": "portal_layout"
     },
     {
-      "path": "/noise-year",
-      "page": "noise-year",
+      "path": "/noise-insights",
+      "page": "noise-insights",
+      "layout": "portal_layout"
+    },
+    {
+      "path": "/noise-data",
+      "page": "noise-data",
       "layout": "portal_layout"
     }
   ],

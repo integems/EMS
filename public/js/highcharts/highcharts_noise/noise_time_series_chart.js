@@ -12,7 +12,12 @@ async function fetchData() {
 }
 
 function renderChart(orgId, jsonData) {
-    const filteredData = jsonData.date_time.filter(entry => entry.org_specific_monitoring_id === orgId);
+    let filteredData;
+    if (orgId === 'all locations') {
+        filteredData = jsonData.date_time;
+    } else {
+        filteredData = jsonData.date_time.filter(entry => entry.org_specific_monitoring_id === orgId);
+    }
 
     // Sort the data by start_date_time in ascending order
     const dateData = filteredData.sort((a, b) => new Date(a.start_date_time) - new Date(b.start_date_time));
@@ -27,7 +32,7 @@ function renderChart(orgId, jsonData) {
         }))
     }));
 
-    // Create the Highcharts time series chart
+
     Highcharts.chart('time_series_chart_two', {
         chart: {
             type: 'line'
@@ -58,6 +63,7 @@ function renderChart(orgId, jsonData) {
 
 function populateSelectOptions(uniqueOrgs) {
     const orgSelect = $('#orgSelect');
+    orgSelect.append('<option value="all locations">All locations</option>');
     uniqueOrgs.forEach(org => {
         orgSelect.append(`<option value="${org}">${org}</option>`);
     });

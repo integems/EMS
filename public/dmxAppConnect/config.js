@@ -19,7 +19,7 @@ dmx.config({
       }
     ]
   },
-  "noiseyear": {
+  "noiseinsights": {
     "query": [
       {
         "type": "text",

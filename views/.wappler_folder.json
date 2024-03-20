@@ -55,7 +55,11 @@
     "layoutPage": "portal_layout",
     "description": ""
   },
-  "noise-year.ejs": {
+  "noise-data.ejs": {
+    "layoutPage": "portal_layout",
+    "description": ""
+  },
+  "noise-insights.ejs": {
     "layoutPage": "portal_layout",
     "description": ""
   }

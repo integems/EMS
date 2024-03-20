@@ -1,0 +1,74 @@
+<!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="noiseinsights" appconnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Navigation:{},dmxFormatter:{},dmxBootstrap5TableGenerator:{},dmxStateManagement:{},dmxBootstrap5PagingGenerator:{}}" -->
+<dmx-serverconnect id="sc_monitoring_locations" url="/api/location/monitoring_location_id"></dmx-serverconnect>
+<dmx-serverconnect id="sc_monitorin_location_type" url="/api/location/monitoring_location_type"></dmx-serverconnect>
+<dmx-query-manager id="query_noise"></dmx-query-manager>
+<dmx-serverconnect id="sc_noise_data" url="/api/noise/query_noise_data" dmx-param:monitoring_location="select_monitoring_location.value"></dmx-serverconnect>
+<dmx-serverconnect id="sc_noise_data_chart" url="/api/noise/query_noise" dmx-param:monitoring_location="select_monitoring_location.value"></dmx-serverconnect>
+<meta name="ac:route" content="/noise-insights">
+
+<section class="mb-3">
+  <div class="row text-end">
+
+    <div class="col text-start">
+      <h1 class="fw-normal fs-2">Noise Data Insights</h1>
+      <div class="breadcrumb">
+        <a class="breadcrumb-item breadcrumb-link fs-5 fw-light" href="/dashboard">Dashboard</a>
+        <a class="breadcrumb-item breadcrumb-link fs-5 fw-light" href="/noise">Noise</a>
+        <a class="breadcrumb-item breadcrumb-link fs-5 fw-bold" href="/noise" dmx-bind:href="">{{var_datetime.datetime.getYear(var_datetime.datetime)}}</a>
+      </div>
+    </div>
+    <div class="col">
+      <button id="btn1" class="btn btn-primary">Download</button>
+    </div>
+  </div>
+</section>
+<section class="mb-3">
+  <div class="row">
+    <div class="col">
+      <select id="select_year" class="form-select">
+        <option value="">All Years</option>
+        <option value="" dmx-bind:value="var_datetime.datetime.getYear()">{{var_datetime.datetime.getYear()}}</option>
+        <option value="var_datetime.datetime.getYear(var_datetime.datetime)-1">{{var_datetime.datetime.getYear(var_datetime.datetime)-1}}</option>
+        <option value="var_datetime.datetime.getYear(var_datetime.datetime)-2">{{var_datetime.datetime.getYear(var_datetime.datetime)-2}}</option>
+      </select>
+    </div>
+    <div class="col">
+      <select id="select_monthly" class="form-select">
+        <option value="1">Option One</option>
+        <option value="2">Option Two</option>
+        <option value="3">Option Three</option>
+      </select>
+    </div>
+    <div class="col">
+      <select id="select_monitoring_location" class="form-select" name="location_id" dmx-bind:options="sc_monitoring_locations.data.monitoring_location_id" optiontext="org_specific_monitoring_id" optionvalue="location_id">
+        <option value="">All Monitoring Locations</option>
+      </select>
+    </div>
+  </div>
+</section>
+<section>
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <div id="monthly_average" style="height: 400px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <div id="quarterly_average" style="height: 400px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="/js/highcharts/highcharts_noise/monthly_avg.js" async="true"></script>
+<script src="/js/highcharts/highcharts_noise/quarterly_avg.js" async="true"></script>
