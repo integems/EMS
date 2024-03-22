@@ -74,7 +74,7 @@ async function initializeChart() {
     if (jsonData) {
         const uniqueOrgs = [...new Set(jsonData.date_time.map(entry => entry.org_specific_monitoring_id))];
         populateSelectOptions(uniqueOrgs);
-        renderChart(uniqueOrgs[0], jsonData);
+        renderChart('all locations', jsonData);
 
         $('#orgSelect').on('change', function () {
             const selectedOrg = $(this).val();

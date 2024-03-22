@@ -103,7 +103,8 @@
             {
               "table": "noise_monitoring_data",
               "column": "start_date_time",
-              "direction": "DESC"
+              "direction": "DESC",
+              "recid": 1
             }
           ]
         }

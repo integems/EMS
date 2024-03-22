@@ -26,135 +26,67 @@
   "exec": {
     "steps": {
       "name": "date_time",
-      "module": "dbconnector",
-      "action": "select",
+      "module": "dbupdater",
+      "action": "custom",
       "options": {
         "connection": "conn_db",
         "sql": {
-          "type": "select",
-          "columns": [
-            {
-              "table": "noise_monitoring_data",
-              "column": "*",
-              "recid": 1
-            },
-            {
-              "table": "monitoring_location",
-              "column": "org_specific_monitoring_id",
-              "recid": 2
-            },
-            {
-              "table": "location_type",
-              "column": "location_type",
-              "recid": 3
-            }
-          ],
-          "params": [],
-          "table": {
-            "name": "noise_monitoring_data"
-          },
-          "primary": "noise_id",
-          "joins": [
-            {
-              "table": "monitoring_location",
-              "column": "*",
-              "type": "INNER",
-              "clauses": {
-                "condition": "AND",
-                "rules": [
-                  {
-                    "table": "monitoring_location",
-                    "column": "location_id",
-                    "operation": "=",
-                    "operator": "equal",
-                    "value": {
-                      "table": "noise_monitoring_data",
-                      "column": "location_id",
-                      "type": "number"
-                    }
-                  }
-                ]
-              },
-              "primary": "location_id"
-            },
-            {
-              "table": "location_type",
-              "column": "*",
-              "type": "INNER",
-              "clauses": {
-                "condition": "AND",
-                "rules": [
-                  {
-                    "table": "location_type",
-                    "column": "location_type_id",
-                    "operation": "=",
-                    "operator": "equal",
-                    "value": {
-                      "table": "monitoring_location",
-                      "column": "location_type_id",
-                      "type": "number"
-                    }
-                  }
-                ]
-              },
-              "primary": "location_type_id"
-            }
-          ],
-          "query": "select `noise_monitoring_data`.*, `monitoring_location`.`org_specific_monitoring_id`, `location_type`.`location_type` from `noise_monitoring_data` inner join `monitoring_location` on `monitoring_location`.`location_id` = `noise_monitoring_data`.`location_id` inner join `location_type` on `location_type`.`location_type_id` = `monitoring_location`.`location_type_id`"
+          "query": "select `noise_monitoring_data`.*, `monitoring_location`.`org_specific_monitoring_id`, `location_type`.`location_type` \nfrom `noise_monitoring_data` \ninner join `monitoring_location` on `monitoring_location`.`location_id` = `noise_monitoring_data`.`location_id` \ninner join `location_type` on `location_type`.`location_type_id` = `monitoring_location`.`location_type_id`\nWHERE \n  YEAR(noise_monitoring_data.start_date_time) = (\n    SELECT YEAR(MAX(start_date_time))\n    FROM noise_monitoring_data\n  )\nAND \n  MONTH(noise_monitoring_data.start_date_time) = (\n    SELECT MONTH(MAX(start_date_time))\n    FROM noise_monitoring_data\n  );",
+          "params": []
         }
       },
       "output": true,
       "meta": [
         {
-          "type": "number",
-          "name": "noise_id"
+          "name": "noise_id",
+          "type": "number"
         },
         {
-          "type": "datetime",
-          "name": "start_date_time"
+          "name": "start_date_time",
+          "type": "datetime"
         },
         {
-          "type": "datetime",
-          "name": "end_date_time"
+          "name": "end_date_time",
+          "type": "datetime"
         },
         {
-          "type": "number",
-          "name": "LAeq"
+          "name": "LAeq",
+          "type": "text"
         },
         {
-          "type": "number",
-          "name": "LA90"
+          "name": "LA90",
+          "type": "text"
         },
         {
-          "type": "number",
-          "name": "LA10"
+          "name": "LA10",
+          "type": "text"
         },
         {
-          "type": "number",
-          "name": "LAFMax"
+          "name": "LAFMax",
+          "type": "text"
         },
         {
-          "type": "number",
-          "name": "LAFMin"
+          "name": "LAFMin",
+          "type": "text"
         },
         {
-          "type": "number",
-          "name": "location_id"
+          "name": "location_id",
+          "type": "number"
         },
         {
-          "type": "datetime",
-          "name": "date_created"
+          "name": "date_created",
+          "type": "datetime"
         },
         {
-          "type": "text",
-          "name": "org_specific_monitoring_id"
+          "name": "org_specific_monitoring_id",
+          "type": "text"
         },
         {
-          "type": "text",
-          "name": "location_type"
+          "name": "location_type",
+          "type": "text"
         }
       ],
-      "outputType": "array"
+      "type": "dbcustom_query"
     }
   }
 }
