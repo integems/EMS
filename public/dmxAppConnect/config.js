@@ -26,5 +26,13 @@ dmx.config({
         "name": "Offset"
       }
     ]
+  },
+  "waterdata": {
+    "query": [
+      {
+        "type": "text",
+        "name": "offset"
+      }
+    ]
   }
 });

@@ -11,13 +11,21 @@
       },
       {
         "type": "text",
-        "name": "location"
+        "name": "monitoring_location"
+      },
+      {
+        "type": "text",
+        "name": "location_type"
+      },
+      {
+        "type": "text",
+        "name": "date_time"
       }
     ]
   },
   "exec": {
     "steps": {
-      "name": "query_noise",
+      "name": "query",
       "module": "dbconnector",
       "action": "select",
       "options": {
@@ -27,7 +35,32 @@
           "columns": [
             {
               "table": "noise_monitoring_data",
-              "column": "*"
+              "column": "start_date_time",
+              "aggregate": "MAX"
+            },
+            {
+              "table": "noise_monitoring_data",
+              "column": "end_date_time"
+            },
+            {
+              "table": "noise_monitoring_data",
+              "column": "LAeq"
+            },
+            {
+              "table": "noise_monitoring_data",
+              "column": "LA90"
+            },
+            {
+              "table": "noise_monitoring_data",
+              "column": "LA10"
+            },
+            {
+              "table": "noise_monitoring_data",
+              "column": "LAFMax"
+            },
+            {
+              "table": "noise_monitoring_data",
+              "column": "LAFMin"
             },
             {
               "table": "monitoring_location",
@@ -89,15 +122,45 @@
               "primary": "location_type_id"
             }
           ],
-          "query": "select `noise_monitoring_data`.*, `monitoring_location`.`org_specific_monitoring_id`, `location_type`.`location_type` from `noise_monitoring_data` inner join `monitoring_location` on `monitoring_location`.`location_id` = `noise_monitoring_data`.`location_id` inner join `location_type` on `location_type`.`location_type_id` = `monitoring_location`.`location_type_id`"
+          "groupBy": [
+            {
+              "table": "noise_monitoring_data",
+              "column": "end_date_time"
+            },
+            {
+              "table": "noise_monitoring_data",
+              "column": "LAeq"
+            },
+            {
+              "table": "noise_monitoring_data",
+              "column": "LA90"
+            },
+            {
+              "table": "noise_monitoring_data",
+              "column": "LA10"
+            },
+            {
+              "table": "noise_monitoring_data",
+              "column": "LAFMax"
+            },
+            {
+              "table": "noise_monitoring_data",
+              "column": "LAFMin"
+            },
+            {
+              "table": "monitoring_location",
+              "column": "org_specific_monitoring_id"
+            },
+            {
+              "table": "location_type",
+              "column": "location_type"
+            }
+          ],
+          "query": "select max(`noise_monitoring_data`.`start_date_time`), `noise_monitoring_data`.`end_date_time`, `noise_monitoring_data`.`LAeq`, `noise_monitoring_data`.`LA90`, `noise_monitoring_data`.`LA10`, `noise_monitoring_data`.`LAFMax`, `noise_monitoring_data`.`LAFMin`, `monitoring_location`.`org_specific_monitoring_id`, `location_type`.`location_type` from `noise_monitoring_data` inner join `monitoring_location` on `monitoring_location`.`location_id` = `noise_monitoring_data`.`location_id` inner join `location_type` on `location_type`.`location_type_id` = `monitoring_location`.`location_type_id` group by `noise_monitoring_data`.`end_date_time`, `noise_monitoring_data`.`LAeq`, `noise_monitoring_data`.`LA90`, `noise_monitoring_data`.`LA10`, `noise_monitoring_data`.`LAFMax`, `noise_monitoring_data`.`LAFMin`, `monitoring_location`.`org_specific_monitoring_id`, `location_type`.`location_type`"
         }
       },
       "output": true,
       "meta": [
-        {
-          "type": "number",
-          "name": "noise_id"
-        },
         {
           "type": "datetime",
           "name": "start_date_time"
@@ -125,14 +188,6 @@
         {
           "type": "number",
           "name": "LAFMin"
-        },
-        {
-          "type": "number",
-          "name": "location_id"
-        },
-        {
-          "type": "datetime",
-          "name": "date_created"
         },
         {
           "type": "text",

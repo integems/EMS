@@ -62,5 +62,13 @@
   "noise-insights.ejs": {
     "layoutPage": "portal_layout",
     "description": ""
+  },
+  "water-data.ejs": {
+    "layoutPage": "portal_layout",
+    "description": ""
+  },
+  "water-insight.ejs": {
+    "layoutPage": "portal_layout",
+    "description": ""
   }
 }

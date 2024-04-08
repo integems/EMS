@@ -11,15 +11,23 @@
       },
       {
         "type": "text",
+        "name": "limit"
+      },
+      {
+        "type": "text",
         "name": "monitoring_location"
       },
       {
         "type": "text",
-        "name": "year"
+        "name": "location_type"
       },
       {
         "type": "text",
-        "name": "month"
+        "name": "start_date"
+      },
+      {
+        "type": "text",
+        "name": "end_date"
       }
     ]
   },
@@ -35,7 +43,31 @@
           "columns": [
             {
               "table": "noise_monitoring_data",
-              "column": "*"
+              "column": "start_date_time"
+            },
+            {
+              "table": "noise_monitoring_data",
+              "column": "end_date_time"
+            },
+            {
+              "table": "noise_monitoring_data",
+              "column": "LAeq"
+            },
+            {
+              "table": "noise_monitoring_data",
+              "column": "LA90"
+            },
+            {
+              "table": "noise_monitoring_data",
+              "column": "LA10"
+            },
+            {
+              "table": "noise_monitoring_data",
+              "column": "LAFMax"
+            },
+            {
+              "table": "noise_monitoring_data",
+              "column": "LAFMin"
             },
             {
               "table": "location_type",
@@ -46,7 +78,22 @@
               "column": "org_specific_monitoring_id"
             }
           ],
-          "params": [],
+          "params": [
+            {
+              "operator": "contains",
+              "type": "expression",
+              "name": ":P1",
+              "value": "{{$_GET.monitoring_location}}",
+              "test": ""
+            },
+            {
+              "operator": "contains",
+              "type": "expression",
+              "name": ":P2",
+              "value": "{{$_GET.location_type}}",
+              "test": ""
+            }
+          ],
           "table": {
             "name": "noise_monitoring_data"
           },
@@ -55,19 +102,18 @@
             {
               "table": "monitoring_location",
               "column": "*",
-              "type": "INNER",
+              "type": "LEFT",
               "clauses": {
                 "condition": "AND",
                 "rules": [
                   {
                     "table": "monitoring_location",
                     "column": "location_id",
-                    "operation": "=",
                     "operator": "equal",
+                    "operation": "=",
                     "value": {
                       "table": "noise_monitoring_data",
-                      "column": "location_id",
-                      "type": "number"
+                      "column": "location_id"
                     }
                   }
                 ]
@@ -77,19 +123,18 @@
             {
               "table": "location_type",
               "column": "*",
-              "type": "INNER",
+              "type": "LEFT",
               "clauses": {
                 "condition": "AND",
                 "rules": [
                   {
                     "table": "location_type",
                     "column": "location_type_id",
-                    "operation": "=",
                     "operator": "equal",
+                    "operation": "=",
                     "value": {
                       "table": "monitoring_location",
-                      "column": "location_type_id",
-                      "type": "number"
+                      "column": "location_type_id"
                     }
                   }
                 ]
@@ -97,8 +142,7 @@
               "primary": "location_type_id"
             }
           ],
-          "query": "select `noise_monitoring_data`.*, `location_type`.`location_type`, `monitoring_location`.`org_specific_monitoring_id` from `noise_monitoring_data` inner join `monitoring_location` on `monitoring_location`.`location_id` = `noise_monitoring_data`.`location_id` inner join `location_type` on `location_type`.`location_type_id` = `monitoring_location`.`location_type_id` order by `noise_monitoring_data`.`start_date_time` DESC limit ?",
-          "limit": 25,
+          "query": "select `noise_monitoring_data`.`start_date_time`, `noise_monitoring_data`.`end_date_time`, `noise_monitoring_data`.`LAeq`, `noise_monitoring_data`.`LA90`, `noise_monitoring_data`.`LA10`, `noise_monitoring_data`.`LAFMax`, `noise_monitoring_data`.`LAFMin`, `location_type`.`location_type`, `monitoring_location`.`org_specific_monitoring_id` from `noise_monitoring_data` left join `monitoring_location` on `monitoring_location`.`location_id` = `noise_monitoring_data`.`location_id` left join `location_type` on `location_type`.`location_type_id` = `monitoring_location`.`location_type_id` where (`monitoring_location`.`org_specific_monitoring_id` like ? and `location_type`.`location_type` like ?) order by `noise_monitoring_data`.`start_date_time` DESC",
           "orders": [
             {
               "table": "noise_monitoring_data",
@@ -106,7 +150,62 @@
               "direction": "DESC",
               "recid": 1
             }
-          ]
+          ],
+          "wheres": {
+            "condition": "AND",
+            "rules": [
+              {
+                "condition": "AND",
+                "rules": [
+                  {
+                    "id": "monitoring_location.org_specific_monitoring_id",
+                    "field": "monitoring_location.org_specific_monitoring_id",
+                    "type": "string",
+                    "operator": "contains",
+                    "value": "{{$_GET.monitoring_location}}",
+                    "data": {
+                      "table": "monitoring_location",
+                      "column": "org_specific_monitoring_id",
+                      "type": "text",
+                      "columnObj": {
+                        "type": "string",
+                        "default": "",
+                        "maxLength": 255,
+                        "primary": false,
+                        "nullable": true,
+                        "name": "org_specific_monitoring_id"
+                      }
+                    },
+                    "operation": "LIKE"
+                  },
+                  {
+                    "id": "location_type.location_type",
+                    "field": "location_type.location_type",
+                    "type": "string",
+                    "operator": "contains",
+                    "value": "{{$_GET.location_type}}",
+                    "data": {
+                      "table": "location_type",
+                      "column": "location_type",
+                      "type": "text",
+                      "columnObj": {
+                        "type": "string",
+                        "default": "",
+                        "maxLength": 255,
+                        "primary": false,
+                        "nullable": true,
+                        "name": "location_type"
+                      }
+                    },
+                    "operation": "LIKE"
+                  }
+                ],
+                "conditional": null
+              }
+            ],
+            "conditional": null,
+            "valid": true
+          }
         }
       },
       "output": true,
@@ -164,10 +263,6 @@
           "type": "array",
           "sub": [
             {
-              "type": "number",
-              "name": "noise_id"
-            },
-            {
               "type": "datetime",
               "name": "start_date_time"
             },
@@ -194,14 +289,6 @@
             {
               "type": "number",
               "name": "LAFMin"
-            },
-            {
-              "type": "number",
-              "name": "location_id"
-            },
-            {
-              "type": "datetime",
-              "name": "date_created"
             },
             {
               "type": "text",

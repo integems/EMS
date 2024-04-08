@@ -1,0 +1,67 @@
+{
+  "meta": {
+    "options": {
+      "linkedFile": "/views/noise.ejs",
+      "linkedForm": "add_noise_data"
+    },
+    "$_POST": [
+      {
+        "type": "file",
+        "fieldName": "data_file",
+        "options": {
+          "rules": {
+            "core:required": {
+              "param": ""
+            },
+            "upload:accept": {
+              "param": ".csv"
+            }
+          }
+        },
+        "name": "data_file",
+        "sub": [
+          {
+            "name": "name",
+            "type": "text"
+          },
+          {
+            "name": "type",
+            "type": "text"
+          },
+          {
+            "name": "size",
+            "type": "number"
+          },
+          {
+            "name": "error",
+            "type": "text"
+          }
+        ],
+        "outputType": "file"
+      },
+      {
+        "type": "text",
+        "fieldName": "location_id",
+        "options": {
+          "rules": {
+            "core:required": {
+              "param": ""
+            }
+          }
+        },
+        "name": "location_id"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "Valid",
+      "module": "core",
+      "action": "response",
+      "options": {
+        "status": 200,
+        "data": "Data Valid"
+      }
+    }
+  }
+}

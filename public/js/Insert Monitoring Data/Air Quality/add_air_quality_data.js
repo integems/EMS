@@ -79,23 +79,23 @@ function handleAddData(csvData, databaseColumns) {
         }
     });
 
-    for (record of csvData) {
-        let mappedRecord = {}
-        for (key of Object.keys(mappedColumns)) {
-            let mappedKey = mappedColumns[key]
-            if (mappedKey == "start_date_time" || mappedKey == "end_date_time") {
+    // for (record of csvData) {
+    //     let mappedRecord = {}
+    //     for (key of Object.keys(mappedColumns)) {
+    //         let mappedKey = mappedColumns[key]
+    //         if (mappedKey == "start_date_time" || mappedKey == "end_date_time") {
 
-                let convertedDate = moment(record[key], "DD/MM/YYYY HH:mm").format("YYYY-MM-DD HH:mm")
-                mappedRecord[mappedKey] = convertedDate;
+    //             let convertedDate = moment(record[key], "DD/MM/YYYY HH:mm").format("YYYY-MM-DD HH:mm")
+    //             mappedRecord[mappedKey] = convertedDate;
 
-            } else {
-                mappedRecord[mappedKey] = record[key]
-            }
+    //         } else {
+    //             mappedRecord[mappedKey] = record[key]
+    //         }
 
-        }
-        mappedRecord.location_id = $("#select_location").val()
-        mappedData.push(mappedRecord)
-    }
+    //     }
+    //     mappedRecord.location_id = $("#select_location").val()
+    //     mappedData.push(mappedRecord)
+    // }
     // console.log(mappedData);
 
 
@@ -120,7 +120,7 @@ function handleAddData(csvData, databaseColumns) {
 
 // Function to fetch database columns from the server
 function fetchDatabaseColumns() {
-    return fetch('/api/noise/noise_data_columns')
+    return fetch('api/air_quality/air_quality_columns')
         .then(response => response.json())
         .then(data => data.query);
 }
@@ -157,3 +157,4 @@ function parseCSV(databaseColumns) {
         }
     });
 }
+

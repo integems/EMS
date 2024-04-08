@@ -1,0 +1,412 @@
+{
+  "meta": {
+    "$_POST": [
+      {
+        "type": "array",
+        "name": "record",
+        "sub": [
+          {
+            "type": "datetime",
+            "name": "datetime"
+          },
+          {
+            "type": "number",
+            "name": "location_id"
+          },
+          {
+            "type": "text",
+            "name": "temperature"
+          },
+          {
+            "type": "text",
+            "name": "pH"
+          },
+          {
+            "type": "text",
+            "name": "mV_pH"
+          },
+          {
+            "type": "text",
+            "name": "ORP_mV"
+          },
+          {
+            "type": "text",
+            "name": "EC"
+          },
+          {
+            "type": "text",
+            "name": "EC_Abs"
+          },
+          {
+            "type": "text",
+            "name": "Resistivity"
+          },
+          {
+            "type": "text",
+            "name": "TDS_ppm"
+          },
+          {
+            "type": "text",
+            "name": "salinity_psu"
+          },
+          {
+            "type": "text",
+            "name": "pressure_psi"
+          },
+          {
+            "type": "text",
+            "name": "DO_percentage"
+          },
+          {
+            "type": "text",
+            "name": "DO_ppm"
+          },
+          {
+            "type": "text",
+            "name": "turbidity_FNU"
+          },
+          {
+            "type": "datetime",
+            "name": "NOW"
+          },
+          {
+            "type": "time",
+            "name": "time"
+          },
+          {
+            "type": "date",
+            "name": "date"
+          }
+        ]
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "repeat",
+      "module": "core",
+      "action": "repeat",
+      "options": {
+        "repeat": "{{$_POST.record}}",
+        "outputFields": [],
+        "exec": {
+          "steps": {
+            "name": "insert",
+            "module": "dbupdater",
+            "action": "insert",
+            "options": {
+              "connection": "conn_db",
+              "sql": {
+                "type": "insert",
+                "values": [
+                  {
+                    "table": "water_quality_data",
+                    "column": "location_id",
+                    "type": "number",
+                    "value": "{{location_id}}"
+                  },
+                  {
+                    "table": "water_quality_data",
+                    "column": "temperature",
+                    "type": "text",
+                    "value": "{{temperature}}"
+                  },
+                  {
+                    "table": "water_quality_data",
+                    "column": "pH",
+                    "type": "text",
+                    "value": "{{pH}}"
+                  },
+                  {
+                    "table": "water_quality_data",
+                    "column": "mV_pH",
+                    "type": "text",
+                    "value": "{{mV_pH}}"
+                  },
+                  {
+                    "table": "water_quality_data",
+                    "column": "ORP_mV",
+                    "type": "text",
+                    "value": "{{ORP_mV}}"
+                  },
+                  {
+                    "table": "water_quality_data",
+                    "column": "EC",
+                    "type": "text",
+                    "value": "{{EC}}"
+                  },
+                  {
+                    "table": "water_quality_data",
+                    "column": "EC_Abs",
+                    "type": "text",
+                    "value": "{{EC_Abs}}"
+                  },
+                  {
+                    "table": "water_quality_data",
+                    "column": "Resistivity",
+                    "type": "text",
+                    "value": "{{Resistivity}}"
+                  },
+                  {
+                    "table": "water_quality_data",
+                    "column": "TDS_ppm",
+                    "type": "text",
+                    "value": "{{TDS_ppm}}"
+                  },
+                  {
+                    "table": "water_quality_data",
+                    "column": "salinity_psu",
+                    "type": "text",
+                    "value": "{{salinity_psu}}"
+                  },
+                  {
+                    "table": "water_quality_data",
+                    "column": "pressure_psi",
+                    "type": "text",
+                    "value": "{{pressure_psi}}"
+                  },
+                  {
+                    "table": "water_quality_data",
+                    "column": "DO_percentage",
+                    "type": "text",
+                    "value": "{{DO_percentage}}"
+                  },
+                  {
+                    "table": "water_quality_data",
+                    "column": "DO_ppm",
+                    "type": "text",
+                    "value": "{{DO_ppm}}"
+                  },
+                  {
+                    "table": "water_quality_data",
+                    "column": "turbidity_FNU",
+                    "type": "text",
+                    "value": "{{turbidity_FNU}}"
+                  },
+                  {
+                    "table": "water_quality_data",
+                    "column": "date_created",
+                    "type": "datetime",
+                    "value": "{{NOW}}"
+                  },
+                  {
+                    "table": "water_quality_data",
+                    "column": "time",
+                    "type": "time",
+                    "value": "{{time}}"
+                  },
+                  {
+                    "table": "water_quality_data",
+                    "column": "date",
+                    "type": "date",
+                    "value": "{{date}}"
+                  }
+                ],
+                "table": "water_quality_data",
+                "returning": "water_id",
+                "query": "insert into `water_quality_data` (`DO_percentage`, `DO_ppm`, `EC`, `EC_Abs`, `ORP_mV`, `Resistivity`, `TDS_ppm`, `date`, `date_created`, `location_id`, `mV_pH`, `pH`, `pressure_psi`, `salinity_psu`, `temperature`, `time`, `turbidity_FNU`) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "params": [
+                  {
+                    "name": ":P1",
+                    "type": "expression",
+                    "value": "{{location_id}}",
+                    "test": ""
+                  },
+                  {
+                    "name": ":P2",
+                    "type": "expression",
+                    "value": "{{temperature}}",
+                    "test": ""
+                  },
+                  {
+                    "name": ":P3",
+                    "type": "expression",
+                    "value": "{{pH}}",
+                    "test": ""
+                  },
+                  {
+                    "name": ":P4",
+                    "type": "expression",
+                    "value": "{{mV_pH}}",
+                    "test": ""
+                  },
+                  {
+                    "name": ":P5",
+                    "type": "expression",
+                    "value": "{{ORP_mV}}",
+                    "test": ""
+                  },
+                  {
+                    "name": ":P6",
+                    "type": "expression",
+                    "value": "{{EC}}",
+                    "test": ""
+                  },
+                  {
+                    "name": ":P7",
+                    "type": "expression",
+                    "value": "{{EC_Abs}}",
+                    "test": ""
+                  },
+                  {
+                    "name": ":P8",
+                    "type": "expression",
+                    "value": "{{Resistivity}}",
+                    "test": ""
+                  },
+                  {
+                    "name": ":P9",
+                    "type": "expression",
+                    "value": "{{TDS_ppm}}",
+                    "test": ""
+                  },
+                  {
+                    "name": ":P10",
+                    "type": "expression",
+                    "value": "{{salinity_psu}}",
+                    "test": ""
+                  },
+                  {
+                    "name": ":P11",
+                    "type": "expression",
+                    "value": "{{pressure_psi}}",
+                    "test": ""
+                  },
+                  {
+                    "name": ":P12",
+                    "type": "expression",
+                    "value": "{{DO_percentage}}",
+                    "test": ""
+                  },
+                  {
+                    "name": ":P13",
+                    "type": "expression",
+                    "value": "{{DO_ppm}}",
+                    "test": ""
+                  },
+                  {
+                    "name": ":P14",
+                    "type": "expression",
+                    "value": "{{turbidity_FNU}}",
+                    "test": ""
+                  },
+                  {
+                    "name": ":P15",
+                    "type": "expression",
+                    "value": "{{NOW}}",
+                    "test": ""
+                  },
+                  {
+                    "name": ":P16",
+                    "type": "expression",
+                    "value": "{{time}}",
+                    "test": ""
+                  },
+                  {
+                    "name": ":P17",
+                    "type": "expression",
+                    "value": "{{date}}",
+                    "test": ""
+                  }
+                ]
+              }
+            },
+            "meta": [
+              {
+                "name": "identity",
+                "type": "text"
+              },
+              {
+                "name": "affected",
+                "type": "number"
+              }
+            ]
+          }
+        }
+      },
+      "meta": [
+        {
+          "name": "$index",
+          "type": "number"
+        },
+        {
+          "name": "$number",
+          "type": "number"
+        },
+        {
+          "name": "$name",
+          "type": "text"
+        },
+        {
+          "name": "$value",
+          "type": "object"
+        },
+        {
+          "name": "datetime",
+          "type": "datetime"
+        },
+        {
+          "name": "location_id",
+          "type": "number"
+        },
+        {
+          "name": "temperature",
+          "type": "text"
+        },
+        {
+          "name": "pH",
+          "type": "text"
+        },
+        {
+          "name": "mV_pH",
+          "type": "text"
+        },
+        {
+          "name": "ORP_mV",
+          "type": "text"
+        },
+        {
+          "name": "EC",
+          "type": "text"
+        },
+        {
+          "name": "EC_Abs",
+          "type": "text"
+        },
+        {
+          "name": "Resistivity",
+          "type": "text"
+        },
+        {
+          "name": "TDS_ppm",
+          "type": "text"
+        },
+        {
+          "name": "salinity_psu",
+          "type": "text"
+        },
+        {
+          "name": "pressure_psi",
+          "type": "text"
+        },
+        {
+          "name": "DO_percentage",
+          "type": "text"
+        },
+        {
+          "name": "DO_ppm",
+          "type": "text"
+        },
+        {
+          "name": "turbidity_FNU",
+          "type": "text"
+        },
+        {
+          "name": "NOW",
+          "type": "datetime"
+        }
+      ],
+      "outputType": "array"
+    }
+  }
+}

@@ -68,6 +68,11 @@
       "path": "/noise-data",
       "page": "noise-data",
       "layout": "portal_layout"
+    },
+    {
+      "path": "/water-data",
+      "page": "water-data",
+      "layout": "portal_layout"
     }
   ],
   "layouts": {

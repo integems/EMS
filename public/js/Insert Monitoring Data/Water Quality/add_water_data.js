@@ -68,14 +68,16 @@ function handleAddData(csvData, databaseColumns) {
     let mappedData = [];
 
     databaseColumns.forEach(dbColumn => {
-        const dropdownElement = document.getElementById(`${dbColumn.Field}_mapping`);
+        if (dbColumn.Field !== 'date_created') {
+            const dropdownElement = document.getElementById(`${dbColumn.Field}_mapping`);
 
-        // Check if the element exists before accessing its value
-        if (dropdownElement) {
-            const dropdownValue = dropdownElement.value;
-            mappedColumns[dropdownValue] = dbColumn.Field;
-        } else {
-            console.error(`Dropdown element not found for ${dbColumn.Field}`);
+            // Check if the element exists before accessing its value
+            if (dropdownElement) {
+                const dropdownValue = dropdownElement.value;
+                mappedColumns[dropdownValue] = dbColumn.Field;
+            } else {
+                console.error(`Dropdown element not found for ${dbColumn.Field}`);
+            }
         }
     });
 
@@ -83,23 +85,30 @@ function handleAddData(csvData, databaseColumns) {
         let mappedRecord = {}
         for (key of Object.keys(mappedColumns)) {
             let mappedKey = mappedColumns[key]
-            if (mappedKey == "start_date_time" || mappedKey == "end_date_time") {
-
-                let convertedDate = moment(record[key], "DD/MM/YYYY HH:mm").format("YYYY-MM-DD HH:mm")
-                mappedRecord[mappedKey] = convertedDate;
-
+            if (mappedKey == "date") {
+                if (record[key] !== null) {
+                    // console.log(`Original date: ${record[key]}`);
+                    let convertedDate = moment(record[key], "DD/MM/YYYY").format("YYYY-MM-DD")
+                    // console.log(`Converted date: ${convertedDate}`);
+                    if (convertedDate !== 'Invalid date') {
+                        mappedRecord[mappedKey] = convertedDate;
+                    }
+                }
             } else {
                 mappedRecord[mappedKey] = record[key]
             }
-
         }
-        mappedRecord.location_id = $("#select_location").val()
-        mappedData.push(mappedRecord)
+        if (mappedRecord.date !== undefined && mappedRecord.date !== 'Invalid date') {
+            mappedRecord.location_id = $("#select_location").val()
+            mappedData.push(mappedRecord)
+        }
     }
     // console.log(mappedData);
 
 
-    fetch('/api/noise/insert_noise_data', {
+
+
+    fetch('/api/water_quality/insert_water_data', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -120,7 +129,7 @@ function handleAddData(csvData, databaseColumns) {
 
 // Function to fetch database columns from the server
 function fetchDatabaseColumns() {
-    return fetch('/api/noise/noise_data_columns')
+    return fetch('/api/water_quality/water_quality_dbcolumns')
         .then(response => response.json())
         .then(data => data.query);
 }
@@ -157,3 +166,4 @@ function parseCSV(databaseColumns) {
         }
     });
 }
+

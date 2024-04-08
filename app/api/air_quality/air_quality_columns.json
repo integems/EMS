@@ -1,0 +1,39 @@
+{
+  "name": "custom",
+  "module": "dbupdater",
+  "action": "custom",
+  "options": {
+    "connection": "conn_db",
+    "sql": {
+      "query": "SHOW COLUMNS FROM air_quality_monitoring_data WHERE Field NOT IN ('air_id', 'location_id');",
+      "params": []
+    }
+  },
+  "output": true,
+  "meta": [
+    {
+      "name": "Field",
+      "type": "text"
+    },
+    {
+      "name": "Type",
+      "type": "file"
+    },
+    {
+      "name": "Null",
+      "type": "text"
+    },
+    {
+      "name": "Key",
+      "type": "text"
+    },
+    {
+      "name": "Default",
+      "type": "file"
+    },
+    {
+      "name": "Extra",
+      "type": "text"
+    }
+  ]
+}

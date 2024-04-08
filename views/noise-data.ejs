@@ -1,5 +1,5 @@
-<!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="noisedata" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Navigation:{},dmxBootstrap5TableGenerator:{},dmxFormatter:{}}" -->
-<dmx-serverconnect id="sc_noise_data" url="/api/noise/query_noise_data" dmx-param:monitoring_location="select_monitoring_location.value" dmx-param:year="select_year.value"></dmx-serverconnect>
+<!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="noisedata" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Navigation:{},dmxBootstrap5TableGenerator:{},dmxFormatter:{},dmxDatePicker:{}}" moment_2="cdn" -->
+<dmx-serverconnect id="sc_noise_data" url="/api/noise/query_noise_data" dmx-param:monitoring_location="select_monitoring_location.value" dmx-param:year="" dmx-param:limit="25" dmx-param:location_type="select_location_type.value" dmx-param:start_date="date_range.value" dmx-param:end_date="date_range.value"></dmx-serverconnect>
 <dmx-serverconnect id="sc_monitoring_locations" url="/api/location/monitoring_location_id"></dmx-serverconnect>
 <dmx-serverconnect id="sc_monitorin_location_type" url="/api/location/monitoring_location_type"></dmx-serverconnect>
 
@@ -8,6 +8,7 @@
 <section class="mb-3">
     <div class="row text-end">
         <div class="col text-start">
+
             <h1 class="fw-normal fs-2">Noise Data</h1>
             <div class="breadcrumb">
                 <a class="breadcrumb-item breadcrumb-link fs-5 fw-light" href="/dashboard">Dashboard</a>
@@ -15,29 +16,23 @@
                 <a class="breadcrumb-item breadcrumb-link fs-5 fw-bold" href="/noise-data">Data</a>
             </div>
         </div>
+        <div class="col">
+            <a href="#" class="btn btn-primary" id="btn_dwnld_noiseData">Download</a>
+        </div>
     </div>
 </section>
 
 <section class="mb-3">
     <div class="row">
         <div class="col">
-            <select id="select_year" class="form-select">
-                <option value="">All Years</option>
-                <option value="" dmx-bind:value="var_datetime.datetime.getYear()">{{var_datetime.datetime.getYear()}}</option>
-                <option value="" dmx-bind:value="var_datetime.datetime.getYear(var_datetime.datetime)-1">{{var_datetime.datetime.getYear(var_datetime.datetime)-1}}</option>
-                <option value="" dmx-bind:value="var_datetime.datetime.getYear(var_datetime.datetime)-2">{{var_datetime.datetime.getYear(var_datetime.datetime)-2}}</option>
+        </div>
+        <div class="col">
+            <select id="select_location_type" class="form-select" name="location_type_id" dmx-bind:options="sc_monitorin_location_type.data.location_type" optiontext="location_type" optionvalue="location_type">
+                <option value="">All Location Types</option>
             </select>
         </div>
         <div class="col">
-            <select id="select_monthly" class="form-select">
-                <option value="">All Months</option>
-                <option value="" dmx-bind:value="var_datetime.datetime.getMonth()">{{var_datetime.datetime.getMonth()}}</option>
-                <option value="" dmx-bind:value="var_datetime.datetime.getMonth(var_datetime.datetime)-1">{{var_datetime.datetime.getMonth(var_datetime.datetime)-1}}</option>
-                <option value="" dmx-bind:value="var_datetime.datetime.getMonth(var_datetime.datetime)-2">{{var_datetime.datetime.getMonth(var_datetime.datetime)-2}}</option>
-            </select>
-        </div>
-        <div class="col">
-            <select id="select_monitoring_location" class="form-select" name="location_id" dmx-bind:options="sc_monitoring_locations.data.monitoring_location_id" optiontext="org_specific_monitoring_id" optionvalue="location_id">
+            <select id="select_monitoring_location" class="form-select" name="location_id" dmx-bind:options="sc_monitoring_locations.data.monitoring_location_id" optiontext="org_specific_monitoring_id" optionvalue="org_specific_monitoring_id">
                 <option value="">All Monitoring Locations</option>
             </select>
         </div>

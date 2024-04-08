@@ -1,0 +1,223 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "query",
+      "module": "dbconnector",
+      "action": "select",
+      "options": {
+        "connection": "conn_db",
+        "sql": {
+          "type": "select",
+          "columns": [
+            {
+              "table": "water_quality_data",
+              "column": "date"
+            },
+            {
+              "table": "water_quality_data",
+              "column": "time"
+            },
+            {
+              "table": "water_quality_data",
+              "column": "temperature"
+            },
+            {
+              "table": "water_quality_data",
+              "column": "pH"
+            },
+            {
+              "table": "water_quality_data",
+              "column": "mV_pH"
+            },
+            {
+              "table": "water_quality_data",
+              "column": "ORP_mV"
+            },
+            {
+              "table": "water_quality_data",
+              "column": "EC"
+            },
+            {
+              "table": "water_quality_data",
+              "column": "EC_Abs"
+            },
+            {
+              "table": "water_quality_data",
+              "column": "Resistivity"
+            },
+            {
+              "table": "water_quality_data",
+              "column": "TDS_ppm"
+            },
+            {
+              "table": "water_quality_data",
+              "column": "salinity_psu"
+            },
+            {
+              "table": "water_quality_data",
+              "column": "pressure_psi"
+            },
+            {
+              "table": "water_quality_data",
+              "column": "DO_percentage"
+            },
+            {
+              "table": "water_quality_data",
+              "column": "DO_ppm"
+            },
+            {
+              "table": "water_quality_data",
+              "column": "turbidity_FNU"
+            },
+            {
+              "table": "monitoring_location",
+              "column": "location_id"
+            },
+            {
+              "table": "monitoring_location",
+              "column": "latitude"
+            },
+            {
+              "table": "monitoring_location",
+              "column": "longitude"
+            },
+            {
+              "table": "monitoring_location",
+              "column": "org_specific_monitoring_id"
+            },
+            {
+              "table": "monitoring_location",
+              "column": "description"
+            }
+          ],
+          "params": [],
+          "table": {
+            "name": "water_quality_data"
+          },
+          "primary": "water_id",
+          "joins": [
+            {
+              "table": "monitoring_location",
+              "column": "*",
+              "type": "INNER",
+              "clauses": {
+                "condition": "AND",
+                "rules": [
+                  {
+                    "table": "monitoring_location",
+                    "column": "location_id",
+                    "operation": "=",
+                    "operator": "equal",
+                    "value": {
+                      "table": "water_quality_data",
+                      "column": "location_id",
+                      "type": "number"
+                    }
+                  }
+                ]
+              },
+              "primary": "location_id"
+            }
+          ],
+          "query": "select `water_quality_data`.`date`, `water_quality_data`.`time`, `water_quality_data`.`temperature`, `water_quality_data`.`pH`, `water_quality_data`.`mV_pH`, `water_quality_data`.`ORP_mV`, `water_quality_data`.`EC`, `water_quality_data`.`EC_Abs`, `water_quality_data`.`Resistivity`, `water_quality_data`.`TDS_ppm`, `water_quality_data`.`salinity_psu`, `water_quality_data`.`pressure_psi`, `water_quality_data`.`DO_percentage`, `water_quality_data`.`DO_ppm`, `water_quality_data`.`turbidity_FNU`, `monitoring_location`.`location_id`, `monitoring_location`.`latitude`, `monitoring_location`.`longitude`, `monitoring_location`.`org_specific_monitoring_id`, `monitoring_location`.`description` from `water_quality_data` inner join `monitoring_location` on `monitoring_location`.`location_id` = `water_quality_data`.`location_id`"
+        }
+      },
+      "output": true,
+      "meta": [
+        {
+          "type": "date",
+          "name": "date"
+        },
+        {
+          "type": "time",
+          "name": "time"
+        },
+        {
+          "type": "text",
+          "name": "temperature"
+        },
+        {
+          "type": "text",
+          "name": "pH"
+        },
+        {
+          "type": "text",
+          "name": "mV_pH"
+        },
+        {
+          "type": "text",
+          "name": "ORP_mV"
+        },
+        {
+          "type": "text",
+          "name": "EC"
+        },
+        {
+          "type": "text",
+          "name": "EC_Abs"
+        },
+        {
+          "type": "text",
+          "name": "Resistivity"
+        },
+        {
+          "type": "text",
+          "name": "TDS_ppm"
+        },
+        {
+          "type": "text",
+          "name": "salinity_psu"
+        },
+        {
+          "type": "text",
+          "name": "pressure_psi"
+        },
+        {
+          "type": "text",
+          "name": "DO_percentage"
+        },
+        {
+          "type": "text",
+          "name": "DO_ppm"
+        },
+        {
+          "type": "text",
+          "name": "turbidity_FNU"
+        },
+        {
+          "type": "number",
+          "name": "location_id"
+        },
+        {
+          "type": "number",
+          "name": "latitude"
+        },
+        {
+          "type": "number",
+          "name": "longitude"
+        },
+        {
+          "type": "text",
+          "name": "org_specific_monitoring_id"
+        },
+        {
+          "type": "text",
+          "name": "description"
+        }
+      ],
+      "outputType": "array"
+    }
+  }
+}
