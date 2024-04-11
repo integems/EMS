@@ -1,6 +1,7 @@
 <!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="waterdata" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Navigation:{},dmxBootstrap5TableGenerator:{},dmxStateManagement:{},dmxBootstrap5PagingGenerator:{},dmxFormatter:{}}" -->
+<dmx-serverconnect id="sc_year" url="/api/water_quality/water_data_year"></dmx-serverconnect>
 <dmx-query-manager id="query_water"></dmx-query-manager>
-<dmx-serverconnect id="sc_water_data" url="/api/water_quality/water_data"></dmx-serverconnect>
+<dmx-serverconnect id="sc_water_data" url="/api/water_quality/water_data" dmx-param:location="select_monitoring_location.value" dmx-param:limit="25"></dmx-serverconnect>
 <dmx-serverconnect id="sc_monitoring_locations" url="/api/location/monitoring_location_id"></dmx-serverconnect>
 <dmx-serverconnect id="sc_monitorin_location_type" url="/api/location/monitoring_location_type"></dmx-serverconnect>
 <meta name="ac:route" content="/water-data">
@@ -9,10 +10,10 @@
     <div class="row text-end">
 
         <div class="col text-start">
-            <h1 class="fw-normal fs-2">Water Quality Data Insights</h1>
+            <h1 class="fw-normal fs-2">Water Quality Data</h1>
             <div class="breadcrumb">
                 <a class="breadcrumb-item breadcrumb-link fs-5 fw-light" href="/dashboard">Dashboard</a>
-                <a class="breadcrumb-item breadcrumb-link fs-5 fw-bold" href="/water-quality">Water Quality</a>
+                <a class="breadcrumb-item breadcrumb-link fs-5 fw-bold" href="/water-data">Water Quality Data</a>
             </div>
         </div>
     </div>
@@ -21,10 +22,9 @@
 <section class="mb-3">
     <div class="row">
         <div class="col">
-        </div>
-        <div class="col">
-            <select id="select_location_type" class="form-select" name="location_type_id" dmx-bind:options="sc_monitorin_location_type.data.location_type" optiontext="location_type" optionvalue="location_type">
-                <option value="">All Location Types</option>
+            <select id="select_year" class="form-select" name="date" dmx-bind:options="sc_water_data.data.water_data.data" optionvalue="date" optiontext="date.getYear(date)">
+                <option value="">All Years</option>
+
             </select>
         </div>
         <div class="col">

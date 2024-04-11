@@ -62,6 +62,17 @@
   <script src="/dmxAppConnect/dmxBootstrap4Navigation/dmxBootstrap4Navigation.js" defer></script>
   <link rel="stylesheet" href="/dmxAppConnect/dmxBootstrap5TableGenerator/dmxBootstrap5TableGenerator.css" />
   <script src="/dmxAppConnect/dmxBootstrap5PagingGenerator/dmxBootstrap5PagingGenerator.js" defer></script>
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+
 </head>
 
 <body is="dmx-app" id="portal_layout">
@@ -167,7 +178,7 @@
                   <a class="sidebar-link" href="/water-data">Water Data</a>
                 </li>
                 <li class="submenu-item">
-                  <a class="sidebar-link" href="#">Water Insights </a>
+                  <a class="sidebar-link" href="/water-insights">Water Insights </a>
                 </li>
 
 
@@ -282,7 +293,7 @@
 
     <!-- NavBar -->
     <div id="main" class="layout-navbar navbar-fixed">
-      <header class="mb-3">
+      <header class="mb-3" id="layout_portal_header">
         <nav class="navbar navbar-expand navbar-light navbar-top">
           <div class="container-fluid">
             <a href="#" class="burger-btn d-block">

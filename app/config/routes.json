@@ -73,6 +73,11 @@
       "path": "/water-data",
       "page": "water-data",
       "layout": "portal_layout"
+    },
+    {
+      "path": "/water-insights",
+      "page": "water-insights",
+      "layout": "portal_layout"
     }
   ],
   "layouts": {

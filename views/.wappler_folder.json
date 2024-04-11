@@ -70,5 +70,9 @@
   "water-insight.ejs": {
     "layoutPage": "portal_layout",
     "description": ""
+  },
+  "water-insights.ejs": {
+    "layoutPage": "portal_layout",
+    "description": ""
   }
 }

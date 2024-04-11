@@ -1,0 +1,39 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      },
+      {
+        "type": "text",
+        "name": "year"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "custom_year",
+      "module": "dbupdater",
+      "action": "custom",
+      "options": {
+        "connection": "conn_db",
+        "sql": {
+          "query": "SELECT YEAR(date) AS 'Year' \nFROM water_quality_data;",
+          "params": []
+        }
+      },
+      "output": true,
+      "meta": [
+        {
+          "name": "Year",
+          "type": "number"
+        }
+      ]
+    }
+  }
+}

@@ -38,12 +38,12 @@ fetch('api/noise/query_noise')
         const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 
-        const monthlyData = {}; // Object to store monthly data
+        const monthlyData = {};
         data.query_noise.forEach(record => {
             const monthIndex = new Date(record.start_date_time).getMonth();
             const monthName = months[monthIndex];
 
-            // Initialize data for the month if not already present
+
             if (!monthlyData[monthName]) {
                 monthlyData[monthName] = {
                     LAeq: [],
@@ -54,7 +54,7 @@ fetch('api/noise/query_noise')
                 };
             }
 
-            // Push values for each parameter
+
             monthlyData[monthName].LAeq.push(record.LAeq);
             monthlyData[monthName].LA10.push(record.LA10);
             monthlyData[monthName].LA90.push(record.LA90);

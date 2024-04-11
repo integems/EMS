@@ -18,7 +18,7 @@
       </div>
     </div>
     <div class="col">
-      <button id="btn_dwnld_noiseInsight" class="btn btn-primary">Download</button>
+      <button id="downloadPDF" class="btn btn-primary" dmx-on:click="">Download</button>
     </div>
   </div>
 </section>
@@ -51,7 +51,7 @@
     <div class="col">
       <div class="card">
         <div class="card-body">
-          <div id="monthly_average" style="height: 400px;"></div>
+          <div id="monthly_average" class="h-auto"></div>
         </div>
       </div>
     </div>
@@ -63,7 +63,7 @@
     <div class="col">
       <div class="card">
         <div class="card-body">
-          <div id="quarterly_average" style="height: 400px;"></div>
+          <div id="quarterly_average" class="h-auto"></div>
         </div>
       </div>
     </div>
@@ -78,12 +78,66 @@
           <select id="orgSelect">
 
           </select>
-          <div id="time_series_chart_all" style="height: 400px;"></div>
+          <div id="time_series_chart_all" class="h-auto"></div>
         </div>
       </div>
     </div>
   </div>
 </section>
+
+
+
+<script>
+  const button = document.getElementById('downloadPDF');
+  button.addEventListener('click', () => {
+  // Remove the top section
+  const topSection = document.getElementById('layout_portal_header');
+  if (topSection) {
+    topSection.parentNode.removeChild(topSection);
+  }
+
+  // Remove the side menu bar
+  const sideMenuBar = document.getElementById('sidebar');
+  if (sideMenuBar) {
+  sideMenuBar.parentNode.removeChild(sideMenuBar);
+  }
+
+  const element = document.body;
+  const opt = {
+    margin: 1,
+    filename: 'webpage.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
+  };
+
+  // New Promise-based usage:
+  html2pdf().set(opt).from(element).save();
+});
+
+
+// const monthlyAverageChart = document.getElementById('monthly_average');
+// const quarterlyAverageChart = document.getElementById('quarterly_average');
+// const timeSeriesChart = document.getElementById('time_series_chart_all');
+
+// html2canvas(monthlyAverageChart).then(canvas => {
+//   const imgData = canvas.toDataURL('image/png');
+//   const pdf = new jsPDF('landscape', 'in', 'legal');
+//   pdf.addImage(imgData, 'PNG', 0, 0);
+//   return html2canvas(quarterlyAverageChart);
+// }).then(canvas => {
+//   const imgData = canvas.toDataURL('image/png');
+//   pdf.addPage();
+//   pdf.addImage(imgData, 'PNG', 0, 0);
+//   return html2canvas(timeSeriesChart);
+// }).then(canvas => {
+//   const imgData = canvas.toDataURL('image/png');
+//   pdf.addPage();
+//   pdf.addImage(imgData, 'PNG', 0, 0);
+//   pdf.save('webpage.pdf');
+// });
+</script>
+
 
 <script src="/js/highcharts/highcharts_noise/monthly_avg.js" async="true"></script>
 <script src="/js/highcharts/highcharts_noise/quarterly_avg.js" async="true"></script>

@@ -4,64 +4,13 @@ async function fetchData() {
     try {
         const response = await fetch('api/noise/query_noise');
         const jsonData = await response.json();
-        console.log(jsonData);
+        // console.log(jsonData);
         return jsonData;
     } catch (error) {
         console.error('Error fetching data:', error);
         return null;
     }
 }
-
-// function renderChart(orgId, jsonData) {
-//     let filteredData;
-//     if (orgId === 'all locations') {
-//         filteredData = jsonData.date_time;
-//     } else {
-//         filteredData = jsonData.date_time.filter(entry => entry.org_specific_monitoring_id === orgId);
-//     }
-
-
-//     // Sort the data by start_date_time in ascending order
-//     const dateData = filteredData.sort((a, b) => new Date(a.start_date_time) - new Date(b.start_date_time));
-
-//     // Prepare data series for each parameter
-//     const parameters = ['LAeq', 'LA90', 'LA10', 'LAFMax', 'LAFMin'];
-//     const seriesData = parameters.map(parameter => ({
-//         name: parameter,
-//         data: dateData.map(entry => ({
-//             x: new Date(entry.start_date_time).getTime(),
-//             y: entry[parameter]
-//         }))
-//     }));
-
-
-//     Highcharts.chart('time_series_chart_all', {
-//         chart: {
-//             type: 'line'
-//         },
-//         title: {
-//             text: `Noise Levels for ${orgId}`
-//         },
-//         xAxis: {
-//             type: 'datetime',
-//             dateTimeLabelFormats: {
-//                 day: '%d/%m/%Y %H:%M:%S'
-//             },
-//             title: {
-//                 text: 'Date/Time'
-//             }
-//         },
-//         yAxis: {
-//             title: {
-//                 text: 'Noise Levels (dB)'
-//             }
-//         },
-//         series: seriesData,
-//         accessibility: {
-//             enabled: true
-//         }
-//     });
-// }
 
 function renderChart(orgId, jsonData) {
     let filteredData;

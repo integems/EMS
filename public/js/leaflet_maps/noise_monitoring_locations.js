@@ -149,6 +149,8 @@ function updateCardContent(data) {
       <b>LAeq:</b> ${mostRecentEntry.LAeq.toFixed(2)}<br>
       <b>LA90:</b> ${mostRecentEntry.LA90.toFixed(2)}<br>
       <b>LA10:</b> ${mostRecentEntry.LA10.toFixed(2)}<br>
+      <b>LAFMax:</b> ${mostRecentEntry.LAFMax.toFixed(2)}<br>
+      <b>LAFMin:</b> ${mostRecentEntry.LAFMin.toFixed(2)}<br>
     `;
 }
 
@@ -180,6 +182,8 @@ fetch('/api/noise/monitoring_locations')
             <b>LAeq:</b> ${locationGroup[0].LAeq.toFixed(2)}<br>
             <b>LA90:</b> ${locationGroup[0].LA90.toFixed(2)}<br>
             <b>LA10:</b> ${locationGroup[0].LA10.toFixed(2)}<br>
+            <b>LAFMax:</b> ${locationGroup[0].LAFMax.toFixed(2)}<br>
+            <b>LAFMin:</b> ${locationGroup[0].LAFMin.toFixed(2)}<br>
           `)
                 .on('click', function () {
                     updateCardContent(locationGroup);

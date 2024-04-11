@@ -43,39 +43,48 @@
           "columns": [
             {
               "table": "noise_monitoring_data",
-              "column": "start_date_time"
+              "column": "start_date_time",
+              "recid": 1
             },
             {
               "table": "noise_monitoring_data",
-              "column": "end_date_time"
+              "column": "end_date_time",
+              "recid": 2
             },
             {
               "table": "noise_monitoring_data",
-              "column": "LAeq"
+              "column": "LAeq",
+              "recid": 3
             },
             {
               "table": "noise_monitoring_data",
-              "column": "LA90"
+              "column": "LA90",
+              "recid": 4
             },
             {
               "table": "noise_monitoring_data",
-              "column": "LA10"
+              "column": "LA10",
+              "recid": 5
             },
             {
               "table": "noise_monitoring_data",
-              "column": "LAFMax"
+              "column": "LAFMax",
+              "recid": 6
             },
             {
               "table": "noise_monitoring_data",
-              "column": "LAFMin"
+              "column": "LAFMin",
+              "recid": 7
             },
             {
               "table": "location_type",
-              "column": "location_type"
+              "column": "location_type",
+              "recid": 8
             },
             {
               "table": "monitoring_location",
-              "column": "org_specific_monitoring_id"
+              "column": "org_specific_monitoring_id",
+              "recid": 9
             }
           ],
           "params": [
@@ -176,7 +185,8 @@
                         "name": "org_specific_monitoring_id"
                       }
                     },
-                    "operation": "LIKE"
+                    "operation": "LIKE",
+                    "table": "noise_monitoring_data"
                   },
                   {
                     "id": "location_type.location_type",
@@ -197,10 +207,13 @@
                         "name": "location_type"
                       }
                     },
-                    "operation": "LIKE"
+                    "operation": "LIKE",
+                    "table": "noise_monitoring_data"
                   }
                 ],
-                "conditional": null
+                "conditional": null,
+                "table": "noise_monitoring_data",
+                "id": "noise_monitoring_data.undefined"
               }
             ],
             "conditional": null,

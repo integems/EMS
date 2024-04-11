@@ -1,4 +1,5 @@
 <!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="noisedata" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Navigation:{},dmxBootstrap5TableGenerator:{},dmxFormatter:{},dmxDatePicker:{}}" moment_2="cdn" -->
+<dmx-serverconnect id="sc_download_noise_data" url="/api/noise/download_noise_table"></dmx-serverconnect>
 <dmx-serverconnect id="sc_noise_data" url="/api/noise/query_noise_data" dmx-param:monitoring_location="select_monitoring_location.value" dmx-param:year="" dmx-param:limit="25" dmx-param:location_type="select_location_type.value" dmx-param:start_date="date_range.value" dmx-param:end_date="date_range.value"></dmx-serverconnect>
 <dmx-serverconnect id="sc_monitoring_locations" url="/api/location/monitoring_location_id"></dmx-serverconnect>
 <dmx-serverconnect id="sc_monitorin_location_type" url="/api/location/monitoring_location_type"></dmx-serverconnect>
@@ -17,7 +18,7 @@
             </div>
         </div>
         <div class="col">
-            <a href="#" class="btn btn-primary" id="btn_dwnld_noiseData">Download</a>
+            <a href="#" class="btn btn-primary" id="btn_dwnld_noiseData" dmx-on:click="sc_download_noise_data.load({})">Download</a>
         </div>
     </div>
 </section>
