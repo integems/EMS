@@ -90,6 +90,10 @@
             "name": "path"
           }
         ]
+      },
+      {
+        "type": "number",
+        "name": "monitoring_parameter_id"
       }
     ]
   },
@@ -252,13 +256,15 @@
                       "table": "monitoring_location_photos",
                       "column": "location_id",
                       "type": "number",
-                      "value": "{{insert_monitoring_location.identity}}"
+                      "value": "{{insert_monitoring_location.identity}}",
+                      "recid": 1
                     },
                     {
                       "table": "monitoring_location_photos",
                       "column": "path",
                       "type": "text",
-                      "value": "{{path}}"
+                      "value": "{{path}}",
+                      "recid": 2
                     }
                   ],
                   "table": "monitoring_location_photos",
@@ -315,13 +321,15 @@
                             "table": "monitoring_location_photos",
                             "column": "location_id",
                             "type": "number",
-                            "value": "{{insert_monitoring_location.identity}}"
+                            "value": "{{insert_monitoring_location.identity}}",
+                            "recid": 1
                           },
                           {
                             "table": "monitoring_location_photos",
                             "column": "path",
                             "type": "text",
-                            "value": "{{path}}"
+                            "value": "{{path}}",
+                            "recid": 2
                           }
                         ],
                         "table": "monitoring_location_photos",

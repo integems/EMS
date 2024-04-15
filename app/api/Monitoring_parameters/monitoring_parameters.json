@@ -1,0 +1,52 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "parameters",
+      "module": "dbconnector",
+      "action": "select",
+      "options": {
+        "connection": "conn_db",
+        "sql": {
+          "type": "select",
+          "columns": [
+            {
+              "table": "monitoring_parameters",
+              "column": "*"
+            }
+          ],
+          "params": [],
+          "table": {
+            "name": "monitoring_parameters"
+          },
+          "primary": "monitoring_parameters_id",
+          "joins": [],
+          "query": "select * from `monitoring_parameters`"
+        }
+      },
+      "output": true,
+      "meta": [
+        {
+          "type": "number",
+          "name": "monitoring_parameters_id"
+        },
+        {
+          "type": "text",
+          "name": "monitoring_parameters"
+        }
+      ],
+      "outputType": "array"
+    }
+  }
+}
