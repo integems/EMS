@@ -3,7 +3,7 @@
 <dmx-serverconnect id="sc_monitorin_location_type" url="/api/location/monitoring_location_type"></dmx-serverconnect>
 <dmx-query-manager id="query_noise"></dmx-query-manager>
 <dmx-serverconnect id="sc_noise_data" url="/api/noise/query_noise_data" dmx-param:monitoring_location="select_monitoring_location.value"></dmx-serverconnect>
-<dmx-serverconnect id="sc_noise_data_chart" url="/api/noise/query_noise" dmx-param:monitoring_location="select_monitoring_location.value" dmx-param:location=""></dmx-serverconnect>
+<dmx-serverconnect id="sc_noise_data_chart" url="/api/noise/query_noise" dmx-param:monitoring_location="select_monitoring_location.value" dmx-param:location="select_monitoring_location.value"></dmx-serverconnect>
 <meta name="ac:route" content="/noise-insights">
 
 <section class="mb-3">
