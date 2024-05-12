@@ -93,7 +93,7 @@ fetch('api/noise/query_noise')
                 type: 'column'
             },
             title: {
-                text: 'Quarterly Noise Averages'
+                text: 'Quarterly Noise Averages by Location'
             },
             xAxis: {
                 categories: quarterlyAverages.map(item => item.quarter)

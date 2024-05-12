@@ -43,48 +43,43 @@
           "columns": [
             {
               "table": "noise_monitoring_data",
-              "column": "start_date_time",
-              "recid": 1
+              "column": "start_date_time"
             },
             {
               "table": "noise_monitoring_data",
-              "column": "end_date_time",
-              "recid": 2
+              "column": "end_date_time"
             },
             {
               "table": "noise_monitoring_data",
-              "column": "LAeq",
-              "recid": 3
+              "column": "LAeq"
             },
             {
               "table": "noise_monitoring_data",
-              "column": "LA90",
-              "recid": 4
+              "column": "LA90"
             },
             {
               "table": "noise_monitoring_data",
-              "column": "LA10",
-              "recid": 5
+              "column": "LA10"
             },
             {
               "table": "noise_monitoring_data",
-              "column": "LAFMax",
-              "recid": 6
+              "column": "LAFMax"
             },
             {
               "table": "noise_monitoring_data",
-              "column": "LAFMin",
-              "recid": 7
+              "column": "LAFMin"
             },
             {
               "table": "location_type",
-              "column": "location_type",
-              "recid": 8
+              "column": "location_type"
             },
             {
               "table": "monitoring_location",
-              "column": "org_specific_monitoring_id",
-              "recid": 9
+              "column": "org_specific_monitoring_id"
+            },
+            {
+              "table": "monitoring_location",
+              "column": "description"
             }
           ],
           "params": [
@@ -151,7 +146,7 @@
               "primary": "location_type_id"
             }
           ],
-          "query": "select `noise_monitoring_data`.`start_date_time`, `noise_monitoring_data`.`end_date_time`, `noise_monitoring_data`.`LAeq`, `noise_monitoring_data`.`LA90`, `noise_monitoring_data`.`LA10`, `noise_monitoring_data`.`LAFMax`, `noise_monitoring_data`.`LAFMin`, `location_type`.`location_type`, `monitoring_location`.`org_specific_monitoring_id` from `noise_monitoring_data` left join `monitoring_location` on `monitoring_location`.`location_id` = `noise_monitoring_data`.`location_id` left join `location_type` on `location_type`.`location_type_id` = `monitoring_location`.`location_type_id` where (`monitoring_location`.`org_specific_monitoring_id` like ? and `location_type`.`location_type` like ?) order by `noise_monitoring_data`.`start_date_time` DESC",
+          "query": "select `noise_monitoring_data`.`start_date_time`, `noise_monitoring_data`.`end_date_time`, `noise_monitoring_data`.`LAeq`, `noise_monitoring_data`.`LA90`, `noise_monitoring_data`.`LA10`, `noise_monitoring_data`.`LAFMax`, `noise_monitoring_data`.`LAFMin`, `location_type`.`location_type`, `monitoring_location`.`org_specific_monitoring_id`, `monitoring_location`.`description` from `noise_monitoring_data` left join `monitoring_location` on `monitoring_location`.`location_id` = `noise_monitoring_data`.`location_id` left join `location_type` on `location_type`.`location_type_id` = `monitoring_location`.`location_type_id` where (`monitoring_location`.`org_specific_monitoring_id` like ? and `location_type`.`location_type` like ?) order by `noise_monitoring_data`.`start_date_time` DESC",
           "orders": [
             {
               "table": "noise_monitoring_data",
@@ -185,8 +180,7 @@
                         "name": "org_specific_monitoring_id"
                       }
                     },
-                    "operation": "LIKE",
-                    "table": "noise_monitoring_data"
+                    "operation": "LIKE"
                   },
                   {
                     "id": "location_type.location_type",
@@ -207,13 +201,10 @@
                         "name": "location_type"
                       }
                     },
-                    "operation": "LIKE",
-                    "table": "noise_monitoring_data"
+                    "operation": "LIKE"
                   }
                 ],
-                "conditional": null,
-                "table": "noise_monitoring_data",
-                "id": "noise_monitoring_data.undefined"
+                "conditional": null
               }
             ],
             "conditional": null,
@@ -310,6 +301,10 @@
             {
               "type": "text",
               "name": "org_specific_monitoring_id"
+            },
+            {
+              "type": "text",
+              "name": "description"
             }
           ]
         }

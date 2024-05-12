@@ -11,139 +11,223 @@
       },
       {
         "type": "text",
+        "options": {
+          "rules": {}
+        },
         "name": "location"
       }
     ]
   },
   "exec": {
-    "steps": {
-      "name": "query_noise",
-      "module": "dbconnector",
-      "action": "select",
-      "options": {
-        "connection": "conn_db",
-        "sql": {
-          "type": "select",
-          "columns": [
-            {
-              "table": "noise_monitoring_data",
-              "column": "*"
+    "steps": [
+      {
+        "name": "default_location_id",
+        "module": "dbconnector",
+        "action": "single",
+        "options": {
+          "connection": "conn_db",
+          "sql": {
+            "type": "select",
+            "columns": [
+              {
+                "table": "monitoring_location",
+                "column": "location_id"
+              }
+            ],
+            "params": [],
+            "table": {
+              "name": "monitoring_location"
             },
-            {
-              "table": "monitoring_location",
-              "column": "org_specific_monitoring_id"
-            },
-            {
-              "table": "location_type",
-              "column": "location_type"
-            }
-          ],
-          "params": [],
-          "table": {
-            "name": "noise_monitoring_data"
-          },
-          "primary": "noise_id",
-          "joins": [
-            {
-              "table": "monitoring_location",
-              "column": "*",
-              "type": "INNER",
-              "clauses": {
-                "condition": "AND",
-                "rules": [
-                  {
-                    "table": "monitoring_location",
-                    "column": "location_id",
-                    "operation": "=",
-                    "operator": "equal",
-                    "value": {
-                      "table": "noise_monitoring_data",
-                      "column": "location_id",
-                      "type": "number"
-                    }
-                  }
-                ]
-              },
-              "primary": "location_id"
-            },
-            {
-              "table": "location_type",
-              "column": "*",
-              "type": "INNER",
-              "clauses": {
-                "condition": "AND",
-                "rules": [
-                  {
-                    "table": "location_type",
-                    "column": "location_type_id",
-                    "operation": "=",
-                    "operator": "equal",
-                    "value": {
-                      "table": "monitoring_location",
-                      "column": "location_type_id",
-                      "type": "number"
-                    }
-                  }
-                ]
-              },
-              "primary": "location_type_id"
-            }
-          ],
-          "query": "select `noise_monitoring_data`.*, `monitoring_location`.`org_specific_monitoring_id`, `location_type`.`location_type` from `noise_monitoring_data` inner join `monitoring_location` on `monitoring_location`.`location_id` = `noise_monitoring_data`.`location_id` inner join `location_type` on `location_type`.`location_type_id` = `monitoring_location`.`location_type_id`"
-        }
+            "primary": "location_id",
+            "joins": [],
+            "query": "select `location_id` from `monitoring_location`"
+          }
+        },
+        "meta": [
+          {
+            "type": "number",
+            "name": "location_id"
+          }
+        ],
+        "outputType": "object"
       },
-      "output": true,
-      "meta": [
-        {
-          "type": "number",
-          "name": "noise_id"
+      {
+        "name": "query_noise",
+        "module": "dbconnector",
+        "action": "select",
+        "options": {
+          "connection": "conn_db",
+          "sql": {
+            "type": "select",
+            "columns": [
+              {
+                "table": "noise_monitoring_data",
+                "column": "*"
+              },
+              {
+                "table": "monitoring_location",
+                "column": "org_specific_monitoring_id"
+              },
+              {
+                "table": "location_type",
+                "column": "location_type"
+              },
+              {
+                "table": "monitoring_location",
+                "column": "description"
+              }
+            ],
+            "params": [
+              {
+                "operator": "equal",
+                "type": "expression",
+                "name": ":P1",
+                "value": "{{$_GET.location||default_location_id.location_id}}",
+                "test": ""
+              }
+            ],
+            "table": {
+              "name": "noise_monitoring_data"
+            },
+            "primary": "noise_id",
+            "joins": [
+              {
+                "table": "monitoring_location",
+                "column": "*",
+                "type": "INNER",
+                "clauses": {
+                  "condition": "AND",
+                  "rules": [
+                    {
+                      "table": "monitoring_location",
+                      "column": "location_id",
+                      "operation": "=",
+                      "operator": "equal",
+                      "value": {
+                        "table": "noise_monitoring_data",
+                        "column": "location_id",
+                        "type": "number"
+                      }
+                    }
+                  ]
+                },
+                "primary": "location_id"
+              },
+              {
+                "table": "location_type",
+                "column": "*",
+                "type": "INNER",
+                "clauses": {
+                  "condition": "AND",
+                  "rules": [
+                    {
+                      "table": "location_type",
+                      "column": "location_type_id",
+                      "operation": "=",
+                      "operator": "equal",
+                      "value": {
+                        "table": "monitoring_location",
+                        "column": "location_type_id",
+                        "type": "number"
+                      }
+                    }
+                  ]
+                },
+                "primary": "location_type_id"
+              }
+            ],
+            "query": "select `noise_monitoring_data`.*, `monitoring_location`.`org_specific_monitoring_id`, `location_type`.`location_type`, `monitoring_location`.`description` from `noise_monitoring_data` inner join `monitoring_location` on `monitoring_location`.`location_id` = `noise_monitoring_data`.`location_id` inner join `location_type` on `location_type`.`location_type_id` = `monitoring_location`.`location_type_id` where `noise_monitoring_data`.`location_id` = ?",
+            "wheres": {
+              "condition": "AND",
+              "rules": [
+                {
+                  "id": "noise_monitoring_data.location_id",
+                  "field": "noise_monitoring_data.location_id",
+                  "type": "double",
+                  "operator": "equal",
+                  "value": "{{$_GET.location||default_location_id.location_id}}",
+                  "data": {
+                    "table": "noise_monitoring_data",
+                    "column": "location_id",
+                    "type": "number",
+                    "columnObj": {
+                      "type": "reference",
+                      "default": "",
+                      "primary": false,
+                      "nullable": true,
+                      "references": "location_id",
+                      "inTable": "monitoring_location",
+                      "referenceType": "integer",
+                      "onUpdate": "CASCADE",
+                      "onDelete": "CASCADE",
+                      "name": "location_id"
+                    }
+                  },
+                  "operation": "="
+                }
+              ],
+              "conditional": null,
+              "valid": true
+            }
+          }
         },
-        {
-          "type": "datetime",
-          "name": "start_date_time"
-        },
-        {
-          "type": "datetime",
-          "name": "end_date_time"
-        },
-        {
-          "type": "number",
-          "name": "LAeq"
-        },
-        {
-          "type": "number",
-          "name": "LA90"
-        },
-        {
-          "type": "number",
-          "name": "LA10"
-        },
-        {
-          "type": "number",
-          "name": "LAFMax"
-        },
-        {
-          "type": "number",
-          "name": "LAFMin"
-        },
-        {
-          "type": "number",
-          "name": "location_id"
-        },
-        {
-          "type": "datetime",
-          "name": "date_created"
-        },
-        {
-          "type": "text",
-          "name": "org_specific_monitoring_id"
-        },
-        {
-          "type": "text",
-          "name": "location_type"
-        }
-      ],
-      "outputType": "array"
-    }
+        "output": true,
+        "meta": [
+          {
+            "type": "number",
+            "name": "noise_id"
+          },
+          {
+            "type": "datetime",
+            "name": "start_date_time"
+          },
+          {
+            "type": "datetime",
+            "name": "end_date_time"
+          },
+          {
+            "type": "number",
+            "name": "LAeq"
+          },
+          {
+            "type": "number",
+            "name": "LA90"
+          },
+          {
+            "type": "number",
+            "name": "LA10"
+          },
+          {
+            "type": "number",
+            "name": "LAFMax"
+          },
+          {
+            "type": "number",
+            "name": "LAFMin"
+          },
+          {
+            "type": "number",
+            "name": "location_id"
+          },
+          {
+            "type": "datetime",
+            "name": "date_created"
+          },
+          {
+            "type": "text",
+            "name": "org_specific_monitoring_id"
+          },
+          {
+            "type": "text",
+            "name": "location_type"
+          },
+          {
+            "type": "text",
+            "name": "description"
+          }
+        ],
+        "outputType": "array"
+      }
+    ]
   }
 }

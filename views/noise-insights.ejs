@@ -1,16 +1,18 @@
-<!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="noiseinsights" appconnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Navigation:{},dmxFormatter:{},dmxBootstrap5TableGenerator:{},dmxStateManagement:{},dmxBootstrap5PagingGenerator:{}}" -->
-<dmx-serverconnect id="sc_monitoring_locations" url="/api/location/monitoring_location_id"></dmx-serverconnect>
+<!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="noiseinsights" appconnect="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Navigation:{},dmxFormatter:{},dmxBootstrap5TableGenerator:{},dmxStateManagement:{},dmxBootstrap5PagingGenerator:{}}" -->
+<dmx-serverconnect id="sc_all_monitoring_locations" url="/api/location/all_locations"></dmx-serverconnect>
+<dmx-query-manager id="query"></dmx-query-manager>
+<dmx-serverconnect id="sc_monitoring_locations" url="/api/location/monitoring_location_id" dmx-on:success="sc_noise_data_chart.load({location: query.m_location})"></dmx-serverconnect>
 <dmx-serverconnect id="sc_monitorin_location_type" url="/api/location/monitoring_location_type"></dmx-serverconnect>
 <dmx-query-manager id="query_noise"></dmx-query-manager>
-<dmx-serverconnect id="sc_noise_data" url="/api/noise/query_noise_data" dmx-param:monitoring_location="select_monitoring_location.value"></dmx-serverconnect>
-<dmx-serverconnect id="sc_noise_data_chart" url="/api/noise/query_noise" dmx-param:monitoring_location="select_monitoring_location.value" dmx-param:location="select_monitoring_location.value"></dmx-serverconnect>
+<dmx-serverconnect id="sc_noise_data" url="/api/noise/query_noise_data" dmx-param:monitoring_location=""></dmx-serverconnect>
+<dmx-serverconnect id="sc_noise_data_chart" url="/api/noise/query_noise" dmx-param:monitoring_location="select_monitoring_location.value" dmx-param:location="select_monitoring_location.value" noload="true" onsuccess="renderNoiseChart()"></dmx-serverconnect>
 <meta name="ac:route" content="/noise-insights">
 
 <section class="mb-3">
   <div class="row text-end">
 
     <div class="col text-start">
-      <h1 class="fw-normal fs-2">Noise Data Insights</h1>
+      <h1 class="fw-normal fs-2">Noise Data Insights&nbsp;</h1>
       <div class="breadcrumb">
         <a class="breadcrumb-item breadcrumb-link fs-5 fw-light" href="/dashboard">Dashboard</a>
         <a class="breadcrumb-item breadcrumb-link fs-5 fw-light" href="/noise">Noise</a>
@@ -33,15 +35,10 @@
       </select>
     </div>
     <div class="col">
-      <select id="select_monthly" class="form-select">
-        <option value="1">Option One</option>
-        <option value="2">Option Two</option>
-        <option value="3">Option Three</option>
-      </select>
     </div>
     <div class="col">
-      <select id="select_monitoring_location" class="form-select" name="location_id" dmx-bind:options="sc_monitoring_locations.data.monitoring_location_id" optiontext="org_specific_monitoring_id" optionvalue="location_id">
-        <option value="">All Monitoring Locations</option>
+      <select id="select_monitoring_location" class="form-select" name="location_id" dmx-bind:options="sc_all_monitoring_locations.data.monitoringLocations" optiontext="org_specific_monitoring_id+' '+description" optionvalue="location_id" dmx-bind:value="query.data.m_location" dmx-on:changed="sc_noise_data_chart.load({location: value});query.set('m_location',value)">
+        <option value="">Select Monitoring Location</option>
       </select>
     </div>
   </div>
@@ -74,10 +71,10 @@
     <div class="col">
       <div class="card">
         <div class="card-body">
-          <label for="orgSelect">Select Monitoring Location:</label>
+          <!-- <label for="orgSelect">Select Monitoring Location:</label>
           <select id="orgSelect">
 
-          </select>
+          </select> -->
           <div id="time_series_chart_all" class="h-auto"></div>
         </div>
       </div>
@@ -138,7 +135,9 @@
 // });
 </script>
 
-
+<!-- 
 <script src="/js/highcharts/highcharts_noise/monthly_avg.js" async="true"></script>
 <script src="/js/highcharts/highcharts_noise/quarterly_avg.js" async="true"></script>
-<script src="/js/highcharts/highcharts_noise/noise_time_series_chart-copy.js" async="true"></script>
+<script src="/js/highcharts/highcharts_noise/noise_time_series_chart-copy.js" async="true"></script> -->
+
+<script src="/js/highcharts/highcharts_noise/main.js" async="true"></script>

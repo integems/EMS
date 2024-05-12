@@ -1,10 +1,12 @@
-<!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="noise" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Navigation:{},dmxDatePicker:{},dmxBootstrap5Modal:{},dmxValidator:{},dmxDatastore:{},dmxStateManagement:{}}" moment_2="cdn" -->
+<!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="noise" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Navigation:{},dmxDatePicker:{},dmxBootstrap5Modal:{},dmxValidator:{},dmxDatastore:{},dmxStateManagement:{},dmxFormatter:{}}" moment_2="cdn" -->
+<dmx-serverconnect id="sc_noise_data" url="/api/noise/query_noise"></dmx-serverconnect>
 <dmx-serverconnect id="sc_noise_data_columns" url="/api/test/noise_data_columns"></dmx-serverconnect>
 
 <dmx-serverconnect id="sc_monitoring_location_type" url="/api/location/monitoring_location_type"></dmx-serverconnect>
 <dmx-serverconnect id="sc_monitoring_location_id" url="/api/location/monitoring_location_id"></dmx-serverconnect>
+<dmx-serverconnect id="sc_all_monitoring_locations" url="/api/location/all_locations"></dmx-serverconnect>
 
-<dmx-serverconnect id="sc_noise_monitoring_date_time" url="/api/noise/noise_data_date_time" dmx-param:monitoring_location="" dmx-param:location_type="" dmx-param:date_time=""></dmx-serverconnect>
+<dmx-serverconnect id="sc_noise_monitoring_date_time" url="/api/noise/noise_data_date_time_copy" dmx-param:monitoring_location="select_location_id.value" dmx-param:location_type="" dmx-param:date_time="" dmx-param:start_date="" dmx-param:end_date=""></dmx-serverconnect>
 <dmx-serverconnect id="sc_monitoring_locations" url="/api/noise/monitoring_locations" dmx-param:location_id_filter="" dmx-param:location_type_filter=""></dmx-serverconnect>
 
 <div class="modal fade" id="modal_add_data" is="dmx-bs5-modal" tabindex="-1" nocloseonclick="true">
@@ -23,7 +25,7 @@
                                 <div class="form-group mb-3 row">
                                     <label for="input1" class="col-sm-4 col-form-label">Select Monitoring Location</label>
                                     <div class="col-sm-8">
-                                        <select id="select_location" class="form-select" name="location_id" dmx-bind:options="sc_monitoring_location_id.data.monitoring_location_id" optiontext="org_specific_monitoring_id" optionvalue="location_id" required="">
+                                        <select id="select_location" class="form-select" name="location_id" dmx-bind:options="sc_all_monitoring_locations.data.monitoringLocations" optionvalue="location_id" required="" optiontext="org_specific_monitoring_id+' '+description">
                                             <option value="">Choose a Location</option>
 
                                         </select><small class="text-muted">Can't see your Monitoring Location? &nbsp;<a href="/add-monitoring-location">Add Location.</a></small>
@@ -134,7 +136,7 @@
     <div class="row text-end">
 
         <div class="col text-start">
-            <h1 class="fw-normal fs-2">Noise Data Insights</h1>
+            <h1 class="fw-normal fs-2">Recent Noise Data</h1>
             <div class="breadcrumb">
                 <a class="breadcrumb-item breadcrumb-link fs-5 fw-light" href="/dashboard">Dashboard</a>
                 <a class="breadcrumb-item breadcrumb-link fs-5 fw-bold" href="/noise">Noise</a>
@@ -147,19 +149,14 @@
 </section>
 <section class="mt-1 mb-3">
     <div class="row">
-        <div class="col">
-            <select id="select_location_id" class="form-select " name="location_id" dmx-bind:options="sc_monitoring_location_id.data.monitoring_location_id" optiontext="org_specific_monitoring_id" optionvalue="location_id">
-                <option value="">All Location IDs</option>
+        <div class="col-4 text-end">
+            <select id="select_location_id" class="form-select " name="location_id" dmx-bind:options="sc_all_monitoring_locations.data.monitoringLocations" optiontext="org_specific_monitoring_id+' '+description" optionvalue="location_id">
+                <option value="">Select Location</option>
 
             </select>
 
 
         </div>
-        <div class="col"><select id="select_location_type" class="form-select " name="location_type" dmx-bind:options="sc_monitoring_location_type.data.location_type" optiontext="location_type" optionvalue="location_type_id">
-                <option value="">All Location Types</option>
-
-            </select></div>
-        <div class="col"><input id="date_monitoring" name="date" is="dmx-date-range-picker" placeholder="Pick a Date Range" class="form-control "></div>
     </div>
 </section>
 <section class="mb-3 ">
@@ -206,5 +203,5 @@
 
 <script src="/js/Insert%20Monitoring%20Data/Noise/add_noise_data.js" async="true"></script>
 <script src="/js/leaflet_maps/noise_monitoring_locations.js" async="true"></script>
-<script src="/js/highcharts/highcharts_noise/noise_time_series_chart.js" async="true"></script>
+<script src="/js/highcharts/highcharts_noise/noise_time_series_chart-copy.js" async="true"></script>
 <meta name="ac:route" content="/noise">

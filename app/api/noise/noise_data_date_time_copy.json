@@ -19,7 +19,11 @@
       },
       {
         "type": "text",
-        "name": "date_time"
+        "name": "start_date"
+      },
+      {
+        "type": "text",
+        "name": "end_date"
       }
     ]
   },
@@ -36,7 +40,7 @@
             {
               "table": "noise_monitoring_data",
               "column": "start_date_time",
-              "aggregate": "MAX"
+              "aggregate": ""
             },
             {
               "table": "noise_monitoring_data",
@@ -71,7 +75,15 @@
               "column": "location_type"
             }
           ],
-          "params": [],
+          "params": [
+            {
+              "operator": "equal",
+              "type": "expression",
+              "name": ":P1",
+              "value": "{{$_GET.monitoring_location}}",
+              "test": ""
+            }
+          ],
           "table": {
             "name": "noise_monitoring_data"
           },
@@ -122,41 +134,47 @@
               "primary": "location_type_id"
             }
           ],
-          "groupBy": [
+          "query": "select `noise_monitoring_data`.`start_date_time`, `noise_monitoring_data`.`end_date_time`, `noise_monitoring_data`.`LAeq`, `noise_monitoring_data`.`LA90`, `noise_monitoring_data`.`LA10`, `noise_monitoring_data`.`LAFMax`, `noise_monitoring_data`.`LAFMin`, `monitoring_location`.`org_specific_monitoring_id`, `location_type`.`location_type` from `noise_monitoring_data` inner join `monitoring_location` on `monitoring_location`.`location_id` = `noise_monitoring_data`.`location_id` inner join `location_type` on `location_type`.`location_type_id` = `monitoring_location`.`location_type_id` where `noise_monitoring_data`.`location_id` = ? order by `noise_monitoring_data`.`start_date_time` DESC",
+          "wheres": {
+            "condition": "AND",
+            "rules": [
+              {
+                "id": "noise_monitoring_data.location_id",
+                "field": "noise_monitoring_data.location_id",
+                "type": "double",
+                "operator": "equal",
+                "value": "{{$_GET.monitoring_location}}",
+                "data": {
+                  "table": "noise_monitoring_data",
+                  "column": "location_id",
+                  "type": "number",
+                  "columnObj": {
+                    "type": "reference",
+                    "default": "",
+                    "primary": false,
+                    "nullable": true,
+                    "references": "location_id",
+                    "inTable": "monitoring_location",
+                    "referenceType": "integer",
+                    "onUpdate": "CASCADE",
+                    "onDelete": "CASCADE",
+                    "name": "location_id"
+                  }
+                },
+                "operation": "="
+              }
+            ],
+            "conditional": null,
+            "valid": true
+          },
+          "orders": [
             {
               "table": "noise_monitoring_data",
-              "column": "end_date_time"
-            },
-            {
-              "table": "noise_monitoring_data",
-              "column": "LAeq"
-            },
-            {
-              "table": "noise_monitoring_data",
-              "column": "LA90"
-            },
-            {
-              "table": "noise_monitoring_data",
-              "column": "LA10"
-            },
-            {
-              "table": "noise_monitoring_data",
-              "column": "LAFMax"
-            },
-            {
-              "table": "noise_monitoring_data",
-              "column": "LAFMin"
-            },
-            {
-              "table": "monitoring_location",
-              "column": "org_specific_monitoring_id"
-            },
-            {
-              "table": "location_type",
-              "column": "location_type"
+              "column": "start_date_time",
+              "direction": "DESC",
+              "recid": 1
             }
-          ],
-          "query": "select max(`noise_monitoring_data`.`start_date_time`), `noise_monitoring_data`.`end_date_time`, `noise_monitoring_data`.`LAeq`, `noise_monitoring_data`.`LA90`, `noise_monitoring_data`.`LA10`, `noise_monitoring_data`.`LAFMax`, `noise_monitoring_data`.`LAFMin`, `monitoring_location`.`org_specific_monitoring_id`, `location_type`.`location_type` from `noise_monitoring_data` inner join `monitoring_location` on `monitoring_location`.`location_id` = `noise_monitoring_data`.`location_id` inner join `location_type` on `location_type`.`location_type_id` = `monitoring_location`.`location_type_id` group by `noise_monitoring_data`.`end_date_time`, `noise_monitoring_data`.`LAeq`, `noise_monitoring_data`.`LA90`, `noise_monitoring_data`.`LA10`, `noise_monitoring_data`.`LAFMax`, `noise_monitoring_data`.`LAFMin`, `monitoring_location`.`org_specific_monitoring_id`, `location_type`.`location_type`"
+          ]
         }
       },
       "output": true,

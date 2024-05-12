@@ -20,7 +20,8 @@
         "fieldName": "latitude",
         "options": {
           "rules": {
-            "core:number": {}
+            "core:number": {},
+            "core:required": {}
           }
         },
         "name": "latitude"
@@ -30,7 +31,8 @@
         "fieldName": "longitude",
         "options": {
           "rules": {
-            "core:number": {}
+            "core:number": {},
+            "core:required": {}
           }
         },
         "name": "longitude"
@@ -112,37 +114,43 @@
                 "table": "monitoring_location",
                 "column": "latitude",
                 "type": "number",
-                "value": "{{$_POST.latitude}}"
+                "value": "{{$_POST.latitude}}",
+                "recid": 1
               },
               {
                 "table": "monitoring_location",
                 "column": "longitude",
                 "type": "number",
-                "value": "{{$_POST.longitude}}"
+                "value": "{{$_POST.longitude}}",
+                "recid": 2
               },
               {
                 "table": "monitoring_location",
                 "column": "org_specific_monitoring_id",
                 "type": "text",
-                "value": "{{$_POST.org_specific_monitoring_id}}"
+                "value": "{{$_POST.org_specific_monitoring_id}}",
+                "recid": 3
               },
               {
                 "table": "monitoring_location",
                 "column": "description",
                 "type": "text",
-                "value": "{{$_POST.description}}"
+                "value": "{{$_POST.description}}",
+                "recid": 4
               },
               {
                 "table": "monitoring_location",
                 "column": "location_type_id",
                 "type": "number",
-                "value": "{{$_POST.location_type_id}}"
+                "value": "{{$_POST.location_type_id}}",
+                "recid": 5
               },
               {
                 "table": "monitoring_location",
                 "column": "date_created",
                 "type": "datetime",
-                "value": "{{NOW}}"
+                "value": "{{NOW}}",
+                "recid": 6
               }
             ],
             "table": "monitoring_location",

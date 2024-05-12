@@ -2,7 +2,7 @@
 //Time series chart
 async function fetchData() {
     try {
-        const response = await fetch('api/noise/noise_data_date_time');
+        const response = await fetch('api/noise/noise_data_date_time_copy');
         const jsonData = await response.json();
         return jsonData;
     } catch (error) {

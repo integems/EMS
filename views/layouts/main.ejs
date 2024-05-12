@@ -15,9 +15,10 @@
   <script src="/dmxAppConnect/dmxBrowser/dmxBrowser.js" defer></script>
   <script src="/dmxAppConnect/dmxBootstrap5Modal/dmxBootstrap5Modal.js" defer></script>
   <script src="/dmxAppConnect/dmxRouting/dmxRouting.js" defer></script>
+  <script src="/dmxAppConnect/dmxBootstrap5Navigation/dmxBootstrap5Navigation.js" defer></script>
 </head>
 
-<body is="dmx-app" id="main">
+<body is="dmx-app" id="main" class="h-100">
   <dmx-serverconnect id="sc_security_app_data" url="/api/app_settings/security_app_data"></dmx-serverconnect>
   <div is="dmx-view" id="content">
     <%- await include(content, locals); %>

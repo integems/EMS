@@ -74,7 +74,14 @@
               "primary": "location_type_id"
             }
           ],
-          "query": "select `monitoring_location`.`location_id`, `monitoring_location`.`latitude`, `monitoring_location`.`longitude`, `monitoring_location`.`org_specific_monitoring_id`, `monitoring_location`.`description`, `location_type`.`location_type` from `monitoring_location` inner join `location_type` on `location_type`.`location_type_id` = `monitoring_location`.`location_type_id`"
+          "query": "select `monitoring_location`.`location_id`, `monitoring_location`.`latitude`, `monitoring_location`.`longitude`, `monitoring_location`.`org_specific_monitoring_id`, `monitoring_location`.`description`, `location_type`.`location_type` from `monitoring_location` inner join `location_type` on `location_type`.`location_type_id` = `monitoring_location`.`location_type_id` order by `monitoring_location`.`org_specific_monitoring_id` ASC",
+          "orders": [
+            {
+              "table": "monitoring_location",
+              "column": "org_specific_monitoring_id",
+              "direction": "ASC"
+            }
+          ]
         }
       },
       "output": true,

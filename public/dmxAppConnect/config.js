@@ -24,6 +24,10 @@ dmx.config({
       {
         "type": "text",
         "name": "Offset"
+      },
+      {
+        "type": "text",
+        "name": "m_location"
       }
     ]
   },
@@ -32,6 +36,14 @@ dmx.config({
       {
         "type": "text",
         "name": "offset"
+      }
+    ]
+  },
+  "portal_layout": {
+    "query": [
+      {
+        "type": "text",
+        "name": "m_location"
       }
     ]
   }
