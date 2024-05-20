@@ -1,6 +1,6 @@
 <!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="noise" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Navigation:{},dmxDatePicker:{},dmxBootstrap5Modal:{},dmxValidator:{},dmxDatastore:{},dmxStateManagement:{},dmxFormatter:{}}" moment_2="cdn" -->
 <dmx-serverconnect id="sc_noise_data" url="/api/noise/query_noise"></dmx-serverconnect>
-<dmx-serverconnect id="sc_noise_data_columns" url="/api/test/noise_data_columns"></dmx-serverconnect>
+<dmx-serverconnect id="sc_noise_data_columns" url="/api/noise/noise_data_columns"></dmx-serverconnect>
 
 <dmx-serverconnect id="sc_monitoring_location_type" url="/api/location/monitoring_location_type"></dmx-serverconnect>
 <dmx-serverconnect id="sc_monitoring_location_id" url="/api/location/monitoring_location_id"></dmx-serverconnect>
@@ -161,21 +161,11 @@
 </section>
 <section class="mb-3 ">
     <div class="row">
-        <div class="col-8">
-            <div class="card ">
-                <div class="card-body">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-body ">
                     <h4 class="card-title ">Monitoring Locations</h4>
                     <div id="location_map" style="height: 400px;"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card ">
-                <div class="card-body text-justify">
-                    <h5 class="card-title " id="cardTitle"></h5>
-                    <img src="/assets/images/logo_icon.jpg" alt="Location Photos" width="118px" height="118px">
-                    <p class="card-text" id="cardContent"></p>
-
                 </div>
             </div>
         </div>
@@ -184,15 +174,13 @@
 
 <section class="mb-3">
     <div class="row">
-        <div class="card">
+        <div class="card shadow">
             <div class="card-body">
 
                 <div class="col">
-                    <label for="orgSelect">Select Monitoring Location:</label>
-                    <select id="orgSelect">
-
-                    </select>
-                    <div id="time_series_chart_two" style="height: 400px;"></div>
+                    <!-- <label for="orgSelect">Select Monitoring Location:</label>
+                    <select id="orgSelect"></select> -->
+                    <div id="container" style="height: 400px;"></div>
                 </div>
             </div>
         </div>

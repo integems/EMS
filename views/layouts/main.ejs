@@ -7,6 +7,8 @@
   <meta charset="UTF-8">
   <title><%=_('query.where(\'field_name\', \'==\', \'organisation_name\')[0].field_value+\' - Environmental Monitoring System \'')%></title>
 
+  <link rel="icon" type="image/ico" href="/favicon.ico" dmx-bind:href="sc_security_app_data.data.query.where(`field_name`, 'favicon', '==')[0].field_value">
+
   <script src="/dmxAppConnect/dmxBootstrap5Alert/dmxBootstrap5Alert.js" defer></script>
   <link rel="stylesheet" href="/dmxAppConnect/dmxValidator/dmxValidator.css" />
   <script src="/dmxAppConnect/dmxValidator/dmxValidator.js" defer></script>
@@ -16,13 +18,43 @@
   <script src="/dmxAppConnect/dmxBootstrap5Modal/dmxBootstrap5Modal.js" defer></script>
   <script src="/dmxAppConnect/dmxRouting/dmxRouting.js" defer></script>
   <script src="/dmxAppConnect/dmxBootstrap5Navigation/dmxBootstrap5Navigation.js" defer></script>
+
+  <link rel="stylesheet" href="/css/styles.css">
+
+  <link rel="stylesheet" href="assets/css/main/app.css" />
+  <link rel="stylesheet" href="assets/css/main/app-dark.css" />
+
+
+  <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+
+
+
+
+  <script src="/dmxAppConnect/dmxFormatter/dmxFormatter.js" defer></script>
 </head>
 
-<body is="dmx-app" id="main" class="h-100">
+<body is="dmx-app" class="d-flex flex-column h-100">
   <dmx-serverconnect id="sc_security_app_data" url="/api/app_settings/security_app_data"></dmx-serverconnect>
-  <div is="dmx-view" id="content">
-    <%- await include(content, locals); %>
+  <!-- <div id="main" class="layout-navbar navbar-fixed"> -->
+
+  <div id="main-content">
+    <div is="dmx-view" id="content">
+      <%- await include(content, locals); %>
+    </div>
+
+
   </div>
+  <!-- </div> -->
+
+  <script src="assets/js/bootstrap.js"></script>
+  <script src="assets/js/app.js"></script>
+
 </body>
 
 </html>

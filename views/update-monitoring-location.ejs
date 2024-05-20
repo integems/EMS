@@ -1,0 +1,94 @@
+<!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="updatemonitoringlocation" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Navigation:{}}" -->
+<dmx-serverconnect id="sc_all_monitoring_locations" url="/api/location/all_locations"></dmx-serverconnect>
+
+<dmx-serverconnect id="sc_monitoring_parameters" url="/api/Monitoring_parameters/monitoring_parameters"></dmx-serverconnect>
+
+<dmx-serverconnect id="sc_monitoring_location_type" url="/api/location/monitoring_location_type"></dmx-serverconnect>
+<meta name="ac:route" content="/update-monitoring-location">
+<dmx-serverconnect id="sc_add_monitoring_locations" url="/api/location/add_monitoring_location"></dmx-serverconnect>
+
+<section>
+    <div class="row text-end">
+
+        <div class="col text-start">
+            <h1 class="fw-normal fs-2">Monitoring Locations</h1>
+            <div class="breadcrumb">
+                <a class="breadcrumb-item breadcrumb-link fs-5 fw-light" href="/dashboard">Dashboard</a>
+                <a class="breadcrumb-item breadcrumb-link fs-5 fw-light">Administration</a>
+                <a class="breadcrumb-item breadcrumb-link fw-bold" href="#">Add Monitoring Locations</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="multiple-column-form">
+    <div class="row match-height">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        <form class="form" novalidate="" method="post" dmx-on:success="scf_add_monitoring_location.reset();notifies1.success('Monitoring location successfully added.')" is="dmx-serverconnect-form" id="scf_add_monitoring_location" action="/api/location/add_monitoring_location">
+                            <div class="row">
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group">
+                                        <label for="latitude" class="col-form-label">Latitude</label>
+                                        <input type="number" id="latitude" class="form-control" placeholder="Latitude" name="latitude" is="dmx-input" value="" dmx-bind:value="">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group">
+                                        <label for="longitude" class="col-form-label">Longitude</label>
+                                        <input type="number" id="longitude" class="form-control" placeholder="Longitude" name="longitude" is="dmx-input" value="">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group">
+                                        <label for="monitoring_location_id" class="col-form-label">Monitoring Location ID</label>
+                                        <select id="select_monitoring_location_id" class="form-select" name="org_specific_monitoring_id" dmx-bind:options="sc_all_monitoring_locations.data.monitoringLocations" optiontext="org_specific_monitoring_id+' '+description" optionvalue="location_id">
+                                            <option value="">Select a monitoring location</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group">
+                                        <label for="country-floating" class="col-form-label">Location Type</label>
+                                        <select id="modal_select_location_type" class="form-select form-control" name="location_type_id" dmx-bind:options="sc_monitoring_location_type.data.location_type" optiontext="location_type" optionvalue="location_type_id">
+                                            <option value="">Select Location Types</option>
+
+                                        </select>
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="company-column" class="col-form-label">Description</label>
+                                        <textarea id="text_location_description" class="form-control" name="description"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="company-column" class="col-form-label">Photos</label>
+                                        <input id="file_location_photos" name="path[]" type="file" class="form-control" multiple="true">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" dmx-on:click="scf_add_monitoring_location.submit()">Add Location &nbsp;<span class="spinner-border spinner-border-sm" role="status" dmx-show="scf_add_monitoring_location.state.executing"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<meta name="ac:route" content="/update-monitoring-location">

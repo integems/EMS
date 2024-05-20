@@ -78,6 +78,16 @@
       "path": "/water-insights",
       "page": "water-insights",
       "layout": "portal_layout"
+    },
+    {
+      "path": "/test",
+      "page": "test",
+      "layout": "main"
+    },
+    {
+      "path": "/update-monitoring-location",
+      "page": "update-monitoring-location",
+      "layout": "portal_layout"
     }
   ],
   "layouts": {

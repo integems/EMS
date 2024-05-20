@@ -561,3 +561,10 @@ link{
 #location_map{
   z-index:1;
 }
+
+@media (min-width: 768px){
+
+.style1{
+    font-family: Verdana, Geneva, sans-serif;
+  }
+}

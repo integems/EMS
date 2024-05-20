@@ -35,23 +35,28 @@
           "columns": [
             {
               "table": "monitoring_location",
-              "column": "*"
+              "column": "*",
+              "recid": 1
             },
             {
               "table": "monitoring location photos",
-              "column": "path"
+              "column": "path",
+              "recid": 2
             },
             {
               "table": "monitoring location photos",
-              "column": "photo_id"
+              "column": "photo_id",
+              "recid": 3
             },
             {
               "table": "monitoring location data",
-              "column": "*"
+              "column": "*",
+              "recid": 4
             },
             {
               "table": "location_type",
-              "column": "location_type"
+              "column": "location_type",
+              "recid": 5
             }
           ],
           "params": [],
@@ -155,6 +160,14 @@
         {
           "type": "number",
           "name": "location_type_id"
+        },
+        {
+          "type": "datetime",
+          "name": "date_created"
+        },
+        {
+          "type": "number",
+          "name": "monitoring_parameter_id"
         },
         {
           "type": "text",

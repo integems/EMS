@@ -1,18 +1,94 @@
-// JavaScript Document
 
-let greyIcon = L.icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34]
-});
 
-let map = L.map("location_map").setView([8.4344, -12.3433], 7);
+// // Define the custom grey icon
+// let greyIcon = L.icon({
+//     iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png',
+//     iconSize: [25, 41],
+//     iconAnchor: [12, 41],
+//     popupAnchor: [1, -34]
+// });
 
+// // Initialize the map
+// let map = L.map("location_map").setView([8.6439, -10.9714], 11);
+
+// // Set up the OpenStreetMap layer
+// L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+//     maxZoom: 19,
+//     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+// }).addTo(map);
+
+// // Function to format date/time
+// function formatDateTime(dateTimeString) {
+//     let options = {
+//         day: '2-digit',
+//         month: '2-digit',
+//         year: 'numeric',
+//     };
+//     return new Date(dateTimeString).toLocaleDateString('en-GB', options);
+// }
+
+// // Fetch data from the API
+// fetch('/api/noise/monitoring_locations')
+//     .then(response => response.json())
+//     .then(data => {
+//         console.log('Fetched data:', data);
+
+//         // Group data by location_id and keep only the most recent entry per location
+//         const uniqueLocations = data.locations.reduce((acc, location) => {
+//             const locationId = location.location_id;
+
+//             if (!acc[locationId] || new Date(location.start_date_time) > new Date(acc[locationId].start_date_time)) {
+//                 acc[locationId] = location;
+//             }
+
+//             return acc;
+//         }, {});
+
+//         console.log('Unique locations:', uniqueLocations);
+
+//         // Loop through unique locations and add markers with popups
+//         Object.values(uniqueLocations).forEach(location => {
+//             console.log('Adding marker at:', location.latitude, location.longitude);
+
+//             // Add marker to the map
+//             L.marker([location.latitude, location.longitude], { icon: greyIcon })
+//                 .addTo(map)
+//                 .bindPopup(`
+//                             <b>${location.org_specific_monitoring_id}</b>
+//                             <b>${location.description}</b><br>
+//                             <b>Location Type:</b> ${location.location_type}<br>
+//                             <b>Start Date:</b> ${formatDateTime(location.start_date_time)}<br>
+//                             <b>End Date:</b> ${formatDateTime(location.end_date_time)}<br>
+//                             <b>LAeq:</b> ${location.LAeq.toFixed(2)}<br>
+//                             <b>LA90:</b> ${location.LA90.toFixed(2)}<br>
+//                             <b>LA10:</b> ${location.LA10.toFixed(2)}<br>
+//                             <b>LAFMax:</b> ${location.LAFMax.toFixed(2)}<br>
+//                             <b>LAFMin:</b> ${location.LAFMin.toFixed(2)}<br>
+//                         `);
+//         });
+//     })
+//     .catch(error => console.error('Error fetching data:', error));
+
+
+
+
+
+// Initialize the map
+let map = L.map("location_map").setView([8.6439, -10.9714], 11);
+
+// Set up the OpenStreetMap layer
 L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
 }).addTo(map);
+
+// Array of icon URLs with different colors
+let iconColors = [
+    'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+    'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+    'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+    // Add more colors as needed
+];
 
 // Function to format date/time
 function formatDateTime(dateTimeString) {
@@ -24,58 +100,57 @@ function formatDateTime(dateTimeString) {
     return new Date(dateTimeString).toLocaleDateString('en-GB', options);
 }
 
-// Function to update card content with the most recent data
-function updateCardContent(data) {
-    const mostRecentEntry = data[data.length - 1];
-
-    document.getElementById('cardTitle').textContent = mostRecentEntry.org_specific_monitoring_id;
-    document.getElementById('cardContent').innerHTML = `
-      <b>Location Type:</b> ${mostRecentEntry.location_type}<br>
-      <b>Description:</b> ${mostRecentEntry.description}<br>
-      <b>Start Date:</b> ${formatDateTime(mostRecentEntry.start_date_time)}<br>
-      <b>End Date:</b> ${formatDateTime(mostRecentEntry.end_date_time)}<br>
-      <b>LAeq:</b> ${mostRecentEntry.LAeq.toFixed(2)}<br>
-      <b>LA90:</b> ${mostRecentEntry.LA90.toFixed(2)}<br>
-      <b>LA10:</b> ${mostRecentEntry.LA10.toFixed(2)}<br>
-      <b>LAFMax:</b> ${mostRecentEntry.LAFMax.toFixed(2)}<br>
-      <b>LAFMin:</b> ${mostRecentEntry.LAFMin.toFixed(2)}<br>
-    `;
-}
-
+// Fetch data from the API
 fetch('/api/noise/monitoring_locations')
     .then(response => response.json())
     .then(data => {
-        const groupedData = {};
-        data.locations.forEach(location => {
+        console.log('Fetched data:', data);
+
+        // Group data by location_id and keep only the most recent entry per location
+        const uniqueLocations = data.locations.reduce((acc, location, index) => {
             const locationId = location.location_id;
-            const startDate = location.start_date_time.split('T')[0];
-            const key = `${locationId}_${startDate}`;
 
-            if (!groupedData[key]) {
-                groupedData[key] = [];
+            if (!acc[locationId] || new Date(location.start_date_time) > new Date(acc[locationId].start_date_time)) {
+                acc[locationId] = { ...location, index }; // Store the index for color selection
             }
-            groupedData[key].push(location);
-        });
 
-        // Loop through grouped data and add markers with popups
-        Object.values(groupedData).forEach(locationGroup => {
-            let marker = L.marker([locationGroup[0].latitude, locationGroup[0].longitude], { icon: greyIcon })
+            return acc;
+        }, {});
+
+        console.log('Unique locations:', uniqueLocations);
+
+        // Loop through unique locations and add markers with popups
+        Object.values(uniqueLocations).forEach(location => {
+            console.log('Adding marker at:', location.latitude, location.longitude);
+
+            // Select icon color based on the index
+            let iconUrl = iconColors[location.index % iconColors.length];
+
+            // Define the custom icon
+            let customIcon = L.icon({
+                iconUrl: iconUrl,
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34]
+            });
+
+            // Add marker to the map
+            L.marker([location.latitude, location.longitude], { icon: customIcon })
                 .addTo(map)
                 .bindPopup(`
-            <b>${locationGroup[0].org_specific_monitoring_id}</b><br>
-            <b>Location Type:</b> ${locationGroup[0].location_type}<br>
-            <b>Description:</b> ${locationGroup[0].description}<br>
-            <b>Start Date:</b> ${formatDateTime(locationGroup[0].start_date_time)}<br>
-            <b>End Date:</b> ${formatDateTime(locationGroup[0].end_date_time)}<br>
-            <b>LAeq:</b> ${locationGroup[0].LAeq.toFixed(2)}<br>
-            <b>LA90:</b> ${locationGroup[0].LA90.toFixed(2)}<br>
-            <b>LA10:</b> ${locationGroup[0].LA10.toFixed(2)}<br>
-            <b>LAFMax:</b> ${locationGroup[0].LAFMax.toFixed(2)}<br>
-            <b>LAFMin:</b> ${locationGroup[0].LAFMin.toFixed(2)}<br>
-          `)
-                .on('click', function () {
-                    updateCardContent(locationGroup);
-                });
+                            <b>${location.org_specific_monitoring_id}</b>
+                            <b>${location.description}</b><br>
+                            <b>Location Type:</b> ${location.location_type}<br>
+                            <b>Start Date:</b> ${formatDateTime(location.start_date_time)}<br>
+                            <b>End Date:</b> ${formatDateTime(location.end_date_time)}<br>
+                            <b>LAeq:</b> ${location.LAeq.toFixed(2)}<br>
+                            <b>LA90:</b> ${location.LA90.toFixed(2)}<br>
+                            <b>LA10:</b> ${location.LA10.toFixed(2)}<br>
+                            <b>LAFMax:</b> ${location.LAFMax.toFixed(2)}<br>
+                            <b>LAFMin:</b> ${location.LAFMin.toFixed(2)}<br>
+                        `);
         });
     })
     .catch(error => console.error('Error fetching data:', error));
+
+

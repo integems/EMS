@@ -28,6 +28,10 @@ dmx.config({
       {
         "type": "text",
         "name": "m_location"
+      },
+      {
+        "type": "text",
+        "name": "year"
       }
     ]
   },

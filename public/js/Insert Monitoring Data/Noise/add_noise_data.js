@@ -123,7 +123,10 @@ function fetchDatabaseColumns() {
     return fetch('/api/noise/noise_data_columns')
         .then(response => response.json())
         .then(data => data.query);
+
+
 }
+// console.log(fetchDatabaseColumns)
 
 
 

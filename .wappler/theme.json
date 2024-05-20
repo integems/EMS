@@ -1,0 +1,13 @@
+{
+  "bootstrap5": {
+    "basic": {
+      "headings-font-family": "Ubuntu:500",
+      "font-family-base": "Nunito:400",
+      "font-family-sans-serif": "Nunito:400",
+      "font-family-monospace": "Nunito:400",
+      "body-bg": "#f2f7ff",
+      "body-color": "#607080"
+    },
+    "advanced": {}
+  }
+}

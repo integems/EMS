@@ -15,6 +15,10 @@
           "rules": {}
         },
         "name": "location"
+      },
+      {
+        "type": "text",
+        "name": "year"
       }
     ]
   },
@@ -31,7 +35,8 @@
             "columns": [
               {
                 "table": "monitoring_location",
-                "column": "location_id"
+                "column": "location_id",
+                "recid": 1
               }
             ],
             "params": [],

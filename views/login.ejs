@@ -10,18 +10,33 @@
     #toggle {
         cursor: pointer;
     }
+
+    #loginForm {
+        background: linear-gradient(to right, #C0D6E8, #EEF7FF);
+        color: #365486;
+    }
+
+    #login_submit {
+        background-color: #365486;
+        border: none;
+    }
 </style>
 <main class="p-4 style1" id="loginPage">
     <div class="container card card-body shadow" id="loginForm">
         <div class="row p-4 justify-content-center">
             <div class="col">
-                <form id="scfLogin" method="post" is="dmx-serverconnect-form" action="/api/security/login" dmx-on:success="browser.goto('/dashboard')" dmx-on:unauthorized="alertmessage.setTextContent(lastError.response);alertmessage.show()">
+                <form id="scfLogin" method="post" is="dmx-serverconnect-form" action="/api/security/login" dmx-on:success="browser.goto('/noise')" dmx-on:unauthorized="alertmessage.setTextContent(lastError.response);alertmessage.show()">
                     <div class="row">
                         <div class="col">
                             <div class="row">
                                 <div class="col text-center">
                                     <a href="/"><img class="img-fluid" width="80px" dmx-bind:src="sc_security_app_data.data.query.where(`field_name`, 'logo', '==')[0].field_value"></a>
 
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col">
+                                    <h5>Gold Lion Environmental Monitoring System</h5>
                                 </div>
                             </div>
                             <div class="row mt-1">

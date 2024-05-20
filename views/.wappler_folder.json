@@ -74,5 +74,9 @@
   "water-insights.ejs": {
     "layoutPage": "portal_layout",
     "description": ""
+  },
+  "update-monitoring-location.ejs": {
+    "layoutPage": "portal_layout",
+    "description": ""
   }
 }

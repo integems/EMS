@@ -1,0 +1,39 @@
+<!-- Wappler include head-page="layouts/main" is="dmx-app" id="test" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxFormatter:{}}" -->
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        height: 80px;
+        background-color: black;
+    }
+
+    #index-login:hover {}
+</style>
+<header>
+    <div class="container ">
+        <div class="row align-items-center">
+            <div class="col">
+                <img dmx-bind:src="sc_security_app_data.data.query.where(`field_name`, 'logo', '==')[0].field_value" width="50px">
+            </div>
+            <div class="col">
+                <div class="row justify-content-end">
+                    <div class="col text-right text-end">
+                        <h5 class="d-inline-block ms-2 text-light">Lorem</h5>
+                        <h5 class="d-inline-block ms-2 text-light">Lorem</h5>
+                        <h5 class="d-inline-block ms-2 text-light">Lorem</h5>
+                        <h2 class="d-inline-block ms-2 text-light">|</h2>
+                        <h5 class="d-inline-block ms-2 text-light" id="index-login">Login</h5>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</header>
+<meta name="ac:route" content="/test">
