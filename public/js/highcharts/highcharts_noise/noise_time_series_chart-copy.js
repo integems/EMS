@@ -187,12 +187,127 @@
 
 // -----------Version 3--------------------------------------
 
-(async () => {
+// (async () => {
 
+//     const response = await fetch('api/noise/query_noise');
+//     const result = await response.json();
+
+//     // Extracting and transforming the data for each parameter
+//     const seriesData = {
+//         LAeq: [],
+//         LA90: [],
+//         LA10: [],
+//         LAFMax: [],
+//         LAFMin: []
+//     };
+
+//     result.query_noise.forEach(item => {
+//         const timestamp = new Date(item.start_date_time).getTime();
+//         seriesData.LAeq.push([timestamp, item.LAeq]);
+//         seriesData.LA90.push([timestamp, item.LA90]);
+//         seriesData.LA10.push([timestamp, item.LA10]);
+//         seriesData.LAFMax.push([timestamp, item.LAFMax]);
+//         seriesData.LAFMin.push([timestamp, item.LAFMin]);
+//     });
+
+//     // Creating the chart
+//     Highcharts.chart('container', {
+//         chart: {
+//             zooming: {
+//                 type: 'x'
+//             }
+//         },
+//         title: {
+//             text: 'Noise Level Trends',
+//             align: 'center'
+//         },
+//         subtitle: {
+//             text: document.ontouchstart === undefined ?
+//                 'Click and drag in the plot area to zoom in' :
+//                 'Pinch the chart to zoom in',
+//             align: 'left'
+//         },
+//         xAxis: {
+//             type: 'datetime'
+//         },
+//         yAxis: {
+//             title: {
+//                 text: 'Noise Levels (dB)'
+//             }
+//         },
+//         legend: {
+//             enabled: true
+//         },
+//         plotOptions: {
+//             line: {
+//                 marker: {
+//                     radius: 2
+//                 },
+//                 lineWidth: 2,
+//                 states: {
+//                     hover: {
+//                         lineWidth: 1
+//                     }
+//                 },
+//                 threshold: null
+//             }
+//         },
+//         series: [
+//             {
+//                 type: 'line',
+//                 name: 'LAeq',
+//                 data: seriesData.LAeq,
+//                 color: Highcharts.getOptions().colors[0]
+//             },
+//             {
+//                 type: 'line',
+//                 name: 'LA90',
+//                 data: seriesData.LA90,
+//                 color: Highcharts.getOptions().colors[1]
+//             },
+//             {
+//                 type: 'line',
+//                 name: 'LA10',
+//                 data: seriesData.LA10,
+//                 color: Highcharts.getOptions().colors[2]
+//             },
+//             {
+//                 type: 'line',
+//                 name: 'LAFMax',
+//                 data: seriesData.LAFMax,
+//                 color: Highcharts.getOptions().colors[3]
+//             },
+//             {
+//                 type: 'line',
+//                 name: 'LAFMin',
+//                 data: seriesData.LAFMin,
+//                 color: Highcharts.getOptions().colors[4]
+//             }
+//         ]
+//     });
+// })();
+
+
+//--------------version 4------------------------------------
+(async () => {
     const response = await fetch('api/noise/query_noise');
     const result = await response.json();
 
-    // Extracting and transforming the data for each parameter
+    // Extract unique locations for the select dropdown
+    const locations = {};
+    result.query_noise.forEach(item => {
+        locations[item.location_id] = item.description;
+    });
+
+    const orgSelect = document.getElementById('orgSelect');
+    orgSelect.innerHTML = '<option value="all">All Locations</option>';
+    Object.entries(locations).forEach(([locationId, description]) => {
+        const option = document.createElement('option');
+        option.value = locationId;
+        option.text = description;
+        orgSelect.appendChild(option);
+    });
+
     const seriesData = {
         LAeq: [],
         LA90: [],
@@ -201,88 +316,114 @@
         LAFMin: []
     };
 
-    result.query_noise.forEach(item => {
-        const timestamp = new Date(item.start_date_time).getTime();
-        seriesData.LAeq.push([timestamp, item.LAeq]);
-        seriesData.LA90.push([timestamp, item.LA90]);
-        seriesData.LA10.push([timestamp, item.LA10]);
-        seriesData.LAFMax.push([timestamp, item.LAFMax]);
-        seriesData.LAFMin.push([timestamp, item.LAFMin]);
+    function processData(locationId) {
+        const filteredData = result.query_noise.filter(item => locationId === 'all' || item.location_id == locationId);
+
+        const data = {
+            LAeq: [],
+            LA90: [],
+            LA10: [],
+            LAFMax: [],
+            LAFMin: []
+        };
+
+        filteredData.forEach(item => {
+            const timestamp = Date.parse(item.start_date_time); // Use Date.parse to preserve 24H format
+            data.LAeq.push([timestamp, item.LAeq]);
+            data.LA90.push([timestamp, item.LA90]);
+            data.LA10.push([timestamp, item.LA10]);
+            data.LAFMax.push([timestamp, item.LAFMax]);
+            data.LAFMin.push([timestamp, item.LAFMin]);
+        });
+
+        return data;
+    }
+
+    function createChart(data) {
+        Highcharts.chart('container', {
+            chart: {
+                zooming: {
+                    type: 'x'
+                }
+            },
+            title: {
+                text: 'Noise Level Trends',
+                align: 'center'
+            },
+            subtitle: {
+                text: document.ontouchstart === undefined ?
+                    'Click and drag in the plot area to zoom in' :
+                    'Pinch the chart to zoom in',
+                align: 'left'
+            },
+            xAxis: {
+                type: 'datetime'
+            },
+            yAxis: {
+                title: {
+                    text: 'Noise Levels (dB)'
+                }
+            },
+            legend: {
+                enabled: true
+            },
+            plotOptions: {
+                line: {
+                    marker: {
+                        radius: 2
+                    },
+                    lineWidth: 2,
+                    states: {
+                        hover: {
+                            lineWidth: 1
+                        }
+                    },
+                    threshold: null
+                }
+            },
+            series: [
+                {
+                    type: 'line',
+                    name: 'LAeq',
+                    data: data.LAeq,
+                    color: Highcharts.getOptions().colors[0]
+                },
+                {
+                    type: 'line',
+                    name: 'LA90',
+                    data: data.LA90,
+                    color: Highcharts.getOptions().colors[1]
+                },
+                {
+                    type: 'line',
+                    name: 'LA10',
+                    data: data.LA10,
+                    color: Highcharts.getOptions().colors[2]
+                },
+                {
+                    type: 'line',
+                    name: 'LAFMax',
+                    data: data.LAFMax,
+                    color: Highcharts.getOptions().colors[3]
+                },
+                {
+                    type: 'line',
+                    name: 'LAFMin',
+                    data: data.LAFMin,
+                    color: Highcharts.getOptions().colors[4]
+                }
+            ]
+        });
+    }
+
+    orgSelect.addEventListener('change', (event) => {
+        const selectedLocationId = event.target.value;
+        const data = processData(selectedLocationId);
+        createChart(data);
     });
 
-    // Creating the chart
-    Highcharts.chart('container', {
-        chart: {
-            zooming: {
-                type: 'x'
-            }
-        },
-        title: {
-            text: 'Noise Level Trends',
-            align: 'center'
-        },
-        subtitle: {
-            text: document.ontouchstart === undefined ?
-                'Click and drag in the plot area to zoom in' :
-                'Pinch the chart to zoom in',
-            align: 'left'
-        },
-        xAxis: {
-            type: 'datetime'
-        },
-        yAxis: {
-            title: {
-                text: 'Noise Levels (dB)'
-            }
-        },
-        legend: {
-            enabled: true
-        },
-        plotOptions: {
-            line: {
-                marker: {
-                    radius: 2
-                },
-                lineWidth: 2,
-                states: {
-                    hover: {
-                        lineWidth: 1
-                    }
-                },
-                threshold: null
-            }
-        },
-        series: [
-            {
-                type: 'line',
-                name: 'LAeq',
-                data: seriesData.LAeq,
-                color: Highcharts.getOptions().colors[0]
-            },
-            {
-                type: 'line',
-                name: 'LA90',
-                data: seriesData.LA90,
-                color: Highcharts.getOptions().colors[1]
-            },
-            {
-                type: 'line',
-                name: 'LA10',
-                data: seriesData.LA10,
-                color: Highcharts.getOptions().colors[2]
-            },
-            {
-                type: 'line',
-                name: 'LAFMax',
-                data: seriesData.LAFMax,
-                color: Highcharts.getOptions().colors[3]
-            },
-            {
-                type: 'line',
-                name: 'LAFMin',
-                data: seriesData.LAFMin,
-                color: Highcharts.getOptions().colors[4]
-            }
-        ]
-    });
+    // Initial chart with all data
+    const initialData = processData('all');
+    createChart(initialData);
 })();
+

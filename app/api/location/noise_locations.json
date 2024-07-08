@@ -1,0 +1,104 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "noise_locations",
+      "module": "dbconnector",
+      "action": "select",
+      "options": {
+        "connection": "conn_db",
+        "sql": {
+          "type": "select",
+          "columns": [
+            {
+              "table": "monitoring_location",
+              "column": "*"
+            }
+          ],
+          "params": [],
+          "table": {
+            "name": "monitoring_location"
+          },
+          "primary": "location_id",
+          "joins": [],
+          "query": "select * from `monitoring_location` where `monitoring_location`.`org_specific_monitoring_id` like ?",
+          "wheres": {
+            "condition": "AND",
+            "rules": [
+              {
+                "id": "monitoring_location.org_specific_monitoring_id",
+                "field": "monitoring_location.org_specific_monitoring_id",
+                "type": "string",
+                "operator": "contains",
+                "value": "AQNMP",
+                "data": {
+                  "table": "monitoring_location",
+                  "column": "org_specific_monitoring_id",
+                  "type": "text",
+                  "columnObj": {
+                    "type": "string",
+                    "default": "",
+                    "maxLength": 255,
+                    "primary": false,
+                    "nullable": true,
+                    "name": "org_specific_monitoring_id"
+                  }
+                },
+                "operation": "LIKE"
+              }
+            ],
+            "conditional": null,
+            "valid": true
+          }
+        }
+      },
+      "output": true,
+      "meta": [
+        {
+          "type": "number",
+          "name": "location_id"
+        },
+        {
+          "type": "number",
+          "name": "latitude"
+        },
+        {
+          "type": "number",
+          "name": "longitude"
+        },
+        {
+          "type": "text",
+          "name": "org_specific_monitoring_id"
+        },
+        {
+          "type": "text",
+          "name": "description"
+        },
+        {
+          "type": "number",
+          "name": "location_type_id"
+        },
+        {
+          "type": "datetime",
+          "name": "date_created"
+        },
+        {
+          "type": "number",
+          "name": "monitoring_parameter_id"
+        }
+      ],
+      "outputType": "array"
+    }
+  }
+}

@@ -1,15 +1,16 @@
-// JavaScript Document
 let databaseColumns;
 let csvData;
 
-
 function addMappedData() {
-    handleAddData(csvData, databaseColumns)
+    handleAddData(csvData, databaseColumns);
 }
 
-
-// Function to handle parsed data and generate mapping rows
 function handleParsedData(data, databaseColumns) {
+    if (!databaseColumns) {
+        console.error('Database columns are not defined');
+        return;
+    }
+
     const mappingContainer = document.getElementById('mapping-container');
 
     // Clear existing content
@@ -35,23 +36,16 @@ function handleParsedData(data, databaseColumns) {
                     </select>
                 </div>
             `;
-            const csvData = data;
 
             mappingContainer.appendChild(row);
         }
     });
 }
 
-
-// Function to find CSV column for a given database column
 function findCsvColumn(data, dbColumnName) {
-
     return data[0][dbColumnName] ? dbColumnName : '';
 }
 
-
-
-// Function to get dropdown options
 function getDropdownOptions(csvColumns, selectedCsvColumn) {
     return Object.keys(csvColumns).map(column => {
         const isSelected = column === selectedCsvColumn ? 'selected' : '';
@@ -59,18 +53,13 @@ function getDropdownOptions(csvColumns, selectedCsvColumn) {
     }).join('');
 }
 
-
-
-// Function to add data
 function handleAddData(csvData, databaseColumns) {
-
     const mappedColumns = {};
     let mappedData = [];
 
     databaseColumns.forEach(dbColumn => {
         const dropdownElement = document.getElementById(`${dbColumn.Field}_mapping`);
 
-        // Check if the element exists before accessing its value
         if (dropdownElement) {
             const dropdownValue = dropdownElement.value;
             mappedColumns[dropdownValue] = dbColumn.Field;
@@ -79,25 +68,17 @@ function handleAddData(csvData, databaseColumns) {
         }
     });
 
-    // for (record of csvData) {
-    //     let mappedRecord = {}
-    //     for (key of Object.keys(mappedColumns)) {
-    //         let mappedKey = mappedColumns[key]
-    //         if (mappedKey == "start_date_time" || mappedKey == "end_date_time") {
+    csvData.forEach(record => {
+        let mappedRecord = {};
+        for (let key in mappedColumns) {
+            let mappedKey = mappedColumns[key];
+            mappedRecord[mappedKey] = record[key];
+        }
+        mappedRecord.location_id = document.getElementById("select_location").value;
+        mappedData.push(mappedRecord);
+    });
 
-    //             let convertedDate = moment(record[key], "DD/MM/YYYY HH:mm").format("YYYY-MM-DD HH:mm")
-    //             mappedRecord[mappedKey] = convertedDate;
-
-    //         } else {
-    //             mappedRecord[mappedKey] = record[key]
-    //         }
-
-    //     }
-    //     mappedRecord.location_id = $("#select_location").val()
-    //     mappedData.push(mappedRecord)
-    // }
-    // console.log(mappedData);
-
+    console.log('Mapped Data:', mappedData); // Log the mapped data before sending
 
     fetch('/api/noise/insert_noise_data', {
         method: 'POST',
@@ -106,41 +87,45 @@ function handleAddData(csvData, databaseColumns) {
         },
         body: JSON.stringify({ record: mappedData }),
     })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
         .then(data => {
             console.log('Data added successfully:', data);
         })
         .catch(error => {
             console.error('Error adding data:', error);
         });
-
 }
 
-
-
-// Function to fetch database columns from the server
 function fetchDatabaseColumns() {
-    return fetch('api/air_quality/air_quality_columns')
-        .then(response => response.json())
-        .then(data => data.query);
+    return fetch('/api/air_quality/air_quality_columns')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Fetched Database Columns:', data);
+            return data.custom; // Adjusted to match the correct property
+        });
 }
 
-
-
-// Event listener for file input change
 document.getElementById('data_file').addEventListener('change', () => {
-    // Fetch database columns and handle parsed data when a file is selected
+    console.log('File input changed');
     fetchDatabaseColumns()
         .then(dbColumns => {
+            console.log('Database Columns Fetched:', dbColumns);
             parseCSV(dbColumns);
-            databaseColumns = dbColumns
+            databaseColumns = dbColumns;
         })
         .catch(error => console.error('Error fetching database columns:', error));
 });
 
-
-
-// Function to parse CSV using PapaParse
 function parseCSV(databaseColumns) {
     const fileInput = document.getElementById('data_file');
 
@@ -148,7 +133,7 @@ function parseCSV(databaseColumns) {
         header: true,
         dynamicTyping: true,
         complete: function (results) {
-            // Handle parsed data
+            console.log('CSV Parsed:', results.data);
             handleParsedData(results.data, databaseColumns);
             csvData = results.data;
         },
@@ -157,4 +142,3 @@ function parseCSV(databaseColumns) {
         }
     });
 }
-

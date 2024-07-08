@@ -25,16 +25,41 @@
     }
 
     main {
-        flex: 1;
+        min-height: calc(100vh - 100px);
+        padding-bottom: 2rem;
+    }
+
+    .card-container {
+        min-height: 400px;
     }
 
     .card {
         display: flex;
         flex-direction: column;
+        height: 250px;
+        overflow: hidden;
+        margin-bottom: 1rem;
+        /* Add margin-bottom for mobile */
     }
 
     .card-body {
         flex: 1;
+        overflow: auto;
+        padding: 1rem;
+    }
+
+    footer {
+        margin-top: 2rem;
+    }
+
+    /* Media query for mobile devices */
+    @media (max-width: 767px) {
+        .card {
+            height: auto;
+            /* Reset height on mobile */
+            margin-bottom: 1.5rem;
+            /* Increase margin-bottom on mobile */
+        }
     }
 </style>
 
@@ -208,11 +233,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row card-container">
                     <div class="col-12 col-md-6 col-lg-3" style="height: 150px;">
                         <div class="card">
                             <div class="card-body">
-                                <h6 class="card-title">Monitor in Real-Time</h6>
+                                <h5 class="card-title">Monitor in Real-Time</h5>
                                 <p class="card-text fs-6">Collect live data on noise, air, etc from multiple sensors, providing instant insights into environmental conditions.</p>
                             </div>
                         </div>
@@ -223,7 +248,7 @@
                     <div class="col-12 col-md-6 col-lg-3" style="height: 150px;">
                         <div class="card">
                             <div class="card-body">
-                                <h6 class="card-title">Visualize with Maps</h6>
+                                <h5 class="card-title">Visualize with Maps</h5>
                                 <p class="card-text fs-6">Use dynamic maps to view and analyze spatial distributions and trends in environmental data across different regions.
                                 <p>
                                 </p>
@@ -235,7 +260,7 @@
                     <div class="col-12 col-md-6 col-lg-3" style="height: 150px;">
                         <div class="card">
                             <div class="card-body">
-                                <h6 class="card-title">Analyze Trends</h6>
+                                <h5 class="card-title">Analyze Trends</h5>
                                 <p class="card-text fs-6">Generate charts and tables to understand patterns and changes over time, enabling informed decision-making for environmental management.</p>
                             </div>
                         </div>
@@ -243,7 +268,7 @@
                     <div class="col-12 col-md-6 col-lg-3" style="height: 150px;">
                         <div class="card">
                             <div class="card-body">
-                                <h6 class="card-title">Access Anywhere</h6>
+                                <h5 class="card-title">Access Anywhere</h5>
                                 <p class="card-text fs-6">Easily access and share data from any device, ensuring that critical environmental information is always at your fingertips.
                                 <p>
                                 </p>
@@ -265,7 +290,7 @@
         </section>
     </main>
     <!-- Footer-->
-    <footer class="bg-white py-4 mt-auto">
+    <footer class="bg-white py-4 mt-auto" style="margin-top: 2rem;">
         <div class="container px-5">
             <div class="row align-items-center justify-content-between flex-column flex-sm-row">
                 <div class="col-auto">

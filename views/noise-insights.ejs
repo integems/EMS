@@ -1,4 +1,5 @@
 <!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="noiseinsights" appconnect="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Navigation:{},dmxFormatter:{},dmxBootstrap5TableGenerator:{},dmxStateManagement:{},dmxBootstrap5PagingGenerator:{}}" -->
+<dmx-serverconnect id="sc_all_noise_locations" url="/api/location/noise_locations"></dmx-serverconnect>
 <dmx-serverconnect id="sc_all_monitoring_locations" url="/api/location/all_locations"></dmx-serverconnect>
 <dmx-query-manager id="query"></dmx-query-manager>
 <dmx-serverconnect id="sc_monitoring_locations" url="/api/location/monitoring_location_id" dmx-on:success="sc_noise_data_chart.load({location: query.m_location})"></dmx-serverconnect>
@@ -37,7 +38,7 @@
     <div class="col">
     </div>
     <div class="col">
-      <select id="select_monitoring_location" class="form-select" name="location_id" dmx-bind:options="sc_all_monitoring_locations.data.monitoringLocations" optiontext="org_specific_monitoring_id+' '+description" optionvalue="location_id" dmx-bind:value="query.data.m_location" dmx-on:changed="sc_noise_data_chart.load({location: value});query.set('m_location',value)">
+      <select id="select_monitoring_location" class="form-select" name="location_id" dmx-bind:options="sc_all_noise_locations.data.noise_locations" optiontext="org_specific_monitoring_id+' '+description" optionvalue="location_id" dmx-bind:value="query.data.m_location" dmx-on:changed="sc_noise_data_chart.load({location: value});query.set('m_location',value)">
         <option value="">Select Monitoring Location</option>
       </select>
     </div>

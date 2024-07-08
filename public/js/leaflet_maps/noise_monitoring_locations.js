@@ -82,12 +82,15 @@ L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
 }).addTo(map);
 
+// Initialize a marker cluster group
+let markers = L.markerClusterGroup();
+
 // Array of icon URLs with different colors
 let iconColors = [
-    'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-    'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
-    'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-    // Add more colors as needed
+    'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png',
+    // 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+    // 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+
 ];
 
 // Function to format date/time
@@ -134,23 +137,26 @@ fetch('/api/noise/monitoring_locations')
                 popupAnchor: [1, -34]
             });
 
-            // Add marker to the map
-            L.marker([location.latitude, location.longitude], { icon: customIcon })
-                .addTo(map)
+            // Add marker to the marker cluster group
+            markers.addLayer(L.marker([location.latitude, location.longitude], { icon: customIcon })
                 .bindPopup(`
-                            <b>${location.org_specific_monitoring_id}</b>
-                            <b>${location.description}</b><br>
-                            <b>Location Type:</b> ${location.location_type}<br>
-                            <b>Start Date:</b> ${formatDateTime(location.start_date_time)}<br>
-                            <b>End Date:</b> ${formatDateTime(location.end_date_time)}<br>
-                            <b>LAeq:</b> ${location.LAeq.toFixed(2)}<br>
-                            <b>LA90:</b> ${location.LA90.toFixed(2)}<br>
-                            <b>LA10:</b> ${location.LA10.toFixed(2)}<br>
-                            <b>LAFMax:</b> ${location.LAFMax.toFixed(2)}<br>
-                            <b>LAFMin:</b> ${location.LAFMin.toFixed(2)}<br>
-                        `);
+                    <b>${location.org_specific_monitoring_id}</b>
+                    <b>${location.description}</b><br>
+                    <b>Location Type:</b> ${location.location_type}<br>
+                    <b>Start Date:</b> ${formatDateTime(location.start_date_time)}<br>
+                    <b>End Date:</b> ${formatDateTime(location.end_date_time)}<br>
+                    <b>LAeq:</b> ${location.LAeq.toFixed(2)}<br>
+                    <b>LA90:</b> ${location.LA90.toFixed(2)}<br>
+                    <b>LA10:</b> ${location.LA10.toFixed(2)}<br>
+                    <b>LAFMax:</b> ${location.LAFMax.toFixed(2)}<br>
+                    <b>LAFMin:</b> ${location.LAFMin.toFixed(2)}<br>
+                `));
         });
+
+        // Add the marker cluster group to the map
+        map.addLayer(markers);
     })
     .catch(error => console.error('Error fetching data:', error));
+
 
 

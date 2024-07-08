@@ -1,4 +1,5 @@
 <!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="noise" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Navigation:{},dmxDatePicker:{},dmxBootstrap5Modal:{},dmxValidator:{},dmxDatastore:{},dmxStateManagement:{},dmxFormatter:{}}" moment_2="cdn" -->
+<dmx-serverconnect id="sc_all_noise_locations" url="/api/location/noise_locations"></dmx-serverconnect>
 <dmx-serverconnect id="sc_noise_data" url="/api/noise/query_noise"></dmx-serverconnect>
 <dmx-serverconnect id="sc_noise_data_columns" url="/api/noise/noise_data_columns"></dmx-serverconnect>
 
@@ -150,7 +151,7 @@
 <section class="mt-1 mb-3">
     <div class="row">
         <div class="col-4 text-end">
-            <select id="select_location_id" class="form-select " name="location_id" dmx-bind:options="sc_all_monitoring_locations.data.monitoringLocations" optiontext="org_specific_monitoring_id+' '+description" optionvalue="location_id">
+            <select id="select_location_id" class="form-select " name="location_id" dmx-bind:options="sc_all_noise_locations.data.noise_locations" optiontext="org_specific_monitoring_id+' '+description" optionvalue="location_id">
                 <option value="">Select Location</option>
 
             </select>
@@ -178,8 +179,8 @@
             <div class="card-body">
 
                 <div class="col">
-                    <!-- <label for="orgSelect">Select Monitoring Location:</label>
-                    <select id="orgSelect"></select> -->
+                    <label for="orgSelect">Select Monitoring Location:</label>
+                    <select id="orgSelect"></select>
                     <div id="container" style="height: 400px;"></div>
                 </div>
             </div>
