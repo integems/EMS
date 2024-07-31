@@ -50,5 +50,17 @@ dmx.config({
         "name": "m_location"
       }
     ]
+  },
+  "noisedata": {
+    "query": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ]
   }
 });

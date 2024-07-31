@@ -83,55 +83,64 @@
                     "table": "noise_monitoring_data",
                     "column": "start_date_time",
                     "type": "datetime",
-                    "value": "{{start_date_time}}"
+                    "value": "{{start_date_time}}",
+                    "recid": 1
                   },
                   {
                     "table": "noise_monitoring_data",
                     "column": "end_date_time",
                     "type": "datetime",
-                    "value": "{{end_date_time}}"
+                    "value": "{{end_date_time}}",
+                    "recid": 2
                   },
                   {
                     "table": "noise_monitoring_data",
                     "column": "LAeq",
                     "type": "number",
-                    "value": "{{LAeq}}"
+                    "value": "{{LAeq}}",
+                    "recid": 3
                   },
                   {
                     "table": "noise_monitoring_data",
                     "column": "LA90",
                     "type": "number",
-                    "value": "{{LA90}}"
+                    "value": "{{LA90}}",
+                    "recid": 4
                   },
                   {
                     "table": "noise_monitoring_data",
                     "column": "LA10",
                     "type": "number",
-                    "value": "{{LA10}}"
+                    "value": "{{LA10}}",
+                    "recid": 5
                   },
                   {
                     "table": "noise_monitoring_data",
                     "column": "LAFMax",
                     "type": "number",
-                    "value": "{{LAFMax}}"
+                    "value": "{{LAFMax}}",
+                    "recid": 6
                   },
                   {
                     "table": "noise_monitoring_data",
                     "column": "LAFMin",
                     "type": "number",
-                    "value": "{{LAFMin}}"
+                    "value": "{{LAFMin}}",
+                    "recid": 7
                   },
                   {
                     "table": "noise_monitoring_data",
                     "column": "location_id",
                     "type": "number",
-                    "value": "{{location_id}}"
+                    "value": "{{location_id}}",
+                    "recid": 8
                   },
                   {
                     "table": "noise_monitoring_data",
                     "column": "date_created",
                     "type": "datetime",
-                    "value": "{{NOW}}"
+                    "value": "{{NOW}}",
+                    "recid": 9
                   }
                 ],
                 "table": "noise_monitoring_data",
@@ -255,7 +264,7 @@
         },
         {
           "name": "location_id",
-          "type": "number"
+          "type": "text"
         },
         {
           "name": "$_POST",
@@ -263,6 +272,10 @@
         },
         {
           "name": "NOW_UTC",
+          "type": "datetime"
+        },
+        {
+          "name": "NOW",
           "type": "datetime"
         }
       ],

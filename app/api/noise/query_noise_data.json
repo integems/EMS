@@ -156,7 +156,7 @@
             }
           ],
           "wheres": {
-            "condition": "AND",
+            "condition": "OR",
             "rules": [
               {
                 "condition": "AND",

@@ -76,7 +76,25 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
+  <style>
+    .sidebar-item.active>a,
+    .submenu-item.active>a {
+      background-color: rgba(255, 255, 255, 0.1);
+      font-weight: bold;
+    }
 
+    .sidebar-item.active>.submenu {
+      display: block;
+    }
+
+    /* .sidebar-link.active {
+      background-color: #435ebe;
+      color: white;
+    } */
+  </style>
+
+
+  <link rel="stylesheet" href="/dmxAppConnect/dmxDatePicker/bgthemes/bootstrap.css" />
 </head>
 
 <body is="dmx-app" id="portal_layout">
@@ -123,7 +141,6 @@
         </div>
         <div class="sidebar-menu">
           <ul class="menu">
-
             <li class="sidebar-item">
               <a class="sidebar-link" href="/dashboard">
                 <i class="bi bi-grid-fill"></i>
@@ -146,7 +163,6 @@
                 <li class="submenu-item">
                   <a class="sidebar-link" href="#">Air Insights</a>
                 </li>
-
               </ul>
             </li>
 
@@ -165,8 +181,6 @@
                 <li class="submenu-item">
                   <a class="sidebar-link" href="/noise-insights">Noise Insights </a>
                 </li>
-
-
               </ul>
             </li>
 
@@ -185,8 +199,6 @@
                 <li class="submenu-item">
                   <a class="sidebar-link" href="/water-insights">Water Insights </a>
                 </li>
-
-
               </ul>
             </li>
 
@@ -205,7 +217,6 @@
                 <li class="submenu-item">
                   <a class="sidebar-link" href="#">Water Usage Insights</a>
                 </li>
-
               </ul>
             </li>
 
@@ -224,7 +235,6 @@
                 <li class="submenu-item">
                   <a class="sidebar-link" href="#">Soils Insights</a>
                 </li>
-
               </ul>
             </li>
 
@@ -243,7 +253,6 @@
                 <li class="submenu-item">
                   <a class="sidebar-link" href="#">Biodiversity Insights</a>
                 </li>
-
               </ul>
             </li>
 
@@ -262,7 +271,6 @@
                 <li class="submenu-item">
                   <a class="sidebar-link" href="#">Waste Management Insights</a>
                 </li>
-
               </ul>
             </li>
 
@@ -381,83 +389,8 @@
     </div>
   </div>
 
-  <script>
-    //     $(document).ready(function() {
-//   // Get all sidebar items
-//   var sidebarItems = $(".sidebar-item, .submenu-item");
-
-//   // Function to set active class
-//   var setActiveClass = function(clickedItem) {
-//     // Remove "active" class from all sidebar items
-//     sidebarItems.removeClass("active");
-
-//     // Add "active" class to the clicked sidebar item
-//     clickedItem.addClass("active");
-
-//     // Store the active item in localStorage
-//     localStorage.setItem("activeSidebarItem", clickedItem.find(".sidebar-link").attr("href"));
-//   };
-
-//   // Add click event listener to each sidebar item
-//   sidebarItems.on("click", function() {
-//     setActiveClass($(this));
-//   });
-
-//   // Set "active" class to the Dashboard item on page load or retrieve from localStorage
-//   var storedActiveItem = localStorage.getItem("activeSidebarItem");
-//   var defaultActiveItem = '/dashboard';
-//   var activeItem = storedActiveItem ? storedActiveItem : defaultActiveItem;
-
-//   var initialActiveItem = $(`.sidebar-link[href="${activeItem}"]`);
-//   if (initialActiveItem.length > 0) {
-//     setActiveClass(initialActiveItem.closest('.sidebar-item'));
-//   }
-// });
-
-//-----------------------------------------------------------------------------------
-
-// document.addEventListener("DOMContentLoaded", function () {
-//   // Function to add 'active' class to elements based on the current URL
-//   function setActiveClass() {
-//     var currentUrl = window.location.pathname;
-
-//     // Remove existing 'active' classes
-//     var allItems = document.querySelectorAll(".sidebar-item, .submenu-item");
-//     allItems.forEach(function (item) {
-//       item.classList.remove("active");
-//     });
-
-//     // Add 'active' class based on the current URL
-//     var activeItems = document.querySelectorAll(
-//       '.sidebar-link[href="' + currentUrl + '"]'
-//     );
-//     activeItems.forEach(function (item) {
-//       item.closest(".sidebar-item, .submenu-item").classList.add("active");
-//     });
-//   }
-
-//   // Initial call to set 'active' class on page load
-//   setActiveClass();
-
-//   // Set 'active' class when a link is clicked
-//   var sidebarLinks = document.querySelectorAll(".sidebar-link");
-//   sidebarLinks.forEach(function (link) {
-//     link.addEventListener("click", function () {
-//       // Allow the default behavior (navigation) to happen
-//       setTimeout(setActiveClass, 0);
-//     });
-//   });
-
-//   // Set 'active' class on page refresh
-//   window.addEventListener("popstate", function () {
-//     setActiveClass();
-//   });
-// });
-
-
-//------------------------------------------------------------------------------
-
-$(document).ready(function() {
+  <!-- <script>
+    $(document).ready(function() {
   // Function to set active class
   var setActiveClass = function(clickedItem) {
     // Remove "active" class from all sidebar items
@@ -497,8 +430,71 @@ $(document).ready(function() {
 
 
 
-  </script>
+  </script> -->
 
+  <!-- <script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+    const sidebarItems = document.querySelectorAll('.sidebar-item.has-sub');
+    const sidebarLinks = document.querySelectorAll('.sidebar-link');
+    
+    // Function to expand or collapse submenu
+    const toggleSubmenu = (item) => {
+      item.classList.toggle('expanded');
+      const submenu = item.querySelector('.submenu');
+      if (submenu.style.display === 'block') {
+        submenu.style.display = 'none';
+      } else {
+        submenu.style.display = 'block';
+      }
+    };
+
+    // Load the state of the sidebar from local storage
+    sidebarItems.forEach(item => {
+      const link = item.querySelector('.sidebar-link');
+      const href = link.getAttribute('href');
+      if (localStorage.getItem(href) === 'expanded') {
+        item.classList.add('expanded');
+        item.querySelector('.submenu').style.display = 'block';
+      }
+    });
+
+    // Load the active submenu item from local storage
+    sidebarLinks.forEach(link => {
+      if (link.getAttribute('href') === localStorage.getItem('activeLink')) {
+        link.classList.add('active');
+      }
+    });
+
+    // Add click event listeners to sidebar links
+    sidebarLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        const parentItem = link.closest('.sidebar-item.has-sub');
+        if (parentItem) {
+          e.preventDefault();
+          toggleSubmenu(parentItem);
+
+          // Save the state of the submenu in local storage
+          const href = link.getAttribute('href');
+          if (parentItem.classList.contains('expanded')) {
+            localStorage.setItem(href, 'expanded');
+          } else {
+            localStorage.removeItem(href);
+          }
+        }
+
+        // Highlight the active submenu item
+        sidebarLinks.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+
+        // Save the active link in local storage
+        localStorage.setItem('activeLink', link.getAttribute('href'));
+      });
+    });
+  });
+  </script> -->
+
+
+  <!-- <script src="/js/sidebar/sidebar-functionality.js" async="true"></script> -->
 
   <script src="assets/js/bootstrap.js"></script>
   <script src="assets/js/app.js"></script>

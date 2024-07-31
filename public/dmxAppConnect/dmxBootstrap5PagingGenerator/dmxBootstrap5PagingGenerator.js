@@ -50,15 +50,20 @@ function _getPagination(m_NumPages, PageNo, m_NumOuterLinks, m_NumAdjacentLinks,
 
 dmx.Formatters('object', {
 
-    getDataViewPagination: function(object, outer, adjecent, separator) {
+	getDataViewPagination: function(object, outer, adjecent, separator) {
 		if (!object.page && !object.pages) return [];
-    	return _getPagination(object.pages, object.page, outer, adjecent, separator);
-    },
+		return _getPagination(object.pages, object.page, outer, adjecent, separator);
+	},
 
 	getServerConnectPagination: function(object, outer, adjecent, separator) {
 		if (!object.page && !object.page.total && !object.page.current) return [];
-    	return _getPagination(object.page.total, object.page.current, outer, adjecent, separator);
-    }
+		return _getPagination(object.page.total, object.page.current, outer, adjecent, separator);
+	},
+
+	getFlowPagination: function(object, outer, adjecent, separator) {
+		if (!object.page && !object.page.total && !object.page.current) return [];
+		return _getPagination(object.page.total, object.page.current, outer, adjecent, separator);
+	}
 
 });
 

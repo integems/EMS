@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="ac:route" content="/pagination-test">
+    <base href="/">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noise Data Table</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .pagination,
+        .filters {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        button,
+        select {
+            padding: 5px 10px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            margin-right: 10px;
+        }
+
+        .filter-group label {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="filters">
+        <div class="filter-group">
+            <label for="dateFilter">Date Range:</label>
+            <select id="dateFilter" onchange="applyFilters()">
+                <option value="">All Dates</option>
+                <option value="last7days">Last 7 Days</option>
+                <option value="last30days">Last 30 Days</option>
+                <option value="last90days">Last 90 Days</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="locationFilter">Location Type:</label>
+            <select id="locationFilter" onchange="applyFilters()">
+                <option value="">All Locations</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="monitoringIdFilter">Monitoring ID:</label>
+            <select id="monitoringIdFilter" onchange="applyFilters()">
+                <option value="">All IDs</option>
+            </select>
+        </div>
+    </div>
+    <div id="tableContainer"></div>
+    <div class="pagination">
+        <button id="prevButton" onclick="changePage(-1)">Previous</button>
+        <div>
+            <span id="pageInfo"></span>
+            <select id="itemsPerPage" onchange="changeItemsPerPage()">
+                <option value="10">Show 10</option>
+                <option value="25">Show 25</option>
+                <option value="50">Show 50</option>
+                <option value="100">Show 100</option>
+            </select>
+        </div>
+        <button id="nextButton" onclick="changePage(1)">Next</button>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        let totalPages = 1;
+        let itemsPerPage = 10;
+        let locationTypes = new Set();
+        let monitoringIds = new Set();
+
+        function fetchData() {
+            const dateFilter = document.getElementById('dateFilter').value;
+            const locationFilter = document.getElementById('locationFilter').value;
+            const monitoringIdFilter = document.getElementById('monitoringIdFilter').value;
+
+            let url = `api/noise/query_noise_data_copy?page=${currentPage}&limit=${itemsPerPage}`;
+            if (dateFilter) url += `&dateFilter=${dateFilter}`;
+            if (locationFilter) url += `&locationFilter=${locationFilter}`;
+            if (monitoringIdFilter) url += `&monitoringIdFilter=${monitoringIdFilter}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    renderTable(data.query_noise.data);
+                    totalPages = Math.ceil(data.query_noise.total / itemsPerPage);
+                    updatePagination();
+                    updateFilterOptions(data.query_noise.data);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function renderTable(data) {
+            const tableContainer = document.getElementById('tableContainer');
+            let tableHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Monitoring Location</th>
+                            <th>Location Type</th>
+                            <th>Start Date Time</th>
+                            <th>End Date Time</th>
+                            <th>LA<sub>eq</sub></th>
+                            <th>LA<sub>90</sub></th>
+                            <th>LA<sub>10</sub></th>
+                            <th>LAF<sub>Max</sub></th>
+                            <th>LAF<sub>Min</sub></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            data.forEach(item => {
+                tableHTML += `
+                    <tr>
+                        <td>${item.org_specific_monitoring_id}</td>
+                        <td>${item.location_type}</td>
+                        <td>${new Date(item.start_date_time).toLocaleString()}</td>
+                        <td>${new Date(item.end_date_time).toLocaleString()}</td>
+                        <td>${item.LAeq}</td>
+                        <td>${item.LA90}</td>
+                        <td>${item.LA10}</td>
+                        <td>${item.LAFMax}</td>
+                        <td>${item.LAFMin}</td>
+                        
+                    </tr>
+                `;
+            });
+
+            tableHTML += `
+                    </tbody>
+                </table>
+            `;
+
+            tableContainer.innerHTML = tableHTML;
+        }
+
+        function updatePagination() {
+            document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages} | `;
+            document.getElementById('prevButton').disabled = currentPage === 1;
+            document.getElementById('nextButton').disabled = currentPage === totalPages;
+        }
+
+        function changePage(delta) {
+            currentPage += delta;
+            fetchData();
+        }
+
+        function changeItemsPerPage() {
+            itemsPerPage = parseInt(document.getElementById('itemsPerPage').value);
+            currentPage = 1; // Reset to first page when changing items per page
+            fetchData();
+        }
+
+        function updateFilterOptions(data) {
+            data.forEach(item => {
+                locationTypes.add(item.location_type);
+                monitoringIds.add(item.org_specific_monitoring_id);
+            });
+
+            updateSelectOptions('locationFilter', locationTypes);
+            updateSelectOptions('monitoringIdFilter', monitoringIds);
+        }
+
+        function updateSelectOptions(selectId, options) {
+            const select = document.getElementById(selectId);
+            const currentValue = select.value;
+            select.innerHTML = '<option value="">All</option>';
+            options.forEach(option => {
+                select.innerHTML += `<option value="${option}"${option === currentValue ? ' selected' : ''}>${option}</option>`;
+            });
+        }
+
+        function applyFilters() {
+            currentPage = 1; // Reset to first page when applying filters
+            fetchData();
+        }
+
+        // Initial data fetch
+        fetchData();
+    </script>
+</body>
+
+</html>

@@ -1,6 +1,7 @@
 <!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="noise" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Navigation:{},dmxDatePicker:{},dmxBootstrap5Modal:{},dmxValidator:{},dmxDatastore:{},dmxStateManagement:{},dmxFormatter:{}}" moment_2="cdn" -->
 <dmx-serverconnect id="sc_all_noise_locations" url="/api/location/noise_locations"></dmx-serverconnect>
 <dmx-serverconnect id="sc_noise_data" url="/api/noise/query_noise"></dmx-serverconnect>
+<dmx-serverconnect id="sc_noise_data_II" url="/api/noise/query_noise_copy"></dmx-serverconnect>
 <dmx-serverconnect id="sc_noise_data_columns" url="/api/noise/noise_data_columns"></dmx-serverconnect>
 
 <dmx-serverconnect id="sc_monitoring_location_type" url="/api/location/monitoring_location_type"></dmx-serverconnect>
@@ -26,7 +27,7 @@
                                 <div class="form-group mb-3 row">
                                     <label for="input1" class="col-sm-4 col-form-label">Select Monitoring Location</label>
                                     <div class="col-sm-8">
-                                        <select id="select_location" class="form-select" name="location_id" dmx-bind:options="sc_all_monitoring_locations.data.monitoringLocations" optionvalue="location_id" required="" optiontext="org_specific_monitoring_id+' '+description">
+                                        <select id="select_location" class="form-select" name="location_id" dmx-bind:options="sc_all_noise_locations.data.noise_locations" optionvalue="location_id" required="" optiontext="org_specific_monitoring_id+' '+description">
                                             <option value="">Choose a Location</option>
 
                                         </select><small class="text-muted">Can't see your Monitoring Location? &nbsp;<a href="/add-monitoring-location">Add Location.</a></small>
@@ -144,11 +145,11 @@
             </div>
         </div>
         <div class="col text-end">
-            <!-- <button id="btn_add_location" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_add_monitoring_location">Add Monitoring Location</button> --><button id="btn_add_noise_data" class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#modal_add_data">Add Data</button>
+            <!-- <button id="btn_add_location" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_add_monitoring_location">Add Monitoring Location</button> --><button id="btn_add_noise_data" class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#modal_add_data">Add Noise Data</button>
         </div>
     </div>
 </section>
-<section class="mt-1 mb-3">
+<!-- <section class="mt-1 mb-3">
     <div class="row">
         <div class="col-4 text-end">
             <select id="select_location_id" class="form-select " name="location_id" dmx-bind:options="sc_all_noise_locations.data.noise_locations" optiontext="org_specific_monitoring_id+' '+description" optionvalue="location_id">
@@ -159,7 +160,7 @@
 
         </div>
     </div>
-</section>
+</section> -->
 <section class="mb-3 ">
     <div class="row">
         <div class="col">
@@ -181,6 +182,9 @@
                 <div class="col">
                     <label for="orgSelect">Select Monitoring Location:</label>
                     <select id="orgSelect"></select>
+                    <label for="yearSelect">Select Year</label>
+                    <select id="yearSelect"></select>
+
                     <div id="container" style="height: 400px;"></div>
                 </div>
             </div>

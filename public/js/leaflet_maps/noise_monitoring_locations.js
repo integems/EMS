@@ -107,7 +107,7 @@ function formatDateTime(dateTimeString) {
 fetch('/api/noise/monitoring_locations')
     .then(response => response.json())
     .then(data => {
-        console.log('Fetched data:', data);
+        // console.log('Fetched data:', data);
 
         // Group data by location_id and keep only the most recent entry per location
         const uniqueLocations = data.locations.reduce((acc, location, index) => {
@@ -120,11 +120,11 @@ fetch('/api/noise/monitoring_locations')
             return acc;
         }, {});
 
-        console.log('Unique locations:', uniqueLocations);
+        // console.log('Unique locations:', uniqueLocations);
 
         // Loop through unique locations and add markers with popups
         Object.values(uniqueLocations).forEach(location => {
-            console.log('Adding marker at:', location.latitude, location.longitude);
+            // console.log('Adding marker at:', location.latitude, location.longitude);
 
             // Select icon color based on the index
             let iconUrl = iconColors[location.index % iconColors.length];

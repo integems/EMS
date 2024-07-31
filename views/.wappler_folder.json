@@ -78,5 +78,9 @@
   "update-monitoring-location.ejs": {
     "layoutPage": "portal_layout",
     "description": ""
+  },
+  "pagination-test.ejs": {
+    "layoutPage": "portal_layout",
+    "description": ""
   }
 }

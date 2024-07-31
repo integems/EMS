@@ -1,8 +1,9 @@
-<!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="noisedata" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Navigation:{},dmxBootstrap5TableGenerator:{},dmxFormatter:{},dmxDatePicker:{}}" moment_2="cdn" -->
+<!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="noisedata" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Navigation:{},dmxBootstrap5TableGenerator:{},dmxFormatter:{},dmxDatePicker:{},dmxStateManagement:{}}" moment_2="cdn" -->
+<dmx-query-manager id="query_sort"></dmx-query-manager>
 <dmx-serverconnect id="sc_all_noise_locations" url="/api/location/noise_locations"></dmx-serverconnect>
 <dmx-serverconnect id="sc_all_monitoring_locations" url="/api/location/all_locations"></dmx-serverconnect>
 <dmx-serverconnect id="sc_download_noise_data" url="/api/noise/download_noise_table"></dmx-serverconnect>
-<dmx-serverconnect id="sc_noise_data" url="/api/noise/query_noise_data" dmx-param:monitoring_location="select_monitoring_location.value" dmx-param:year="" dmx-param:limit="25" dmx-param:location_type="select_location_type.value" dmx-param:start_date="" dmx-param:end_date=""></dmx-serverconnect>
+<dmx-serverconnect id="sc_noise_data" url="/api/noise/query_noise_data" dmx-param:monitoring_location="select_monitoring_location.value" dmx-param:year="" dmx-param:limit="25" dmx-param:location_type="select_location_type.value" dmx-param:start_date="" dmx-param:end_date="" dmx-param:sort="query_sort.data.sort" dmx-param:dir="query_sort.data.dir"></dmx-serverconnect>
 <dmx-serverconnect id="sc_monitoring_locations" url="/api/location/monitoring_location_id"></dmx-serverconnect>
 <dmx-serverconnect id="sc_monitorin_location_type" url="/api/location/monitoring_location_type"></dmx-serverconnect>
 
@@ -19,18 +20,16 @@
                 <a class="breadcrumb-item breadcrumb-link fs-5 fw-bold" href="/noise-data">Data</a>
             </div>
         </div>
-        <div class="col">
-            <a href="#" class="btn btn-primary" id="btn_dwnld_noiseData" dmx-on:click="sc_download_noise_data.load({})">Download</a>
-        </div>
+
     </div>
 </section>
 
 <section class="mb-3">
     <div class="row">
         <div class="col">
-            <input id="date1" name="date1" is="dmx-date-range-picker" dmx-bind:startdate="sc_noise_data.data.query_noise.data[0].start_date_time" dmx-bind:enddate="sc_noise_data.data.query_noise.data[0].end_date_time">
+            <input id="date" name="date" is="dmx-date-range-picker" type="text" class="form-control">
         </div>
-        <div class="col ">
+        <div class="col">
             <select id="select_location_type" class="form-select" name="location_type_id" dmx-bind:options="sc_monitorin_location_type.data.location_type" optiontext="location_type" optionvalue="location_type">
                 <option value="">All Location Types</option>
             </select>
@@ -39,6 +38,9 @@
             <select id="select_monitoring_location" class="form-select" name="location_id" dmx-bind:options="sc_all_noise_locations.data.noise_locations" optiontext="org_specific_monitoring_id+' '+description" optionvalue="org_specific_monitoring_id">
                 <option value="">All Monitoring Locations</option>
             </select>
+        </div>
+        <div class="text-start col">
+            <a href="#" class="btn btn-primary" id="exportButton" onclick="exportTableToCSV('table_export.csv');">Export</a>
         </div>
     </div>
 </section>
@@ -51,18 +53,18 @@
                         <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th>Location</th>
-                                    <th>Type</th>
-                                    <th>Start Date</th>
-                                    <th>End Date</th>
-                                    <th>LA<sub>eq</sub></th>
-                                    <th>LA<sub>90</sub></th>
-                                    <th>LA<sub>10</sub></th>
-                                    <th>LAF<sub>Max</sub></th>
-                                    <th>LAF<sub>Min</sub></th>
+                                    <th class="sorting" dmx-on:click="query.set('sort','org_specific_monitoring_id');query.set('dir',query.data.dir == 'desc' ? 'asc' : 'desc')" dmx-class:sorting_asc="query.data.sort=='org_specific_monitoring_id' && query.data.dir == 'asc'" dmx-class:sorting_desc="query.data.sort=='org_specific_monitoring_id' && query.data.dir == 'desc'">Location</th>
+                                    <th class="sorting" dmx-on:click="query.set('sort','location_type');query.set('dir',query.data.dir == 'desc' ? 'asc' : 'desc')" dmx-class:sorting_asc="query.data.sort=='location_type' && query.data.dir == 'asc'" dmx-class:sorting_desc="query.data.sort=='location_type' && query.data.dir == 'desc'">Type</th>
+                                    <th class="sorting" dmx-on:click="query.set('sort','start_date_time');query.set('dir',query.data.dir == 'desc' ? 'asc' : 'desc')" dmx-class:sorting_asc="query.data.sort=='start_date_time' && query.data.dir == 'asc'" dmx-class:sorting_desc="query.data.sort=='start_date_time' && query.data.dir == 'desc'">Start Date</th>
+                                    <th class="sorting" dmx-on:click="query.set('sort','end_date_time');query.set('dir',query.data.dir == 'desc' ? 'asc' : 'desc')" dmx-class:sorting_asc="query.data.sort=='end_date_time' && query.data.dir == 'asc'" dmx-class:sorting_desc="query.data.sort=='end_date_time' && query.data.dir == 'desc'">End Date</th>
+                                    <th class="sorting" dmx-on:click="query.set('sort','LAeq');query.set('dir',query.data.dir == 'desc' ? 'asc' : 'desc')" dmx-class:sorting_asc="query.data.sort=='LAeq' && query.data.dir == 'asc'" dmx-class:sorting_desc="query.data.sort=='LAeq' && query.data.dir == 'desc'">LA<sub>eq</sub></th>
+                                    <th class="sorting" dmx-on:click="query.set('sort','LA90');query.set('dir',query.data.dir == 'desc' ? 'asc' : 'desc')" dmx-class:sorting_asc="query.data.sort=='LA90' && query.data.dir == 'asc'" dmx-class:sorting_desc="query.data.sort=='LA90' && query.data.dir == 'desc'">LA<sub>90</sub></th>
+                                    <th class="sorting" dmx-on:click="query.set('sort','LA10');query.set('dir',query.data.dir == 'desc' ? 'asc' : 'desc')" dmx-class:sorting_asc="query.data.sort=='LA10' && query.data.dir == 'asc'" dmx-class:sorting_desc="query.data.sort=='LA10' && query.data.dir == 'desc'">LA<sub>10</sub></th>
+                                    <th class="sorting" dmx-on:click="query.set('sort','LAFMax');query.set('dir',query.data.dir == 'desc' ? 'asc' : 'desc')" dmx-class:sorting_asc="query.data.sort=='LAFMax' && query.data.dir == 'asc'" dmx-class:sorting_desc="query.data.sort=='LAFMax' && query.data.dir == 'desc'">LAF<sub>Max</sub></th>
+                                    <th class="sorting" dmx-on:click="query.set('sort','LAFMin');query.set('dir',query.data.dir == 'desc' ? 'asc' : 'desc')" dmx-class:sorting_asc="query.data.sort=='LAFMin' && query.data.dir == 'asc'" dmx-class:sorting_desc="query.data.sort=='LAFMin' && query.data.dir == 'desc'">LAF<sub>Min</sub></th>
                                 </tr>
                             </thead>
-                            <tbody is="dmx-repeat" dmx-generator="bs5table" dmx-bind:repeat="sc_noise_data.data.query_noise.data" id="tableRepeat2">
+                            <tbody is="dmx-repeat" dmx-generator="bs5table" dmx-bind:repeat="sc_noise_data.data.query_noise.data" id="tableRepeat1" dmx-state="query" dmx-sort="sort" dmx-order="dir">
                                 <tr>
                                     <td dmx-text="org_specific_monitoring_id"></td>
                                     <td dmx-text="location_type"></td>
@@ -100,4 +102,6 @@
         </div>
     </div>
 </section>
+
+<script src="/js/exportCSV/exportTabletoCSV.js" async="true"></script>
 <meta name="ac:route" content="/noise-data">

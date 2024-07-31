@@ -1,40 +1,50 @@
 (function() {
 
-  // Call init when DOM is ready
-  if (document.readyState === 'loading') { // Loading hasn't finished yet
-    document.addEventListener('DOMContentLoaded', _init, { once: true });
-  } else { // DOMContentLoaded has already fired
-    _init();
-  }
+  // ignore if routing is enabled
+  if (dmx.routing) return;
 
-  function _init() {
-    // Listen to url changes
-    window.addEventListener('popstate', _update);
-    window.addEventListener('pushstate', _update);
+  dmx.config.mapping['a.nav-link:not([href^="#"])'] = 'nav-link';
 
-    // Listen to DOM changes and call update when nodes are added
-    new MutationObserver(_update).observe(document.body, { subtree: true, childList: true });
+  dmx.Component('nav-link', {
 
-    // Initial update
-    _update();
-  }
+    init (node) {
+      this._stateHandler = this._stateHandler.bind(this);
+      window.addEventListener("popstate", this._stateHandler);
+      window.addEventListener("pushstate", this._stateHandler);
+      window.addEventListener("replacestate", this._stateHandler);
+      window.addEventListener('hashchange', this._stateHandler);
+      this._stateHandler();
+    },
 
-  function _update() {
-  	var url = window.location.href;
+    destroy () {
+      window.removeEventListener("popstate", this._stateHandler);
+      window.removeEventListener("pushstate", this._stateHandler);
+      window.removeEventListener("replacestate", this._stateHandler);
+      window.removeEventListener('hashchange', this._stateHandler);
+    },
 
-  	document.querySelectorAll('a.nav-link:not([data-bs-toggle]), a.dropdown-item').forEach(function(elem) {
-   		elem.classList.toggle('active', elem.href == url || elem.href == url.split("?")[0].split("#")[0]);
-  	});
+    _stateHandler () {
+      const node = this.$node;
+      const active = node.href == window.location.href || node.href == window.location.href.split("?")[0].split("#")[0];
 
-    document.querySelectorAll('a.dropdown-item.active').forEach(function(elem) {
-      var theItem = elem.closest('.nav-item.dropdown');
-      if (theItem) {
-        var theToggle = theItem.querySelector('.dropdown-toggle');
-        if (theToggle) {
-          theToggle.classList.toggle('active');
+      node.classList.toggle('active', active);
+
+      if (node.classList.contains('dropdown-item')) {
+        const items = node.parentNode.querySelectorAll('.dropdown-item');
+        node.classList.remove('active');
+
+        for (let i = 0; i < items.length; i++) {
+          const match = items[i].href == window.location.href || items[i].href == window.location.href.split("?")[0].split("#")[0];
+          if (match) {
+            items[i].classList.add('active');
+            node.classList.add('active');
+          } else {
+            items[i].classList.remove('active');
+          }
         }
       }
-  	});
-  }
+    },
+
+  });
 
 })()

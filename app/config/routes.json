@@ -88,6 +88,11 @@
       "path": "/update-monitoring-location",
       "page": "update-monitoring-location",
       "layout": "portal_layout"
+    },
+    {
+      "path": "/pagination-test",
+      "page": "pagination-test",
+      "layout": "portal_layout"
     }
   ],
   "layouts": {

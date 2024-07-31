@@ -80,7 +80,7 @@ function handleAddData(csvData, databaseColumns) {
 
     console.log('Mapped Data:', mappedData); // Log the mapped data before sending
 
-    fetch('/api/noise/insert_noise_data', {
+    fetch('/api/air_quality/insert_air_quality_data', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
