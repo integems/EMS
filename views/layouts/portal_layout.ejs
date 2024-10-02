@@ -76,7 +76,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-  <style>
+  <!-- <style>
     .sidebar-item.active>a,
     .submenu-item.active>a {
       background-color: rgba(255, 255, 255, 0.1);
@@ -91,7 +91,7 @@
       background-color: #435ebe;
       color: white;
     } */
-  </style>
+  </style> -->
 
 
   <link rel="stylesheet" href="/dmxAppConnect/dmxDatePicker/bgthemes/bootstrap.css" />
@@ -166,19 +166,19 @@
               </ul>
             </li>
 
-            <li class="sidebar-item has-sub">
+            <li class="sidebar-item has-sub" id="liNoise">
               <a class="sidebar-link" href="/noise">
                 <i class="bi bi-soundwave"></i>
                 <span>Noise</span>
               </a>
               <ul class="submenu">
-                <li class="submenu-item">
+                <li class="submenu-item" id="liNoiseRecent">
                   <a class="sidebar-link" href="/noise">Recent</a>
                 </li>
-                <li class="submenu-item">
+                <li class="submenu-item" id="liNoiseData">
                   <a class="sidebar-link" href="/noise-data">Noise Data</a>
                 </li>
-                <li class="submenu-item">
+                <li class="submenu-item" id="liNoiseInsights">
                   <a class="sidebar-link" href="/noise-insights">Noise Insights </a>
                 </li>
               </ul>

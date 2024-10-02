@@ -27,7 +27,7 @@
                                 <div class="form-group mb-3 row">
                                     <label for="input1" class="col-sm-4 col-form-label">Select Monitoring Location</label>
                                     <div class="col-sm-8">
-                                        <select id="select_location" class="form-select" name="location_id" dmx-bind:options="sc_all_noise_locations.data.noise_locations" optionvalue="location_id" required="" optiontext="org_specific_monitoring_id+' '+description">
+                                        <select id="select_location" class="form-select" name="location_id" dmx-bind:options="sc_all_noise_locations.data.noise_locations" required="" optiontext="org_specific_monitoring_id+' '+description" optionvalue="location_id">
                                             <option value="">Choose a Location</option>
 
                                         </select><small class="text-muted">Can't see your Monitoring Location? &nbsp;<a href="/add-monitoring-location">Add Location.</a></small>
@@ -51,7 +51,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="btn_add_data" dmx-on:click="add_noise_data.submit()">Add Data</button>
+                <button type="button" class="btn btn-primary" id="btn_add_data" dmx-on:click="add_noise_data.submit()">Add Noise Data <span class="spinner-border spinner-border-sm" role="status" dmx-show="state.executing"></span></button>
             </div>
         </div>
     </div>
@@ -191,6 +191,15 @@
         </div>
     </div>
 </section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+		document.getElementById("liNoise").className = "active";
+		document.getElementById("liNoiseRecent").className = "active";
+  		
+	});  
+
+</script>
 
 
 

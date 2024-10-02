@@ -57,49 +57,68 @@ function handleAddData(csvData, databaseColumns) {
     const mappedColumns = {};
     let mappedData = [];
 
+    // Map selected CSV columns to database columns
     databaseColumns.forEach(dbColumn => {
         const dropdownElement = document.getElementById(`${dbColumn.Field}_mapping`);
 
-        if (dropdownElement) {
+        if (dropdownElement && dropdownElement.value) {
             const dropdownValue = dropdownElement.value;
             mappedColumns[dropdownValue] = dbColumn.Field;
         } else {
-            console.error(`Dropdown element not found for ${dbColumn.Field}`);
+            console.warn(`No mapping selected for database column: ${dbColumn.Field}`);
         }
     });
 
+    // Build the array of mapped data
     csvData.forEach(record => {
         let mappedRecord = {};
+
+        // Only include fields that have been mapped and contain data
         for (let key in mappedColumns) {
-            let mappedKey = mappedColumns[key];
-            mappedRecord[mappedKey] = record[key];
+            if (record[key] !== undefined && record[key] !== null) {
+                let mappedKey = mappedColumns[key];
+                mappedRecord[mappedKey] = record[key];
+            }
         }
+
+        // Include additional fields if necessary
         mappedRecord.location_id = document.getElementById("select_location").value;
-        mappedData.push(mappedRecord);
+
+        // Only push the record if it contains mapped data
+        if (Object.keys(mappedRecord).length > 0) {
+            mappedData.push(mappedRecord);
+        }
     });
 
-    console.log('Mapped Data:', mappedData); // Log the mapped data before sending
+    // Log the final mapped data to verify before sending
+    console.log('Mapped Data before sending:', JSON.stringify(mappedData, null, 2));
 
-    fetch('/api/air_quality/insert_air_quality_data', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ record: mappedData }),
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-            return response.json();
+    // Ensure that the mappedData is an array and not empty
+    if (Array.isArray(mappedData) && mappedData.length > 0) {
+        fetch('/api/air_quality/insert_air_quality_data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ records: mappedData }), // Adjust 'records' if the key is different
         })
-        .then(data => {
-            console.log('Data added successfully:', data);
-        })
-        .catch(error => {
-            console.error('Error adding data:', error);
-        });
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Data added successfully:', data);
+            })
+            .catch(error => {
+                console.error('Error adding data:', error);
+            });
+    } else {
+        console.error('No valid data to send.');
+    }
 }
+
 
 function fetchDatabaseColumns() {
     return fetch('/api/air_quality/air_quality_columns')

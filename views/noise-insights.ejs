@@ -9,131 +9,124 @@
 <dmx-serverconnect id="sc_noise_data_chart" url="/api/noise/query_noise" dmx-param:monitoring_location="select_monitoring_location.value" dmx-param:location="select_monitoring_location.value" noload="true" onsuccess="renderNoiseChart()" dmx-param:year=""></dmx-serverconnect>
 <meta name="ac:route" content="/noise-insights">
 
-<section class="mb-3">
-  <div class="row text-end">
+<div id="content">
+  <section class="mb-3 no-pdf">
+    <div class="row text-end">
 
-    <div class="col text-start">
-      <h1 class="fw-normal fs-2">Noise Data Insights&nbsp;</h1>
-      <div class="breadcrumb">
-        <a class="breadcrumb-item breadcrumb-link fs-5 fw-light" href="/dashboard">Dashboard</a>
-        <a class="breadcrumb-item breadcrumb-link fs-5 fw-light" href="/noise">Noise</a>
-        <a class="breadcrumb-item breadcrumb-link fs-5 fw-bold" href="/noise" dmx-bind:href="">{{var_datetime.datetime.getYear(var_datetime.datetime)}}</a>
+      <div class="col text-start">
+        <h1 class="fw-normal fs-2">Noise Data Insights&nbsp;</h1>
+        <div class="breadcrumb">
+          <a class="breadcrumb-item breadcrumb-link fs-5 fw-light" href="/dashboard">Dashboard</a>
+          <a class="breadcrumb-item breadcrumb-link fs-5 fw-light" href="/noise">Noise</a>
+          <a class="breadcrumb-item breadcrumb-link fs-5 fw-bold" href="/noise" dmx-bind:href="">{{var_datetime.datetime.getYear(var_datetime.datetime)}}</a>
+        </div>
+      </div>
+      <div class="col">
+        <button id="download" class="btn btn-primary" dmx-on:click="">Export as PDF</button>
       </div>
     </div>
-    <div class="col">
-      <button id="downloadPDF" class="btn btn-primary" dmx-on:click="">Download</button>
+  </section>
+  <section class="mb-3 no-pdf">
+    <div class="row">
+      <div class="col">
+        <select id="select_year" class="form-select" name="start_date_time">
+          <option value="">All Years</option>
+          <option value="" dmx-bind:value="var_datetime.datetime.getYear()">{{var_datetime.datetime.getYear()}}</option>
+          <option value="var_datetime.datetime.getYear(var_datetime.datetime)-1">{{var_datetime.datetime.getYear(var_datetime.datetime)-1}}</option>
+          <option value="var_datetime.datetime.getYear(var_datetime.datetime)-2">{{var_datetime.datetime.getYear(var_datetime.datetime)-2}}</option>
+        </select>
+      </div>
+      <div class="col">
+      </div>
+      <div class="col">
+        <select id="select_monitoring_location" class="form-select" name="location_id" dmx-bind:options="sc_all_noise_locations.data.noise_locations" optiontext="org_specific_monitoring_id+' '+description" optionvalue="location_id" dmx-bind:value="query.data.m_location" dmx-on:changed="sc_noise_data_chart.load({location: value});query.set('m_location',value)">
+          <option value="">Select Monitoring Location</option>
+        </select>
+      </div>
     </div>
-  </div>
-</section>
-<section class="mb-3">
-  <div class="row">
-    <div class="col">
-      <select id="select_year" class="form-select" name="start_date_time">
-        <option value="">All Years</option>
-        <option value="" dmx-bind:value="var_datetime.datetime.getYear()">{{var_datetime.datetime.getYear()}}</option>
-        <option value="var_datetime.datetime.getYear(var_datetime.datetime)-1">{{var_datetime.datetime.getYear(var_datetime.datetime)-1}}</option>
-        <option value="var_datetime.datetime.getYear(var_datetime.datetime)-2">{{var_datetime.datetime.getYear(var_datetime.datetime)-2}}</option>
-      </select>
-    </div>
-    <div class="col">
-    </div>
-    <div class="col">
-      <select id="select_monitoring_location" class="form-select" name="location_id" dmx-bind:options="sc_all_noise_locations.data.noise_locations" optiontext="org_specific_monitoring_id+' '+description" optionvalue="location_id" dmx-bind:value="query.data.m_location" dmx-on:changed="sc_noise_data_chart.load({location: value});query.set('m_location',value)">
-        <option value="">Select Monitoring Location</option>
-      </select>
-    </div>
-  </div>
-</section>
-<section>
-  <div class="row">
-    <div class="col">
-      <div class="card">
-        <div class="card-body">
-          <div id="monthly_average" class="h-auto"></div>
+  </section>
+  <section>
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <div id="monthly_average" class="h-auto"></div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section>
-  <div class="row">
-    <div class="col">
-      <div class="card">
-        <div class="card-body">
-          <div id="quarterly_average" class="h-auto"></div>
+  <section>
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <div id="quarterly_average" class="h-auto"></div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
-<section>
-  <div class="row">
-    <div class="col">
-      <div class="card">
-        <div class="card-body">
-          <!-- <label for="orgSelect">Select Monitoring Location:</label>
+  </section>
+  <section>
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <!-- <label for="orgSelect">Select Monitoring Location:</label>
           <select id="orgSelect">
 
           </select> -->
-          <div id="time_series_chart_all" class="h-auto"></div>
+            <div id="time_series_chart_all" class="h-auto"></div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
-
+  </section>
+</div>
 
 
 <script>
-  const button = document.getElementById('downloadPDF');
-  button.addEventListener('click', () => {
-  // Remove the top section
-  const topSection = document.getElementById('layout_portal_header');
-  if (topSection) {
-    topSection.parentNode.removeChild(topSection);
-  }
+  document.getElementById("download").addEventListener("click", function() {
+      // Hide the side menu and elements with the class 'no-pdf'
+      var sideMenu = document.querySelector('.side-menu');
+      var excludedElements = document.querySelectorAll('.no-pdf');
 
-  // Remove the side menu bar
-  const sideMenuBar = document.getElementById('sidebar');
-  if (sideMenuBar) {
-  sideMenuBar.parentNode.removeChild(sideMenuBar);
-  }
+      if (sideMenu) sideMenu.style.display = 'none';
+      excludedElements.forEach(function(element) {
+          element.style.display = 'none';
+      });
 
-  const element = document.body;
-  const opt = {
-    margin: 1,
-    filename: 'webpage.pdf',
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
-  };
+      // Temporarily adjust content width to take full space
+      var contentElement = document.getElementById("content");
+      var originalWidth = contentElement.style.width;
+      contentElement.style.width = '100%';
 
-  // New Promise-based usage:
-  html2pdf().set(opt).from(element).save();
-});
+      // Temporarily remove overflow-x: hidden from the content element
+      var originalOverflow = contentElement.style.overflowX;
+      contentElement.style.overflowX = 'visible';
+
+      // Generate the PDF
+      html2pdf(contentElement, {
+          margin: 1,
+          filename: 'report.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 3, windowWidth: document.documentElement.scrollWidth }, // Reduce the scale here to fit more content
+          jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' } // Use landscape orientation
+      }).then(function() {
+          // Restore the original styles
+          if (sideMenu) sideMenu.style.display = '';
+          contentElement.style.width = originalWidth;
+          contentElement.style.overflowX = originalOverflow;
+
+          // Show the excluded elements again after the PDF is generated
+          excludedElements.forEach(function(element) {
+              element.style.display = '';
+          });
+      });
+    });
 
 
-// const monthlyAverageChart = document.getElementById('monthly_average');
-// const quarterlyAverageChart = document.getElementById('quarterly_average');
-// const timeSeriesChart = document.getElementById('time_series_chart_all');
-
-// html2canvas(monthlyAverageChart).then(canvas => {
-//   const imgData = canvas.toDataURL('image/png');
-//   const pdf = new jsPDF('landscape', 'in', 'legal');
-//   pdf.addImage(imgData, 'PNG', 0, 0);
-//   return html2canvas(quarterlyAverageChart);
-// }).then(canvas => {
-//   const imgData = canvas.toDataURL('image/png');
-//   pdf.addPage();
-//   pdf.addImage(imgData, 'PNG', 0, 0);
-//   return html2canvas(timeSeriesChart);
-// }).then(canvas => {
-//   const imgData = canvas.toDataURL('image/png');
-//   pdf.addPage();
-//   pdf.addImage(imgData, 'PNG', 0, 0);
-//   pdf.save('webpage.pdf');
-// });
 </script>
 
 <!-- 
