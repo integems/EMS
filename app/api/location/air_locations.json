@@ -13,7 +13,7 @@
   },
   "exec": {
     "steps": {
-      "name": "noise_locations",
+      "name": "air_locations",
       "module": "dbconnector",
       "action": "select",
       "options": {
