@@ -1,0 +1,101 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ]
+  },
+  "exec": {
+    "steps": [
+      {
+        "name": "",
+        "module": "auth",
+        "action": "restrict",
+        "options": {
+          "provider": "ems_security_provider",
+          "loginUrl": "/login",
+          "forbiddenUrl": "/forbidden"
+        },
+        "disabled": true
+      },
+      {
+        "name": "query",
+        "module": "dbconnector",
+        "action": "select",
+        "options": {
+          "connection": "conn_db",
+          "sql": {
+            "type": "select",
+            "columns": [
+              {
+                "table": "air_quality_monitoring_data",
+                "column": "*"
+              }
+            ],
+            "params": [],
+            "table": {
+              "name": "air_quality_monitoring_data"
+            },
+            "primary": "air_id",
+            "joins": [],
+            "query": "select * from `air_quality_monitoring_data`"
+          }
+        },
+        "output": true,
+        "meta": [
+          {
+            "type": "number",
+            "name": "air_id"
+          },
+          {
+            "type": "datetime",
+            "name": "date"
+          },
+          {
+            "type": "number",
+            "name": "location_id"
+          },
+          {
+            "type": "number",
+            "name": "CO_ppm"
+          },
+          {
+            "type": "number",
+            "name": "NO2_ppm"
+          },
+          {
+            "type": "number",
+            "name": "PM10_ppm"
+          },
+          {
+            "type": "number",
+            "name": "PM2_5_ppm"
+          },
+          {
+            "type": "number",
+            "name": "RH_percentage"
+          },
+          {
+            "type": "number",
+            "name": "SO2_ppm"
+          },
+          {
+            "type": "number",
+            "name": "temp_C"
+          },
+          {
+            "type": "datetime",
+            "name": "date_created"
+          }
+        ],
+        "outputType": "array"
+      }
+    ]
+  }
+}

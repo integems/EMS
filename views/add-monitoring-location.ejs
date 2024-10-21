@@ -1,4 +1,5 @@
 <!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="addmonitoringlocation" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Navigation:{},dmxValidator:{}}" -->
+<dmx-serverconnect id="sc_water_types" url="/api/water_quality/water_types"></dmx-serverconnect>
 <dmx-serverconnect id="sc_monitoring_parameters" url="/api/Monitoring_parameters/monitoring_parameters"></dmx-serverconnect>
 
 <dmx-serverconnect id="sc_monitoring_location_type" url="/api/location/monitoring_location_type"></dmx-serverconnect>
@@ -64,6 +65,15 @@
                                         <label for="company-column" class="col-form-label">Description</label>
                                         <textarea id="text_location_description" class="form-control" name="description"></textarea>
                                     </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="country-floating" class="col-form-label">Water Type</label>
+                                    <div class="mt-0"><small id="bs5-form-group-help1" class="form-text text-muted">Only select this if you are entering a WATER MONITORING LOCATION</small></div>
+                                    <select id="modal_select_water_type" class="form-select form-control" name="water_type_id" dmx-bind:options="sc_water_types.data.query_water_types" optiontext="water_type" optionvalue="water_type_id">
+                                        <option value="">Select Water Type</option>
+
+                                    </select>
+
                                 </div>
                             </div>
                             <div class="row">

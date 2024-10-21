@@ -1,11 +1,12 @@
 <!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="waterinsights" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Navigation:{},dmxStateManagement:{}}" -->
+<dmx-serverconnect id="sc_query_water" url="/api/water_quality/query_water_data"></dmx-serverconnect>
+<dmx-serverconnect id="sc_water_locations" url="/api/location/water_locations"></dmx-serverconnect>
 <meta name="ac:route" content="/water-insights">
 <dmx-serverconnect id="sc_year" url="/api/water_quality/water_data_year"></dmx-serverconnect>
-<dmx-query-manager id="query_water"></dmx-query-manager>
-<dmx-serverconnect id="sc_water_data" url="/api/water_quality/water_data"></dmx-serverconnect>
-<dmx-serverconnect id="sc_monitoring_locations" url="/api/location/monitoring_location_id"></dmx-serverconnect>
-<dmx-serverconnect id="sc_monitorin_location_type" url="/api/location/monitoring_location_type"></dmx-serverconnect>
+<dmx-serverconnect id="sc_monitoring_locations" url="/api/location/monitoring_location_id" dmx-on:success="sc_noise_data_chart.load({location: query.m_location})"></dmx-serverconnect>
 <meta name="ac:route" content="/water-data">
+
+
 
 <section>
     <div class="row text-end">
@@ -24,55 +25,112 @@
 <section class="mb-3">
     <div class="row">
         <div class="col">
-            <select id="select_year" class="form-select" name="date" dmx-bind:options="sc_water_data.data.water_data.data" optionvalue="date" optiontext="date.getYear(date)">
-                <option value="">All Years</option>
-
+            <select id="select_year" class="form-select" name="start_date_time" onchange="filterByYear()">
+                <!-- <option value="">All Years</option> -->
+                <option value="" dmx-bind:value="var_datetime.datetime.getYear()">{{var_datetime.datetime.getYear()}}</option>
+                <option value="var_datetime.datetime.getYear(var_datetime.datetime)-1">{{var_datetime.datetime.getYear(var_datetime.datetime)-1}}</option>
+                <option value="var_datetime.datetime.getYear(var_datetime.datetime)-2">{{var_datetime.datetime.getYear(var_datetime.datetime)-2}}</option>
             </select>
         </div>
         <div class="col">
-            <select id="select_monitoring_location" class="form-select" name="location_id" dmx-bind:options="sc_monitoring_locations.data.monitoring_location_id" optiontext="org_specific_monitoring_id" optionvalue="org_specific_monitoring_id">
-                <option value="">All Monitoring Locations</option>
+            <select class="form-control" onchange="filterByMonth()">
+                <option value="">Select a month</option>
+                <option value="01">January</option>
+                <option value="02">February</option>
+                <option value="03">March</option>
+                <option value="04">April</option>
+                <option value="05">May</option>
+                <option value="06">June</option>
+                <option value="07">July</option>
+                <option value="08">August</option>
+                <option value="09">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
             </select>
         </div>
+
     </div>
 </section>
 <section>
     <div class="row">
-        <div class="col">
+        <!-- Bar charts container -->
+        <div class="col-6">
             <div class="card">
                 <div class="card-body">
-                    <div id="monthly_chart" class="h-auto"></div>
+                    <div id="chart_temperature" class="h-auto"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <div class="card-body">
+                    <div id="chart_pH" class="h-auto"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Repeat this structure for the remaining charts -->
+        <div class="col-6">
+            <div class="card">
+                <div class="card-body">
+                    <div id="chart_ORP_mV" class="h-auto"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <div class="card-body">
+                    <div id="chart_EC" class="h-auto"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Continue for Resistivity, TDS_ppm, salinity_psu, pressure_psi, DO_percentage, turbidity_FNU -->
+        <div class="col-6">
+            <div class="card">
+                <div class="card-body">
+                    <div id="chart_Resistivity" class="h-auto"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <div class="card-body">
+                    <div id="chart_TDS_ppm" class="h-auto"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <div class="card-body">
+                    <div id="chart_salinity_psu" class="h-auto"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <div class="card-body">
+                    <div id="chart_pressure_psi" class="h-auto"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <div class="card-body">
+                    <div id="chart_DO_percentage" class="h-auto"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <div class="card-body">
+                    <div id="chart_turbidity_FNU" class="h-auto"></div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<section>
-    <div class="row">
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <div id="quarterly_chart" class="h-auto"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<section>
-    <div class="row">
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <label for="orgSelect">Select Monitoring Location:</label>
-                    <select id="orgSelect">
 
-                    </select>
-                    <div id="time_series_chart_all" class="h-auto"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<script src="/js/highcharts/highcharts_water_quality/monthly_quarterly_charts.js" async="true"></script>
+<script src="/js/highcharts/highcharts_water_quality/parameters.js" async="true"></script>

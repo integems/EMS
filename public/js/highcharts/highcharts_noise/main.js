@@ -1,16 +1,32 @@
 // JavaScript Document
+function filterByYear() {
+    const selectedYear = document.getElementById('select_year').value;
+    renderNoiseChart(selectedYear);
+}
+
 function renderNoiseChart() {
     const location_id = document.getElementById('select_monitoring_location').value;
     const url = `api/noise/query_noise?location=${location_id}`;
+    const selectedYear = document.getElementById('select_year').value;
 
     // Fetch data from the API endpoint and plot the chart
     fetch(url)
         .then(response => response.json())
         .then(data => {
 
-            const noiseData = data?.query_noise;
-            const selectedLocationName = noiseData[0].org_specific_monitoring_id;
-            const locationDescription = noiseData[0].description;
+            let noiseData = data?.query_noise;
+
+            // Filter data based on the selected year
+            if (selectedYear) {
+                noiseData = noiseData.filter(record => {
+                    const recordYear = new Date(record.start_date_time).getFullYear();
+                    return recordYear === parseInt(selectedYear);
+                });
+            }
+
+
+            const selectedLocationName = noiseData[0]?.org_specific_monitoring_id || "N/A";
+            const locationDescription = noiseData[0]?.description || "N/A";
 
             const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
             // render monthly chart

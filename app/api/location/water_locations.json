@@ -1,0 +1,168 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "query",
+      "module": "dbconnector",
+      "action": "select",
+      "options": {
+        "connection": "conn_db",
+        "sql": {
+          "type": "select",
+          "columns": [
+            {
+              "table": "monitoring_location",
+              "column": "*"
+            },
+            {
+              "table": "water_type",
+              "column": "water_type_id"
+            },
+            {
+              "table": "water_type",
+              "column": "water_type"
+            }
+          ],
+          "params": [],
+          "table": {
+            "name": "monitoring_location"
+          },
+          "primary": "location_id",
+          "joins": [
+            {
+              "table": "water_type",
+              "column": "*",
+              "type": "INNER",
+              "clauses": {
+                "condition": "AND",
+                "rules": [
+                  {
+                    "table": "water_type",
+                    "column": "water_type_id",
+                    "operation": "=",
+                    "operator": "equal",
+                    "value": {
+                      "table": "monitoring_location",
+                      "column": "water_type_id",
+                      "type": "number"
+                    }
+                  }
+                ]
+              },
+              "primary": "water_type_id"
+            }
+          ],
+          "wheres": {
+            "condition": "AND",
+            "rules": [
+              {
+                "id": "monitoring_location.org_specific_monitoring_id",
+                "field": "monitoring_location.org_specific_monitoring_id",
+                "type": "string",
+                "operator": "contains",
+                "value": "WQMP",
+                "data": {
+                  "table": "monitoring_location",
+                  "column": "org_specific_monitoring_id",
+                  "type": "text",
+                  "columnObj": {
+                    "type": "string",
+                    "default": "",
+                    "maxLength": 255,
+                    "primary": false,
+                    "nullable": true,
+                    "name": "org_specific_monitoring_id"
+                  }
+                },
+                "operation": "LIKE"
+              },
+              {
+                "id": "monitoring_location.water_type_id",
+                "field": "monitoring_location.water_type_id",
+                "type": "double",
+                "operator": "is_not_null",
+                "value": null,
+                "data": {
+                  "table": "monitoring_location",
+                  "column": "water_type_id",
+                  "type": "number",
+                  "columnObj": {
+                    "type": "reference",
+                    "default": "",
+                    "primary": false,
+                    "nullable": true,
+                    "references": "water_type_id",
+                    "inTable": "water_type",
+                    "referenceType": "integer",
+                    "onUpdate": "CASCADE",
+                    "onDelete": "CASCADE",
+                    "name": "water_type_id"
+                  }
+                },
+                "operation": "IS NOT NULL"
+              }
+            ],
+            "conditional": null,
+            "valid": true
+          },
+          "query": "select `monitoring_location`.*, `water_type`.`water_type_id`, `water_type`.`water_type` from `monitoring_location` inner join `water_type` on `water_type`.`water_type_id` = `monitoring_location`.`water_type_id` where `monitoring_location`.`org_specific_monitoring_id` like ? and `monitoring_location`.`water_type_id` is not null"
+        }
+      },
+      "output": true,
+      "meta": [
+        {
+          "type": "number",
+          "name": "location_id"
+        },
+        {
+          "type": "number",
+          "name": "latitude"
+        },
+        {
+          "type": "number",
+          "name": "longitude"
+        },
+        {
+          "type": "text",
+          "name": "org_specific_monitoring_id"
+        },
+        {
+          "type": "text",
+          "name": "description"
+        },
+        {
+          "type": "number",
+          "name": "location_type_id"
+        },
+        {
+          "type": "datetime",
+          "name": "date_created"
+        },
+        {
+          "type": "number",
+          "name": "monitoring_parameter_id"
+        },
+        {
+          "type": "number",
+          "name": "water_type_id"
+        },
+        {
+          "type": "text",
+          "name": "water_type"
+        }
+      ],
+      "outputType": "array"
+    }
+  }
+}

@@ -1,0 +1,189 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      },
+      {
+        "type": "text",
+        "name": "location"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "query_water",
+      "module": "dbconnector",
+      "action": "select",
+      "options": {
+        "connection": "conn_db",
+        "sql": {
+          "type": "select",
+          "columns": [
+            {
+              "table": "water_quality_data",
+              "column": "*"
+            },
+            {
+              "table": "monitoring_location",
+              "column": "org_specific_monitoring_id"
+            },
+            {
+              "table": "monitoring_location",
+              "column": "description"
+            },
+            {
+              "table": "water_type",
+              "column": "water_type"
+            }
+          ],
+          "params": [],
+          "table": {
+            "name": "water_quality_data"
+          },
+          "primary": "water_id",
+          "joins": [
+            {
+              "table": "monitoring_location",
+              "column": "*",
+              "type": "INNER",
+              "clauses": {
+                "condition": "AND",
+                "rules": [
+                  {
+                    "table": "monitoring_location",
+                    "column": "location_id",
+                    "operation": "=",
+                    "operator": "equal",
+                    "value": {
+                      "table": "water_quality_data",
+                      "column": "location_id",
+                      "type": "number"
+                    }
+                  }
+                ]
+              },
+              "primary": "location_id"
+            },
+            {
+              "table": "water_type",
+              "column": "*",
+              "type": "INNER",
+              "clauses": {
+                "condition": "AND",
+                "rules": [
+                  {
+                    "table": "water_type",
+                    "column": "water_type_id",
+                    "operation": "=",
+                    "operator": "equal",
+                    "value": {
+                      "table": "monitoring_location",
+                      "column": "water_type_id",
+                      "type": "number"
+                    }
+                  }
+                ]
+              },
+              "primary": "water_type_id"
+            }
+          ],
+          "query": "select `water_quality_data`.*, `monitoring_location`.`org_specific_monitoring_id`, `monitoring_location`.`description`, `water_type`.`water_type` from `water_quality_data` inner join `monitoring_location` on `monitoring_location`.`location_id` = `water_quality_data`.`location_id` inner join `water_type` on `water_type`.`water_type_id` = `monitoring_location`.`water_type_id`"
+        }
+      },
+      "output": true,
+      "meta": [
+        {
+          "type": "number",
+          "name": "water_id"
+        },
+        {
+          "type": "number",
+          "name": "location_id"
+        },
+        {
+          "type": "text",
+          "name": "temperature"
+        },
+        {
+          "type": "text",
+          "name": "pH"
+        },
+        {
+          "type": "text",
+          "name": "mV_pH"
+        },
+        {
+          "type": "text",
+          "name": "ORP_mV"
+        },
+        {
+          "type": "text",
+          "name": "EC"
+        },
+        {
+          "type": "text",
+          "name": "EC_Abs"
+        },
+        {
+          "type": "text",
+          "name": "Resistivity"
+        },
+        {
+          "type": "text",
+          "name": "TDS_ppm"
+        },
+        {
+          "type": "text",
+          "name": "salinity_psu"
+        },
+        {
+          "type": "text",
+          "name": "pressure_psi"
+        },
+        {
+          "type": "text",
+          "name": "DO_percentage"
+        },
+        {
+          "type": "text",
+          "name": "DO_ppm"
+        },
+        {
+          "type": "text",
+          "name": "turbidity_FNU"
+        },
+        {
+          "type": "datetime",
+          "name": "date_created"
+        },
+        {
+          "type": "time",
+          "name": "time"
+        },
+        {
+          "type": "date",
+          "name": "date"
+        },
+        {
+          "type": "text",
+          "name": "org_specific_monitoring_id"
+        },
+        {
+          "type": "text",
+          "name": "description"
+        },
+        {
+          "type": "text",
+          "name": "water_type"
+        }
+      ],
+      "outputType": "array"
+    }
+  }
+}

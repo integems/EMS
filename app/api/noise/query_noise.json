@@ -67,19 +67,23 @@
             "columns": [
               {
                 "table": "noise_monitoring_data",
-                "column": "*"
+                "column": "*",
+                "recid": 1
               },
               {
                 "table": "monitoring_location",
-                "column": "org_specific_monitoring_id"
+                "column": "org_specific_monitoring_id",
+                "recid": 2
               },
               {
                 "table": "location_type",
-                "column": "location_type"
+                "column": "location_type",
+                "recid": 3
               },
               {
                 "table": "monitoring_location",
-                "column": "description"
+                "column": "description",
+                "recid": 4
               }
             ],
             "params": [
@@ -168,7 +172,8 @@
                       "name": "location_id"
                     }
                   },
-                  "operation": "="
+                  "operation": "=",
+                  "table": "noise_monitoring_data"
                 }
               ],
               "conditional": null,

@@ -25,7 +25,7 @@
     <div class="container card card-body shadow" id="loginForm">
         <div class="row p-4 justify-content-center">
             <div class="col">
-                <form id="scfLogin" method="post" is="dmx-serverconnect-form" action="/api/security/login" dmx-on:success="browser.goto('/dashboard')" dmx-on:unauthorized="alertmessage.setTextContent(lastError.response);alertmessage.show()">
+                <form id="scfLogin" method="post" is="dmx-serverconnect-form" action="/api/security/login" dmx-on:success="browser.goto('/noise')" dmx-on:unauthorized="alertmessage.setTextContent(lastError.response);alertmessage.show()">
                     <div class="row">
                         <div class="col">
                             <div class="row">

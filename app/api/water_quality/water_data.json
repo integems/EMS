@@ -100,6 +100,14 @@
             {
               "table": "water_quality_data",
               "column": "turbidity_FNU"
+            },
+            {
+              "table": "monitoring_location",
+              "column": "description"
+            },
+            {
+              "table": "water_quality_data",
+              "column": "location_id"
             }
           ],
           "params": [
@@ -161,7 +169,7 @@
               "primary": "location_type_id"
             }
           ],
-          "query": "select `monitoring_location`.`org_specific_monitoring_id`, `location_type`.`location_type`, `water_quality_data`.`date`, `water_quality_data`.`time`, `water_quality_data`.`temperature`, `water_quality_data`.`pH`, `water_quality_data`.`mV_pH`, `water_quality_data`.`ORP_mV`, `water_quality_data`.`EC`, `water_quality_data`.`EC_Abs`, `water_quality_data`.`Resistivity`, `water_quality_data`.`TDS_ppm`, `water_quality_data`.`salinity_psu`, `water_quality_data`.`pressure_psi`, `water_quality_data`.`DO_percentage`, `water_quality_data`.`DO_ppm`, `water_quality_data`.`turbidity_FNU` from `water_quality_data` inner join `monitoring_location` on `monitoring_location`.`location_id` = `water_quality_data`.`location_id` inner join `location_type` on `location_type`.`location_type_id` = `monitoring_location`.`location_type_id` where `monitoring_location`.`org_specific_monitoring_id` like ?",
+          "query": "select `monitoring_location`.`org_specific_monitoring_id`, `location_type`.`location_type`, `water_quality_data`.`date`, `water_quality_data`.`time`, `water_quality_data`.`temperature`, `water_quality_data`.`pH`, `water_quality_data`.`mV_pH`, `water_quality_data`.`ORP_mV`, `water_quality_data`.`EC`, `water_quality_data`.`EC_Abs`, `water_quality_data`.`Resistivity`, `water_quality_data`.`TDS_ppm`, `water_quality_data`.`salinity_psu`, `water_quality_data`.`pressure_psi`, `water_quality_data`.`DO_percentage`, `water_quality_data`.`DO_ppm`, `water_quality_data`.`turbidity_FNU`, `monitoring_location`.`description`, `water_quality_data`.`location_id` from `water_quality_data` inner join `monitoring_location` on `monitoring_location`.`location_id` = `water_quality_data`.`location_id` inner join `location_type` on `location_type`.`location_type_id` = `monitoring_location`.`location_type_id` where `monitoring_location`.`org_specific_monitoring_id` like ?",
           "wheres": {
             "condition": "AND",
             "rules": [
@@ -313,6 +321,14 @@
             {
               "type": "text",
               "name": "turbidity_FNU"
+            },
+            {
+              "type": "text",
+              "name": "description"
+            },
+            {
+              "type": "number",
+              "name": "location_id"
             }
           ]
         }

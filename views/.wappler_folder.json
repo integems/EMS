@@ -82,5 +82,13 @@
   "pagination-test.ejs": {
     "layoutPage": "portal_layout",
     "description": ""
+  },
+  "air-data.ejs": {
+    "layoutPage": "portal_layout",
+    "description": ""
+  },
+  "air-insights.ejs": {
+    "layoutPage": "portal_layout",
+    "description": ""
   }
 }

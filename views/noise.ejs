@@ -56,84 +56,7 @@
         </div>
     </div>
 </div>
-<!-- <div class="modal fade" id="modal_add_monitoring_location" is="dmx-bs5-modal" tabindex="-1" nocloseonclick="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add Monitoring Location</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <section id="multiple-column-form">
-                    <div class="row match-height">
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-content">
-                                    <div class="card-body">
-                                        <form class="form" is="dmx-serverconnect-form" novalidate="" method="post" id="scf_add_monitoring_location" action="/api/location/add_monitoring_location" dmx-on:success="scf_add_monitoring_location.reset();modal_add_monitoring_location.hide()">
-                                            <div class="row">
-                                                <div class="col-md-6 col-12">
-                                                    <div class="form-group">
-                                                        <label for="latitude" class="col-form-label">Latitude</label>
-                                                        <input type="number" id="latitude" class="form-control" placeholder="Latitude" name="latitude" is="dmx-input" value="">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 col-12">
-                                                    <div class="form-group">
-                                                        <label for="longitude" class="col-form-label">Longitude</label>
-                                                        <input type="number" id="longitude" class="form-control" placeholder="Longitude" name="longitude" is="dmx-input" value="">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 col-12">
-                                                    <div class="form-group">
-                                                        <label for="monitoring_location_id" class="col-form-label">Monitoring Location ID</label>
-                                                        <input id="text_monitoring_location" name="org_specific_monitoring_id" type="text" class="form-control">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 col-12">
-                                                    <div class="form-group">
-                                                        <label for="country-floating" class="col-form-label">Location Type</label>
-                                                        <select id="modal_select_location_type" class="form-select form-control" name="location_type_id" dmx-bind:options="sc_monitoring_location_type.data.location_type" optiontext="location_type" optionvalue="location_type_id">
-                                                            <option value="">Select Location Types</option>
 
-                                                        </select>
-
-                                                    </div>
-                                                </div>
-
-
-                                            </div>
-                                            <div class="row">
-                                                <div class="col">
-                                                    <div class="form-group">
-                                                        <label for="company-column" class="col-form-label">Description</label>
-                                                        <textarea id="text_location_description" class="form-control" name="description"></textarea>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col">
-                                                    <div class="form-group">
-                                                        <label for="company-column" class="col-form-label">Photos</label>
-                                                        <input id="file_location_photos" name="path[]" type="file" class="form-control" multiple="true">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" dmx-on:click="scf_add_monitoring_location.submit()">Add Location &nbsp;<span class="spinner-border spinner-border-sm" role="status" dmx-show="scf_add_monitoring_location.state.executing"></span></button>
-            </div>
-        </div>
-    </div>
-</div> -->
 <section>
     <div class="row text-end">
 
@@ -149,24 +72,13 @@
         </div>
     </div>
 </section>
-<!-- <section class="mt-1 mb-3">
-    <div class="row">
-        <div class="col-4 text-end">
-            <select id="select_location_id" class="form-select " name="location_id" dmx-bind:options="sc_all_noise_locations.data.noise_locations" optiontext="org_specific_monitoring_id+' '+description" optionvalue="location_id">
-                <option value="">Select Location</option>
 
-            </select>
-
-
-        </div>
-    </div>
-</section> -->
 <section class="mb-3 ">
     <div class="row">
         <div class="col">
             <div class="card shadow">
                 <div class="card-body ">
-                    <h4 class="card-title ">Monitoring Locations</h4>
+                    <h4 class="card-title ">Noise Monitoring Locations</h4>
                     <div id="location_map" style="height: 400px;"></div>
                 </div>
             </div>
@@ -193,8 +105,7 @@
 </section>
 
 
-
-<script src="/js/Insert%20Monitoring%20Data/Noise/add_noise_data.js" async="true"></script>
+<script src="/js/Insert_Monitoring_Data/Noise/add_noise_data.js" async="true"></script>
 <script src="/js/leaflet_maps/noise_monitoring_locations.js" async="true"></script>
 <script src="/js/highcharts/highcharts_noise/noise_time_series_chart-copy.js" async="true"></script>
 <meta name="ac:route" content="/noise">

@@ -1,85 +1,115 @@
-// JavaScript Document
 
-async function fetchData() {
+let waterData = [];
+
+// Fetch water quality data from the API
+async function fetchWaterData() {
     try {
-        const response = await fetch('api/water_quality/water_data_location');
-        const jsonData = await response.json();
-        return jsonData.query;
+        const response = await fetch('/api/water_quality/query_water_data');
+        const data = await response.json();
+        waterData = data.query_water;
+        populateLocationSelect(waterData);
+        createCharts(waterData);
     } catch (error) {
         console.error('Error fetching data:', error);
-        return null;
     }
 }
 
-function renderChart(orgId, jsonData) {
-    let filteredData;
-    if (orgId === 'all locations') {
-        filteredData = jsonData;
-    } else {
-        filteredData = jsonData.filter(entry => entry.org_specific_monitoring_id === orgId);
-    }
+// Populate the location dropdown based on 'org_specific_monitoring_id' and 'description'
+function populateLocationSelect(data) {
+    const orgSelect = document.getElementById('orgSelect');
+    const uniqueLocations = [...new Set(data.map(item => `${item.org_specific_monitoring_id} - ${item.description}`))];
 
-    // Sort the data by date in ascending order
-    const dateData = filteredData.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-    // Prepare data series for each parameter
-    const parameters = ['temperature', 'pH', 'mV_pH', 'ORP_mV', 'EC', 'EC_Abs', 'Resistivity', 'TDS_ppm', 'salinity_psu', 'pressure_psi', 'DO_percentage', 'DO_ppm', 'turbidity_FNU'];
-    const seriesData = parameters.map(parameter => ({
-        name: parameter,
-        data: dateData.map(entry => ({
-            x: new Date(entry.date).getTime(),
-            y: parseFloat(entry[parameter])
-        }))
-    }));
-
-    Highcharts.chart('time_series_chart_two', {
-        chart: {
-            type: 'line'
-        },
-        title: {
-            text: `Water Quality Levels for ${orgId}`
-        },
-        xAxis: {
-            type: 'datetime',
-            dateTimeLabelFormats: {
-                day: '%d/%m/%Y %H:%M:%S'
-            },
-            title: {
-                text: 'Date/Time'
-            }
-        },
-        yAxis: {
-            title: {
-                text: 'Water Quality Levels'
-            }
-        },
-        series: seriesData,
-        accessibility: {
-            enabled: true
-        }
+    uniqueLocations.forEach(location => {
+        const option = document.createElement('option');
+        option.value = location;
+        option.textContent = location;
+        orgSelect.appendChild(option);
     });
 }
 
-function populateSelectOptions(uniqueOrgs) {
-    const orgSelect = $('#orgSelect');
-    orgSelect.append('<option value="all locations">All locations</option>');
-    uniqueOrgs.forEach(org => {
-        orgSelect.append(`<option value="${org}">${org}</option>`);
+// Filter data by selected location and recreate the charts
+function filterByLocation() {
+    const selectedLocation = document.getElementById('orgSelect').value;
+    const [orgId] = selectedLocation.split(' - '); // Extract the org_specific_monitoring_id
+    const filteredData = waterData.filter(item => item.org_specific_monitoring_id === orgId);
+    createCharts(filteredData);
+}
+
+// Create the time series charts for temperature, pH, DO, and turbidity
+function createCharts(data) {
+    if (!data.length) {
+        console.warn('No data available for the selected location.');
+        return;
+    }
+
+    // Sort the data by date to ensure proper date order
+    data.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    // Find the latest date in the data and calculate three months prior to it
+    const latestDate = new Date(data[data.length - 1].date);
+    const threeMonthsAgo = new Date(latestDate);
+    threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+
+    // Filter data to include only the last three months of available data
+    const filteredData = data.filter(item => {
+        const itemDate = new Date(item.date);
+        return itemDate >= threeMonthsAgo && itemDate <= latestDate;
+    });
+
+    if (!filteredData.length) {
+        console.warn('No data available for the last 3 months of records.');
+        return;
+    }
+
+    const dates = filteredData.map(item => item.date);
+    const temperatures = filteredData.map(item => parseFloat(item.temperature));
+    const pHValues = filteredData.map(item => parseFloat(item.pH));
+    const doValues = filteredData.map(item => parseFloat(item.DO_ppm));
+    const turbidityValues = filteredData.map(item => parseFloat(item.turbidity_FNU));
+
+    // Check for parsed values to ensure correctness
+    // console.log('Filtered Dates:', dates);
+    // console.log('Temperatures:', temperatures);
+    // console.log('pH Values:', pHValues);
+    // console.log('DO Values:', doValues);
+    // console.log('Turbidity Values:', turbidityValues);
+
+    Highcharts.chart('tempChart', {
+        title: { text: 'Temperature Over the Last 3 Months of Data' },
+        xAxis: { categories: dates, title: { text: 'Date' } },
+        yAxis: { title: { text: 'Temperature (°C)' } },
+        series: [{ name: 'Temperature', data: temperatures }],
+        chart: { type: 'line' }
+    });
+
+    Highcharts.chart('phChart', {
+        title: { text: 'pH Over the Last 3 Months of Data' },
+        xAxis: { categories: dates, title: { text: 'Date' } },
+        yAxis: { title: { text: 'pH Level' } },
+        series: [{ name: 'pH', data: pHValues }],
+        chart: { type: 'line' }
+    });
+
+    Highcharts.chart('doChart', {
+        title: { text: 'Dissolved Oxygen (DO) Over the Last 3 Months of Data' },
+        xAxis: { categories: dates, title: { text: 'Date' } },
+        yAxis: { title: { text: 'DO (ppm)' } },
+        series: [{ name: 'Dissolved Oxygen', data: doValues }],
+        chart: { type: 'line' }
+    });
+
+    Highcharts.chart('turbidityChart', {
+        title: { text: 'Turbidity Over the Last 3 Months of Data' },
+        xAxis: { categories: dates, title: { text: 'Date' } },
+        yAxis: { title: { text: 'Turbidity (FNU)' } },
+        series: [{ name: 'Turbidity', data: turbidityValues }],
+        chart: { type: 'line' }
     });
 }
 
-async function initializeChart() {
-    const jsonData = await fetchData();
-    if (jsonData) {
-        const uniqueOrgs = [...new Set(jsonData.map(entry => entry.org_specific_monitoring_id))];
-        populateSelectOptions(uniqueOrgs);
-        renderChart('all locations', jsonData);
+// Event listener for location selection change
+document.getElementById('orgSelect').addEventListener('change', filterByLocation);
 
-        $('#orgSelect').on('change', function () {
-            const selectedOrg = $(this).val();
-            renderChart(selectedOrg, jsonData);
-        });
-    }
-}
+// Initial fetch of water data
+fetchWaterData();
 
-initializeChart();

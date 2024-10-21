@@ -28,8 +28,8 @@
 <section class="mb-3">
   <div class="row">
     <div class="col">
-      <select id="select_year" class="form-select" name="start_date_time">
-        <option value="">All Years</option>
+      <select id="select_year" class="form-select" name="start_date_time" onchange="filterByYear()">
+        <!-- <option value="">All Years</option> -->
         <option value="" dmx-bind:value="var_datetime.datetime.getYear()">{{var_datetime.datetime.getYear()}}</option>
         <option value="var_datetime.datetime.getYear(var_datetime.datetime)-1">{{var_datetime.datetime.getYear(var_datetime.datetime)-1}}</option>
         <option value="var_datetime.datetime.getYear(var_datetime.datetime)-2">{{var_datetime.datetime.getYear(var_datetime.datetime)-2}}</option>

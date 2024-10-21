@@ -62,5 +62,13 @@ dmx.config({
         "name": "dir"
       }
     ]
+  },
+  "waterinsights": {
+    "query": [
+      {
+        "type": "text",
+        "name": "m_location"
+      }
+    ]
   }
 });

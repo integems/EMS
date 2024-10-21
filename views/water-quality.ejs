@@ -1,4 +1,5 @@
 <!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="waterquality" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Modal:{},dmxBootstrap5Navigation:{},dmxDatePicker:{}}" moment_2="cdn" -->
+<dmx-serverconnect id="sc_water_locations" url="/api/location/water_locations"></dmx-serverconnect>
 <dmx-serverconnect id="sc_water_data"></dmx-serverconnect>
 <meta name="ac:route" content="/water-quality">
 
@@ -22,7 +23,7 @@
                                 <div class="form-group mb-3 row">
                                     <label for="input1" class="col-sm-4 col-form-label">Select Monitoring Location</label>
                                     <div class="col-sm-8">
-                                        <select id="select_location" class="form-select" name="location_id" dmx-bind:options="sc_monitoring_location_id.data.monitoring_location_id" optiontext="org_specific_monitoring_id" optionvalue="location_id" required="">
+                                        <select id="select_location" class="form-select" name="location_id" dmx-bind:options="sc_water_locations.data.query" optiontext="org_specific_monitoring_id+' '+description" optionvalue="location_id" required="">
                                             <option value="">Choose a Location</option>
 
                                         </select><small class="text-muted">Can't see your Monitoring Location? &nbsp;<a href="/add-monitoring-location">Add Location.</a></small>
@@ -71,7 +72,7 @@
     </div>
 </section>
 
-<section class="mt-1 mb-3">
+<!-- <section class="mt-1 mb-3">
     <div class="row">
         <div class="col">
             <select id="select_location_id" class="form-select " name="location_id" dmx-bind:options="sc_monitoring_location_id.data.monitoring_location_id" optiontext="org_specific_monitoring_id" optionvalue="location_id">
@@ -85,9 +86,9 @@
                 <option value="">All Location Types</option>
 
             </select></div>
-        <div class="col"><input id="date_monitoring" name="date" is="dmx-date-range-picker" placeholder="Pick a Date Range" class="form-control "></div>
+        
     </div>
-</section>
+</section> -->
 
 
 <section class="mb-3">
@@ -95,7 +96,7 @@
         <div class="col">
             <div class="card ">
                 <div class="card-body">
-                    <h4 class="card-title">Monitoring Locations</h4>
+                    <h4 class="card-title">Water Quality Monitoring Locations</h4>
                     <div id="location_map" style="height: 400px;"></div>
                 </div>
             </div>
@@ -106,21 +107,32 @@
 
 <section class="mb-3">
     <div class="row">
-        <div class="card">
-            <div class="card-body">
-
-                <div class="col">
-                    <label for="orgSelect">Select Monitoring Location:</label>
-                    <select id="orgSelect">
-
-                    </select>
-                    <div id="time_series_chart_two" style="height: 400px;"></div>
-                </div>
-            </div>
+        <div class="col-md-12">
+            <label for="orgSelect">Select Monitoring Location:</label>
+            <select id="orgSelect" onchange="filterByLocation()" class="mb-3">
+                <!-- Options will be populated dynamically -->
+            </select>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <div id="tempChart" style="height: 400px;"></div>
+        </div>
+        <div class="col-md-6">
+            <div id="phChart" style="height: 400px;"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div id="doChart" style="height: 400px;"></div>
+        </div>
+        <div class="col-md-6">
+            <div id="turbidityChart" style="height: 400px;"></div>
         </div>
     </div>
 </section>
 
-<script src="/js/Insert%20Monitoring%20Data/Water%20Quality/add_water_data.js" async="true"></script>
+
+<script src="/js/Insert_Monitoring_Data/Water%20Quality/add_water_data.js" async="true"></script>
 <script src="/js/leaflet_maps/water_quality_monitoring_locations.js" async="true"></script>
 <script src="/js/highcharts/highcharts_water_quality/water_quality_time_series.js" async="true"></script>

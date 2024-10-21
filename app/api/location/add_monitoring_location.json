@@ -96,6 +96,10 @@
       {
         "type": "number",
         "name": "monitoring_parameter_id"
+      },
+      {
+        "type": "number",
+        "name": "water_type_id"
       }
     ]
   },
@@ -114,48 +118,48 @@
                 "table": "monitoring_location",
                 "column": "latitude",
                 "type": "number",
-                "value": "{{$_POST.latitude}}",
-                "recid": 1
+                "value": "{{$_POST.latitude}}"
               },
               {
                 "table": "monitoring_location",
                 "column": "longitude",
                 "type": "number",
-                "value": "{{$_POST.longitude}}",
-                "recid": 2
+                "value": "{{$_POST.longitude}}"
               },
               {
                 "table": "monitoring_location",
                 "column": "org_specific_monitoring_id",
                 "type": "text",
-                "value": "{{$_POST.org_specific_monitoring_id}}",
-                "recid": 3
+                "value": "{{$_POST.org_specific_monitoring_id}}"
               },
               {
                 "table": "monitoring_location",
                 "column": "description",
                 "type": "text",
-                "value": "{{$_POST.description}}",
-                "recid": 4
+                "value": "{{$_POST.description}}"
               },
               {
                 "table": "monitoring_location",
                 "column": "location_type_id",
                 "type": "number",
-                "value": "{{$_POST.location_type_id}}",
-                "recid": 5
+                "value": "{{$_POST.location_type_id}}"
+              },
+              {
+                "table": "monitoring_location",
+                "column": "water_type_id",
+                "type": "number",
+                "value": "{{$_POST.water_type_id}}"
               },
               {
                 "table": "monitoring_location",
                 "column": "date_created",
                 "type": "datetime",
-                "value": "{{NOW}}",
-                "recid": 6
+                "value": "{{NOW}}"
               }
             ],
             "table": "monitoring_location",
             "returning": "location_id",
-            "query": "insert into `monitoring_location` (`date_created`, `description`, `latitude`, `location_type_id`, `longitude`, `org_specific_monitoring_id`) values (?, ?, ?, ?, ?, ?)",
+            "query": "insert into `monitoring_location` (`date_created`, `description`, `latitude`, `location_type_id`, `longitude`, `org_specific_monitoring_id`, `water_type_id`) values (?, ?, ?, ?, ?, ?, ?)",
             "params": [
               {
                 "name": ":P1",
@@ -189,6 +193,12 @@
               },
               {
                 "name": ":P6",
+                "type": "expression",
+                "value": "{{$_POST.water_type_id}}",
+                "test": ""
+              },
+              {
+                "name": ":P7",
                 "type": "expression",
                 "value": "{{NOW}}",
                 "test": ""

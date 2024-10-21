@@ -3,7 +3,7 @@
 <dmx-serverconnect id="sc_all_noise_locations" url="/api/location/noise_locations"></dmx-serverconnect>
 <dmx-serverconnect id="sc_all_monitoring_locations" url="/api/location/all_locations"></dmx-serverconnect>
 <dmx-serverconnect id="sc_download_noise_data" url="/api/noise/download_noise_table"></dmx-serverconnect>
-<dmx-serverconnect id="sc_noise_data" url="/api/noise/query_noise_data" dmx-param:monitoring_location="select_monitoring_location.value" dmx-param:year="" dmx-param:limit="25" dmx-param:location_type="select_location_type.value" dmx-param:start_date="" dmx-param:end_date="" dmx-param:sort="query_sort.data.sort" dmx-param:dir="query_sort.data.dir"></dmx-serverconnect>
+<dmx-serverconnect id="sc_noise_data" url="/api/noise/query_noise_data" dmx-param:monitoring_location="select_monitoring_location.value" dmx-param:year="" dmx-param:limit="50" dmx-param:location_type="select_location_type.value" dmx-param:start_date="" dmx-param:end_date="" dmx-param:sort="query_sort.data.sort" dmx-param:dir="query_sort.data.dir"></dmx-serverconnect>
 <dmx-serverconnect id="sc_monitoring_locations" url="/api/location/monitoring_location_id"></dmx-serverconnect>
 <dmx-serverconnect id="sc_monitorin_location_type" url="/api/location/monitoring_location_type"></dmx-serverconnect>
 
@@ -26,22 +26,31 @@
 
 <section class="mb-3">
     <div class="row">
-        <div class="col">
+        <!-- <div class="col">
             <input id="date" name="date" is="dmx-date-range-picker" type="text" class="form-control">
-        </div>
-        <div class="col">
+        </div> -->
+        <div class="col-md-3 col-sm-12 mb-sm-3">
             <select id="select_location_type" class="form-select" name="location_type_id" dmx-bind:options="sc_monitorin_location_type.data.location_type" optiontext="location_type" optionvalue="location_type">
                 <option value="">All Location Types</option>
             </select>
         </div>
-        <div class="col">
+        <div class="col-md-3 col-sm-12">
             <select id="select_monitoring_location" class="form-select" name="location_id" dmx-bind:options="sc_all_noise_locations.data.noise_locations" optiontext="org_specific_monitoring_id+' '+description" optionvalue="org_specific_monitoring_id">
                 <option value="">All Monitoring Locations</option>
             </select>
         </div>
-        <div class="text-start col">
-            <a href="#" class="btn btn-primary" id="exportButton" onclick="exportTableToCSV('table_export.csv');">Export</a>
+        <!-- <div class="col-md-3 col-sm-12">
+            <button id="btnExportCSV" class="btn btn-primary">Export Current Page
+                <span class="spinner-border spinner-border-sm" role="status" style="display: none;" id="spinnerCurrentPage"></span>
+            </button>
+
         </div>
+        <div class="col-md-3 col-sm-12">
+            <button id="btnExportFullCSV" class="btn btn-primary">Export All Data
+                <span class="spinner-border spinner-border-sm" role="status" style="display: none;" id="spinnerFullExport"></span>
+            </button>
+
+        </div> -->
     </div>
 </section>
 <section class="mb-3">
@@ -103,5 +112,108 @@
     </div>
 </section>
 
-<script src="/js/exportCSV/exportTabletoCSV.js" async="true"></script>
+<script>
+    // Export Current Page to CSV
+    document.getElementById("btnExportCSV").addEventListener("click", function () {
+        const spinner = document.getElementById("spinnerCurrentPage");
+        spinner.style.display = "inline-block"; // Show the spinner
+
+        const table = document.getElementById("noiseDataTable");
+        const rows = table.querySelectorAll("tr");
+        let csvContent = "";
+
+        // Loop through table rows
+        rows.forEach(function (row) {
+            const cols = row.querySelectorAll("td, th");
+            const rowData = [];
+
+            // Loop through each column in the row
+            cols.forEach(function (col) {
+                rowData.push('"' + col.innerText.replace(/"/g, '""') + '"'); // Escape quotes
+            });
+
+            csvContent += rowData.join(",") + "\n"; // Join columns with commas and add newline after each row
+        });
+
+        // Create a temporary link element for downloading the CSV
+        const downloadLink = document.createElement("a");
+        const blob = new Blob([csvContent], { type: "text/csv" });
+        const url = URL.createObjectURL(blob);
+
+        downloadLink.href = url;
+        downloadLink.download = "currentPage.csv"; // CSV file name
+        downloadLink.click(); // Trigger download
+
+        // Hide the spinner
+        spinner.style.display = "none";
+    });
+
+    // Export All Data to CSV
+    document.getElementById("btnExportFullCSV").addEventListener("click", async function () {
+        const spinner = document.getElementById("spinnerFullExport");
+        spinner.style.display = "inline-block"; // Show the spinner
+        const allLogs = [];
+        const limit = 25; // Records per page
+
+        // Function to fetch data from a specific page
+        const fetchData = (offset) => {
+            return fetch(`/api/noise/query_noise_data?offset=${offset}&limit=${limit}`)
+                .then(response => response.json())
+                .then(data => {
+                    allLogs.push(...data.query_noise.data);
+                    return data.query_noise.total; // Return total records
+                })
+                .catch(error => {
+                    console.error("Error fetching data:", error);
+                    alert("Error fetching data. Please try again.");
+                    throw error; // Rethrow the error to be handled in the calling code
+                });
+        };
+
+        // Fetch all pages dynamically
+        let totalRecords;
+        let offset = 0;
+        do {
+            totalRecords = await fetchData(offset);
+            offset += limit; // Increment the offset for the next page
+        } while (offset < totalRecords); // Continue until all records are fetched
+
+        // After fetching all data, generate CSV
+        generateCSV(allLogs);
+
+        // Hide the spinner
+        spinner.style.display = "none";
+    });
+
+    // Function to generate CSV and trigger download
+    function generateCSV(data) {
+        let csvContent = "Start Date,End Date,LAeq,LA90,LA10,LAFMax,LAFMin\n"; // CSV Header
+
+        // Loop through each record and format it
+        data.forEach(record => {
+            const row = [
+                `"${record.start_date_time}"`,
+                `"${record.end_date_time}"`,
+                `"${record.LAeq}"`,
+                `"${record.LA90}"`,
+                `"${record.LA10}"`,
+                `"${record.LAFMax}"`,
+                `"${record.LAFMin}"`
+            ];
+            csvContent += row.join(",") + "\n"; // Add each record as a new line in the CSV
+        });
+
+        // Create a temporary link element for downloading the CSV
+        const downloadLink = document.createElement("a");
+        const blob = new Blob([csvContent], { type: "text/csv" });
+        const url = URL.createObjectURL(blob);
+
+        downloadLink.href = url;
+        downloadLink.download = "allData.csv"; // CSV file name
+        downloadLink.click(); // Trigger download
+    }
+</script>
+
+
+
 <meta name="ac:route" content="/noise-data">

@@ -10,7 +10,7 @@
   <link rel="icon" type="image/ico" href="/favicon.ico" dmx-bind:href="sc_security_app_data.data.query.where(`field_name`, 'favicon', '==')[0].field_value">
 
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="stylesheet" href="/bootstrap/5/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous" />
+  <link rel="stylesheet" href="/bootstrap/5/css/bootstrap.min.css" crossorigin="anonymous" />
   <link rel="stylesheet" href="/fontawesome6/css/all.min.css" />
   <link rel="stylesheet" href="/css/bootstrap-icons.min.css" />
   <link rel="stylesheet" href="/css/style.css" />
@@ -149,24 +149,6 @@
             </li>
 
             <li class="sidebar-item has-sub">
-              <a class="sidebar-link" href="/air-quality">
-                <i class="bi bi-cloud-fog2"></i>
-                <span>Air Quality</span>
-              </a>
-              <ul class="submenu">
-                <li class="submenu-item">
-                  <a class="sidebar-link" href="/air-quality">Recent</a>
-                </li>
-                <li class="submenu-item">
-                  <a class="sidebar-link" href="#">Air Data</a>
-                </li>
-                <li class="submenu-item">
-                  <a class="sidebar-link" href="#">Air Insights</a>
-                </li>
-              </ul>
-            </li>
-
-            <li class="sidebar-item has-sub">
               <a class="sidebar-link" href="/noise">
                 <i class="bi bi-soundwave"></i>
                 <span>Noise</span>
@@ -183,6 +165,26 @@
                 </li>
               </ul>
             </li>
+
+            <li class="sidebar-item has-sub">
+              <a class="sidebar-link" href="/air-quality">
+                <i class="bi bi-cloud-fog2"></i>
+                <span>Air Quality</span>
+              </a>
+              <ul class="submenu">
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="/air-quality">Recent</a>
+                </li>
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="/air-data">Air Data</a>
+                </li>
+                <li class="submenu-item">
+                  <a class="sidebar-link" href="/air-insights">Air Insights</a>
+                </li>
+              </ul>
+            </li>
+
+
 
             <li class="sidebar-item has-sub">
               <a class="sidebar-link" href="/water-quality">

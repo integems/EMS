@@ -69,21 +69,8 @@ fetch('/api/water_quality/water_data_location')
                 .addTo(map)
                 .bindPopup(`
             <b>${locationGroup[0].org_specific_monitoring_id}</b><br>
-            <b>Description:</b> ${locationGroup[0].description}<br>
-            <b>Date:</b> ${formatDateTime(locationGroup[0].date)}<br>
-            <b>Temperature [°C]:</b> ${locationGroup[0].temperature}<br>
-            <b>pH:</b> ${locationGroup[0].pH}<br>
-            <b>mV[pH]:</b> ${locationGroup[0].mV_pH}<br>
-            <b>ORP[mV]:</b> ${locationGroup[0].ORP_mV}<br>
-            <b>EC [μs/cm]:</b> ${locationGroup[0].EC}<br>
-            <b>EC Abs [μs/cm].:</b> ${locationGroup[0].EC_Abs}<br>
-            <b>Resistivity [Ohm-cm]:</b> ${locationGroup[0].Resistivity}<br>
-            <b>TDS:</b> ${locationGroup[0].TDS_ppm}<br>
-            <b>Salinity[psu]:</b> ${locationGroup[0].salinity_psu}<br>
-            <b>Pressure[psi]:</b> ${locationGroup[0].pressure_psi}<br>
-            <b>D.O.[%]:</b> ${locationGroup[0].DO_percentage}<br>
-            <b>D.O.[ppm]:</b> ${locationGroup[0].DO_ppm}<br>
-            <b>Turbidity [FNU]:</b> ${locationGroup[0].turbidity_FNU}<br>
+            <b> ${locationGroup[0].description}</b><br>
+            
           `)
                 .on('click', function () {
                     updateCardContent(locationGroup);
@@ -92,3 +79,18 @@ fetch('/api/water_quality/water_data_location')
     })
     .catch(error => console.error('Error fetching data:', error));
 
+//-------------------------
+// <b>Date:</b> ${formatDateTime(locationGroup[0].date)}<br>
+            // <b>Temperature [°C]:</b> ${locationGroup[0].temperature}<br>
+            // <b>pH:</b> ${locationGroup[0].pH}<br>
+            // <b>mV[pH]:</b> ${locationGroup[0].mV_pH}<br>
+            // <b>ORP[mV]:</b> ${locationGroup[0].ORP_mV}<br>
+            // <b>EC [μs/cm]:</b> ${locationGroup[0].EC}<br>
+            // <b>EC Abs [μs/cm].:</b> ${locationGroup[0].EC_Abs}<br>
+            // <b>Resistivity [Ohm-cm]:</b> ${locationGroup[0].Resistivity}<br>
+            // <b>TDS:</b> ${locationGroup[0].TDS_ppm}<br>
+            // <b>Salinity[psu]:</b> ${locationGroup[0].salinity_psu}<br>
+            // <b>Pressure[psi]:</b> ${locationGroup[0].pressure_psi}<br>
+            // <b>D.O.[%]:</b> ${locationGroup[0].DO_percentage}<br>
+            // <b>D.O.[ppm]:</b> ${locationGroup[0].DO_ppm}<br>
+            // <b>Turbidity [FNU]:</b> ${locationGroup[0].turbidity_FNU}<br>

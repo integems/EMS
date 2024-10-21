@@ -1,4 +1,5 @@
 <!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="waterdata" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Navigation:{},dmxBootstrap5TableGenerator:{},dmxStateManagement:{},dmxBootstrap5PagingGenerator:{},dmxFormatter:{}}" -->
+<dmx-serverconnect id="sc_water_locations" url="/api/location/water_locations"></dmx-serverconnect>
 <dmx-serverconnect id="sc_year" url="/api/water_quality/water_data_year"></dmx-serverconnect>
 <dmx-query-manager id="query_water"></dmx-query-manager>
 <dmx-serverconnect id="sc_water_data" url="/api/water_quality/water_data" dmx-param:location="select_monitoring_location.value" dmx-param:limit="25"></dmx-serverconnect>
@@ -21,14 +22,14 @@
 
 <section class="mb-3">
     <div class="row">
-        <div class="col">
+        <!-- <div class="col">
             <select id="select_year" class="form-select" name="date" dmx-bind:options="sc_water_data.data.water_data.data" optionvalue="date" optiontext="date.getYear(date)">
                 <option value="">All Years</option>
 
             </select>
-        </div>
+        </div> -->
         <div class="col">
-            <select id="select_monitoring_location" class="form-select" name="location_id" dmx-bind:options="sc_monitoring_locations.data.monitoring_location_id" optiontext="org_specific_monitoring_id" optionvalue="org_specific_monitoring_id">
+            <select id="select_monitoring_location" class="form-select" name="location_id" dmx-bind:options="sc_water_locations.data.query" optiontext="org_specific_monitoring_id+' '+description" optionvalue="org_specific_monitoring_id">
                 <option value="">All Monitoring Locations</option>
             </select>
         </div>

@@ -325,6 +325,35 @@
           "system_versioned": false
         }
       },
+      "monitoring_parameters": {
+        "columns": {
+          "monitoring_parameters_id": {
+            "db": {
+              "type": "increments",
+              "primary": true,
+              "nullable": false
+            }
+          },
+          "monitoring_parameters": {
+            "db": {
+              "type": "string",
+              "default": "",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          }
+        },
+        "db": {
+          "engine": "InnoDB",
+          "schema": "emsdb",
+          "collation": "utf8mb4_general_ci",
+          "system_versioned": false
+        },
+        "refs": {
+          "monitoring_location": "monitoring_parameter_id"
+        }
+      },
       "air_quality_monitoring_data": {
         "columns": {
           "air_id": {
@@ -425,6 +454,143 @@
           "schema": "emsdb",
           "collation": "utf8mb4_general_ci",
           "system_versioned": false
+        }
+      },
+      "water_type": {
+        "columns": {
+          "water_type_id": {
+            "db": {
+              "type": "increments",
+              "primary": true,
+              "nullable": false
+            }
+          },
+          "water_type": {
+            "db": {
+              "type": "string",
+              "default": "",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          }
+        },
+        "db": {
+          "engine": "InnoDB",
+          "schema": "emsdb",
+          "collation": "utf8mb4_general_ci",
+          "system_versioned": false
+        },
+        "refs": {
+          "monitoring_location": "water_type_id"
+        }
+      },
+      "monitoring_location": {
+        "columns": {
+          "location_id": {
+            "db": {
+              "type": "increments",
+              "primary": true,
+              "nullable": false
+            }
+          },
+          "latitude": {
+            "db": {
+              "type": "decimal",
+              "default": "",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "longitude": {
+            "db": {
+              "type": "decimal",
+              "default": "",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "org_specific_monitoring_id": {
+            "db": {
+              "type": "string",
+              "default": "",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "description": {
+            "db": {
+              "type": "string",
+              "default": "",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "location_type_id": {
+            "db": {
+              "type": "reference",
+              "default": "",
+              "primary": false,
+              "nullable": true,
+              "references": "location_type_id",
+              "inTable": "location_type",
+              "referenceType": "integer",
+              "onUpdate": "CASCADE",
+              "onDelete": "CASCADE"
+            }
+          },
+          "date_created": {
+            "db": {
+              "type": "datetime",
+              "default": "",
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "monitoring_parameter_id": {
+            "db": {
+              "type": "reference",
+              "default": "",
+              "primary": false,
+              "nullable": true,
+              "references": "monitoring_parameters_id",
+              "inTable": "monitoring_parameters",
+              "referenceType": "integer",
+              "onUpdate": "CASCADE",
+              "onDelete": "CASCADE"
+            }
+          },
+          "water_type_id": {
+            "db": {
+              "type": "reference",
+              "default": "",
+              "primary": false,
+              "nullable": true,
+              "references": "water_type_id",
+              "inTable": "water_type",
+              "referenceType": "integer",
+              "onUpdate": "CASCADE",
+              "onDelete": "CASCADE"
+            }
+          }
+        },
+        "db": {
+          "engine": "InnoDB",
+          "schema": "emsdb",
+          "collation": "utf8mb4_general_ci",
+          "system_versioned": false
+        },
+        "sub": {
+          "monitoring_location_photos": "location_id"
+        },
+        "refs": {
+          "noise_monitoring_data": "location_id",
+          "air_quality_monitoring_data": "location_id",
+          "water_quality_data": "location_id"
         }
       },
       "water_quality_data": {
@@ -591,136 +757,7 @@
             }
           }
         },
-        "db": {
-          "engine": "InnoDB",
-          "schema": "emsdb",
-          "collation": "utf8mb4_general_ci",
-          "system_versioned": false
-        }
-      },
-      "monitoring_parameters": {
-        "columns": {
-          "monitoring_parameters_id": {
-            "db": {
-              "type": "increments",
-              "primary": true,
-              "nullable": false
-            }
-          },
-          "monitoring_parameters": {
-            "db": {
-              "type": "string",
-              "default": "",
-              "maxLength": 255,
-              "primary": false,
-              "nullable": true
-            }
-          }
-        },
-        "db": {
-          "engine": "InnoDB",
-          "schema": "emsdb",
-          "collation": "utf8mb4_general_ci",
-          "system_versioned": false
-        },
-        "refs": {
-          "monitoring_location": "monitoring_parameter_id"
-        }
-      },
-      "monitoring_location": {
-        "columns": {
-          "location_id": {
-            "db": {
-              "type": "increments",
-              "primary": true,
-              "nullable": false
-            }
-          },
-          "latitude": {
-            "db": {
-              "type": "decimal",
-              "default": "",
-              "maxLength": 255,
-              "primary": false,
-              "nullable": true
-            }
-          },
-          "longitude": {
-            "db": {
-              "type": "decimal",
-              "default": "",
-              "maxLength": 255,
-              "primary": false,
-              "nullable": true
-            }
-          },
-          "org_specific_monitoring_id": {
-            "db": {
-              "type": "string",
-              "default": "",
-              "maxLength": 255,
-              "primary": false,
-              "nullable": true
-            }
-          },
-          "description": {
-            "db": {
-              "type": "string",
-              "default": "",
-              "maxLength": 255,
-              "primary": false,
-              "nullable": true
-            }
-          },
-          "location_type_id": {
-            "db": {
-              "type": "reference",
-              "default": "",
-              "primary": false,
-              "nullable": true,
-              "references": "location_type_id",
-              "inTable": "location_type",
-              "referenceType": "integer",
-              "onUpdate": "CASCADE",
-              "onDelete": "CASCADE"
-            }
-          },
-          "date_created": {
-            "db": {
-              "type": "datetime",
-              "default": "",
-              "primary": false,
-              "nullable": true
-            }
-          },
-          "monitoring_parameter_id": {
-            "db": {
-              "type": "reference",
-              "default": "",
-              "primary": false,
-              "nullable": true,
-              "references": "monitoring_parameters_id",
-              "inTable": "monitoring_parameters",
-              "referenceType": "integer",
-              "onUpdate": "CASCADE",
-              "onDelete": "CASCADE"
-            }
-          }
-        },
-        "db": {
-          "engine": "InnoDB",
-          "schema": "emsdb",
-          "collation": "utf8mb4_general_ci",
-          "system_versioned": false
-        },
-        "sub": {
-          "monitoring_location_photos": "location_id"
-        },
-        "refs": {
-          "noise_monitoring_data": "location_id",
-          "air_quality_monitoring_data": "location_id",
-          "water_quality_data": "location_id"
-        }
+        "db": {}
       }
     },
     "views": {},

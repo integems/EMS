@@ -1,0 +1,23 @@
+<!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="airdata" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Navigation:{}}" -->
+<dmx-serverconnect id="sc_airQualityData"></dmx-serverconnect>
+<meta name="ac:route" content="/air-data">
+
+<section class="mb-3">
+    <div class="row text-end">
+        <div class="col text-start">
+
+            <h1 class="fw-normal fs-2">Air Quality Data {{select_monitoring_location.selectedText}}</h1>
+            <div class="breadcrumb">
+                <a class="breadcrumb-item breadcrumb-link fs-5 fw-light" href="/dashboard">Dashboard</a>
+                <a class="breadcrumb-item breadcrumb-link fs-5 fw-light" href="/air-quality">Air Quality</a>
+                <a class="breadcrumb-item breadcrumb-link fs-5 fw-bold" href="/noise-data">Data</a>
+            </div>
+        </div>
+
+    </div>
+</section>
+<section>
+    <div class="row">
+        <div class="col"></div>
+    </div>
+</section>

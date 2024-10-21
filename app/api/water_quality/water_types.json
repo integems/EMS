@@ -1,0 +1,52 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "query_water_types",
+      "module": "dbconnector",
+      "action": "select",
+      "options": {
+        "connection": "conn_db",
+        "sql": {
+          "type": "select",
+          "columns": [
+            {
+              "table": "water_type",
+              "column": "*"
+            }
+          ],
+          "params": [],
+          "table": {
+            "name": "water_type"
+          },
+          "primary": "water_type_id",
+          "joins": [],
+          "query": "select * from `water_type`"
+        }
+      },
+      "output": true,
+      "meta": [
+        {
+          "type": "number",
+          "name": "water_type_id"
+        },
+        {
+          "type": "text",
+          "name": "water_type"
+        }
+      ],
+      "outputType": "array"
+    }
+  }
+}

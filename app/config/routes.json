@@ -93,6 +93,16 @@
       "path": "/pagination-test",
       "page": "pagination-test",
       "layout": "portal_layout"
+    },
+    {
+      "path": "/air-data",
+      "page": "air-data",
+      "layout": "portal_layout"
+    },
+    {
+      "path": "/air-insights",
+      "page": "air-insights",
+      "layout": "portal_layout"
     }
   ],
   "layouts": {
