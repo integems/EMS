@@ -1,0 +1,227 @@
+<!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="airquality" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Modal:{},dmxBootstrap5Navigation:{},dmxDatePicker:{}}" moment_2="cdn" -->
+<dmx-serverconnect id="sc_airQualityData" url="/api/air_quality/query_air_quality"></dmx-serverconnect>
+<meta name="ac:route" content="/air-quality">
+
+<dmx-serverconnect id="sc_all_air_locations" url="/api/location/noise_locations"></dmx-serverconnect>
+<dmx-serverconnect id="sc_monitoring_location_type" url="/api/location/monitoring_location_type"></dmx-serverconnect>
+<dmx-serverconnect id="sc_monitoring_location_id" url="/api/location/monitoring_location_id"></dmx-serverconnect>
+<dmx-serverconnect id="sc_air_quality_date_time" url="/api/air_quality/date_time"></dmx-serverconnect>
+<dmx-serverconnect id="sc_air_monitoring_locations"></dmx-serverconnect>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3"></script>
+
+
+<div class="modal" id="modal_add_data" is="dmx-bs5-modal" tabindex="-1" nocloseonclick="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Monitoring Data</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <section id="input-file-browser">
+                    <div class="row">
+                        <form action="/api/air_quality/validate_air_quality_data" method="post" is="dmx-serverconnect-form" id="sc_add_air_data" dmx-on:success="notifies1.success('Air Quality Data Added Successfully');sc_add_air_data.reset();modal_add_data.hide()" onsuccess="addMappedData()">
+                            <div class="form-group mb-3 row">
+                                <label for="input1" class="col-sm-4 col-form-label">Select Monitoring Location</label>
+                                <div class="col-sm-8">
+                                    <select id="select_location" class="form-select" name="location_id" dmx-bind:options="sc_all_air_locations.data.noise_locations" optiontext="org_specific_monitoring_id+' '+description" optionvalue="location_id" required="">
+                                        <option value="">Choose a Location</option>
+
+                                    </select><small class="text-muted">Can't see your Monitoring Location? &nbsp;<a href="/add-monitoring-location">Add Location.</a></small>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group mb-3 row">
+                                <label for="data_file" class="col-sm-4 col-form-label">Monitoring Data</label>
+                                <div class="col-sm-8">
+                                    <input class="form-control" type="file" id="data_file" accept=".csv" required="" dmx-on:change="onFileChange($event)" name="data_file">
+                                    <!-- <input class="form-control" type="file" id="data_file" accept=".csv" required="" name="data_file"> -->
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+                <div id="mapping-container" class="mt-3"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" dmx-on:click="sc_add_air_data.submit()">Add Data</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<section>
+    <div class="row text-end">
+
+        <div class="col text-start">
+            <h1 class="fw-normal fs-2">Air Quality</h1>
+            <div class="breadcrumb">
+                <a class="breadcrumb-item breadcrumb-link fs-5 fw-light" href="/dashboard">Dashboard</a>
+                <a class="breadcrumb-item breadcrumb-link fs-5 fw-bold" href="/air-quality">Air Quality</a>
+            </div>
+        </div>
+        <div class="col text-end">
+            <button id="btn_add_noise_data" class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#modal_add_data">Add Air Quality Data</button>
+        </div>
+    </div>
+</section>
+
+
+
+<section class="mb-3">
+    <div class="row">
+        <div class="col">
+            <div class="card ">
+                <div class="card-body">
+                    <h4 class="card-title mt-2">Air Quality Monitoring Locations</h4>
+                    <div id="location_map" style="height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+<<<<<<< HEAD
+
+=======
+        <!-- <div class="col">
+            <div class="card ">
+                <div class="card-body text-center">
+                    <h5 class="card-title mt-2" id="cardTitle"></h5>
+                    <img src="/assets/images/logo_icon.jpg" alt="Location Photos" width="118px" height="118px">
+                    <p class="card-text" id="cardContent"></p>
+
+                </div>
+            </div>
+        </div> -->
+>>>>>>> d82856fa53c634f13851524071bcc1cf270ec72d
+    </div>
+</section>
+
+
+<section class="mb-3">
+    <div class="row">
+        <div class="card">
+            <div class="card-body">
+                <canvas id="air_quality_chart" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+
+
+<script src="/js/leaflet_maps/air_quality_monitoring_locations.js"></script>
+
+<script src="/js/highcharts/highcharts_air_quality/air_quality_time_series.js" defer="true"></script>
+<script src="/js/Insert_Monitoring_Data/Air%20Quality/add_air_quality_data.js" async="true"></script>
+
+<script>
+    async function fetchAirQualityData() {
+    const response = await fetch('/api/air_quality/query_air_quality');
+    const data = await response.json();
+    return data.query;
+}
+
+function createChart(data) {
+    const ctx = document.getElementById('air_quality_chart').getContext('2d');
+
+    const chartData = {
+        labels: data.map(entry => new Date(entry.date).toLocaleString()), // Date and time labels
+        datasets: [
+            {
+                label: 'PM10 (ppm)',
+                data: data.map(entry => entry.PM10_ppm),
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+                fill: false
+            },
+            {
+                label: 'PM2.5 (ppm)',
+                data: data.map(entry => entry.PM2_5_ppm),
+                borderColor: 'rgba(153, 102, 255, 1)',
+                borderWidth: 1,
+                fill: false
+            },
+            {
+                label: 'CO (ppm)',
+                data: data.map(entry => entry.CO_ppm),
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1,
+                fill: false
+            },
+            {
+                label: 'NO2 (ppm)',
+                data: data.map(entry => entry.NO2_ppm),
+                borderColor: 'rgba(255, 159, 64, 1)',
+                borderWidth: 1,
+                fill: false
+            },
+            {
+                label: 'RH (%)',
+                data: data.map(entry => entry.RH_percentage),
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1,
+                fill: false
+            },
+            {
+                label: 'SO2 (ppm)',
+                data: data.map(entry => entry.SO2_ppm),
+                borderColor: 'rgba(255, 206, 86, 1)',
+                borderWidth: 1,
+                fill: false
+            },
+            {
+                label: 'Temp (C)',
+                data: data.map(entry => entry.temp_C),
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+                fill: false
+            }
+        ]
+    };
+
+    new Chart(ctx, {
+        type: 'line',
+        data: chartData,
+        options: {
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'minute'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Date and Time'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Concentration (ppm) / % / °C'
+                    }
+                }
+            }
+        }
+    });
+}
+
+async function init() {
+    const data = await fetchAirQualityData();
+    createChart(data);
+}
+
+init();
+
+</script>
