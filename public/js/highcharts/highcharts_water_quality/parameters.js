@@ -250,7 +250,164 @@
 
 //--------------------------------------------------------------------------------------------------------------
 
-// JavaScript Document
+// // JavaScript Document
+
+// // Function to show a loading indicator
+// function showLoading() {
+//     const loader = document.getElementById('loading');
+//     if (loader) loader.style.display = 'block';
+// }
+
+// // Function to hide the loading indicator
+// function hideLoading() {
+//     const loader = document.getElementById('loading');
+//     if (loader) loader.style.display = 'none';
+// }
+
+// // Function to show an error message on the UI
+// function showError(message) {
+//     const errorContainer = document.getElementById('error-message');
+//     if (errorContainer) {
+//         errorContainer.textContent = message;
+//         errorContainer.style.display = 'block';
+//     }
+// }
+
+// // Function to hide the error message
+// function hideError() {
+//     const errorContainer = document.getElementById('error-message');
+//     if (errorContainer) errorContainer.style.display = 'none';
+// }
+
+// // Fetch water quality data from the API
+// async function fetchWaterQualityData() {
+//     showLoading();
+//     hideError();
+//     try {
+//         const response = await fetch('/api/water_quality/query_water_data');
+//         if (!response.ok) {
+//             throw new Error(`API request failed with status: ${response.status}`);
+//         }
+//         const data = await response.json();
+//         hideLoading();
+//         return data.query_water || [];
+//     } catch (error) {
+//         console.error("Error fetching data:", error);
+//         showError("Failed to load water quality data. Please try again later.");
+//         hideLoading();
+//         return [];
+//     }
+// }
+
+// // Calculate average for each parameter per location
+// function calculateAverages(data) {
+//     const averages = {};
+//     const parameters = ['temperature', 'pH', 'ORP_mV', 'EC', 'Resistivity', 'TDS_ppm', 'salinity_psu', 'pressure_psi', 'DO_percentage', 'turbidity_FNU'];
+
+//     data.forEach(record => {
+//         const location = record.org_specific_monitoring_id;
+
+//         if (!averages[location]) {
+//             averages[location] = {
+//                 count: 0
+//             };
+//             parameters.forEach(param => {
+//                 averages[location][param] = 0;
+//             });
+//         }
+
+//         parameters.forEach(param => {
+//             // Ensure the data is numeric before adding it
+//             const value = parseFloat(record[param]);
+//             if (!isNaN(value)) {
+//                 averages[location][param] += value;
+//             }
+//         });
+
+//         averages[location].count += 1;
+//     });
+
+//     // Calculate the average for each parameter
+//     Object.keys(averages).forEach(location => {
+//         parameters.forEach(param => {
+//             averages[location][param] = averages[location][param] / averages[location].count || 0;
+//         });
+//     });
+
+//     return averages;
+// }
+
+// // Render bar charts for each parameter
+// function renderBarCharts(averages) {
+//     const parameters = ['temperature', 'pH', 'ORP_mV', 'EC', 'Resistivity', 'TDS_ppm', 'salinity_psu', 'pressure_psi', 'DO_percentage', 'turbidity_FNU'];
+//     const parameterNames = {
+//         temperature: 'Temperature (°C)',
+//         pH: 'pH',
+//         ORP_mV: 'ORP (mV)',
+//         EC: 'Electrical Conductivity (µS/cm)',
+//         Resistivity: 'Resistivity (Ohm·cm)',
+//         TDS_ppm: 'Total Dissolved Solids (ppm)',
+//         salinity_psu: 'Salinity (PSU)',
+//         pressure_psi: 'Pressure (psi)',
+//         DO_percentage: 'Dissolved Oxygen (%)',
+//         turbidity_FNU: 'Turbidity (FNU)'
+//     };
+
+//     const locations = Object.keys(averages);
+
+//     parameters.forEach(param => {
+//         const seriesData = locations.map(location => ({
+//             name: location,
+//             y: averages[location][param]
+//         }));
+
+//         Highcharts.chart(`chart_${param}`, {
+//             chart: {
+//                 type: 'column'
+//             },
+//             title: {
+//                 text: parameterNames[param]
+//             },
+//             xAxis: {
+//                 type: 'category',
+//                 title: {
+//                     text: 'Monitoring Locations'
+//                 }
+//             },
+//             yAxis: {
+//                 title: {
+//                     text: parameterNames[param]
+//                 }
+//             },
+//             series: [{
+//                 name: parameterNames[param],
+//                 data: seriesData,
+//                 colorByPoint: true
+//             }],
+//             tooltip: {
+//                 pointFormat: '{series.name}: <b>{point.y:.2f}</b>'
+//             }
+//         });
+//     });
+// }
+
+// // Main function to fetch data, process it, and render charts
+// async function main() {
+//     showLoading();
+//     const data = await fetchWaterQualityData();
+//     if (data.length > 0) {
+//         const averages = calculateAverages(data);
+//         renderBarCharts(averages);
+//     }
+//     hideLoading();
+// }
+
+// // Event listener for page load
+// document.addEventListener('DOMContentLoaded', main);
+
+//--------------------------------------------------------------------------------------------
+
+//with filtering
 
 // Function to show a loading indicator
 function showLoading() {
@@ -299,6 +456,52 @@ async function fetchWaterQualityData() {
     }
 }
 
+// Populate year and month filters based on the data
+function populateFilters(data) {
+    const yearSelect = document.getElementById('filterByYear');
+    const monthSelect = document.getElementById('filterByMonth');
+
+    // Extract unique years from the data
+    const years = Array.from(new Set(data.map(record => new Date(record.date).getFullYear())));
+
+    // Populate year options
+    yearSelect.innerHTML = '<option value="">All Years</option>';
+    years.forEach(year => {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        yearSelect.appendChild(option);
+    });
+
+    // Populate month options (all 12 months)
+    monthSelect.innerHTML = '<option value="">All Months</option>';
+    for (let month = 1; month <= 12; month++) {
+        const option = document.createElement('option');
+        option.value = month;
+        option.textContent = new Date(0, month - 1).toLocaleString('default', { month: 'long' });
+        monthSelect.appendChild(option);
+    }
+}
+
+// Filter data based on selected year and month
+function filterDataByYearAndMonth(data) {
+    const yearSelect = document.getElementById('filterByYear');
+    const monthSelect = document.getElementById('filterByMonth');
+    const selectedYear = yearSelect.value;
+    const selectedMonth = monthSelect.value;
+
+    return data.filter(record => {
+        const recordDate = new Date(record.date);
+        const recordYear = recordDate.getFullYear();
+        const recordMonth = recordDate.getMonth() + 1; // getMonth() returns 0-based index
+
+        return (
+            (!selectedYear || recordYear === parseInt(selectedYear)) &&
+            (!selectedMonth || recordMonth === parseInt(selectedMonth))
+        );
+    });
+}
+
 // Calculate average for each parameter per location
 function calculateAverages(data) {
     const averages = {};
@@ -317,7 +520,6 @@ function calculateAverages(data) {
         }
 
         parameters.forEach(param => {
-            // Ensure the data is numeric before adding it
             const value = parseFloat(record[param]);
             if (!isNaN(value)) {
                 averages[location][param] += value;
@@ -327,7 +529,6 @@ function calculateAverages(data) {
         averages[location].count += 1;
     });
 
-    // Calculate the average for each parameter
     Object.keys(averages).forEach(location => {
         parameters.forEach(param => {
             averages[location][param] = averages[location][param] / averages[location].count || 0;
@@ -396,10 +597,24 @@ async function main() {
     showLoading();
     const data = await fetchWaterQualityData();
     if (data.length > 0) {
+        populateFilters(data);
+
+        // Render initial charts with unfiltered data
         const averages = calculateAverages(data);
         renderBarCharts(averages);
+
+        // Add event listeners for filters
+        document.getElementById('filterByYear').addEventListener('change', () => updateCharts(data));
+        document.getElementById('filterByMonth').addEventListener('change', () => updateCharts(data));
     }
     hideLoading();
+}
+
+// Function to update charts based on filters
+function updateCharts(data) {
+    const filteredData = filterDataByYearAndMonth(data);
+    const averages = calculateAverages(filteredData);
+    renderBarCharts(averages);
 }
 
 // Event listener for page load

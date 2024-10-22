@@ -16,7 +16,7 @@
             <div class="breadcrumb">
                 <a class="breadcrumb-item breadcrumb-link fs-5 fw-light" href="/dashboard">Dashboard</a>
                 <a class="breadcrumb-item breadcrumb-link fs-5 fw-light" href="/water-quality">Water Quality</a>
-                <a class="breadcrumb-item breadcrumb-link fs-5 fw-bold" href="/noise" dmx-bind:href="">{{var_datetime.datetime.getYear(var_datetime.datetime)}}</a>
+                <!-- <a class="breadcrumb-item breadcrumb-link fs-5 fw-bold" href="/noise" dmx-bind:href="">{{var_datetime.datetime.getYear(var_datetime.datetime)}}</a> -->
             </div>
         </div>
     </div>
@@ -25,28 +25,14 @@
 <section class="mb-3">
     <div class="row">
         <div class="col">
-            <select id="select_year" class="form-select" name="start_date_time" onchange="filterByYear()">
-                <!-- <option value="">All Years</option> -->
-                <option value="" dmx-bind:value="var_datetime.datetime.getYear()">{{var_datetime.datetime.getYear()}}</option>
-                <option value="var_datetime.datetime.getYear(var_datetime.datetime)-1">{{var_datetime.datetime.getYear(var_datetime.datetime)-1}}</option>
-                <option value="var_datetime.datetime.getYear(var_datetime.datetime)-2">{{var_datetime.datetime.getYear(var_datetime.datetime)-2}}</option>
+            <select id="filterByYear" class="form-select">
+
             </select>
         </div>
         <div class="col">
-            <select class="form-control" onchange="filterByMonth()">
-                <option value="">Select a month</option>
-                <option value="01">January</option>
-                <option value="02">February</option>
-                <option value="03">March</option>
-                <option value="04">April</option>
-                <option value="05">May</option>
-                <option value="06">June</option>
-                <option value="07">July</option>
-                <option value="08">August</option>
-                <option value="09">September</option>
-                <option value="10">October</option>
-                <option value="11">November</option>
-                <option value="12">December</option>
+            <select class="form-control" id="filterByMonth">
+
+
             </select>
         </div>
 

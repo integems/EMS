@@ -44,25 +44,33 @@
         </select>
       </div>
     </div>
-<<<<<<< HEAD
-  </div>
-</section>
-<section class="mb-3">
+  </section>
+
+</div>
+
+
+
+<section>
   <div class="row">
     <div class="col">
-      <select id="select_year" class="form-select" name="start_date_time" onchange="filterByYear()">
-        <!-- <option value="">All Years</option> -->
-        <option value="" dmx-bind:value="var_datetime.datetime.getYear()">{{var_datetime.datetime.getYear()}}</option>
-        <option value="var_datetime.datetime.getYear(var_datetime.datetime)-1">{{var_datetime.datetime.getYear(var_datetime.datetime)-1}}</option>
-        <option value="var_datetime.datetime.getYear(var_datetime.datetime)-2">{{var_datetime.datetime.getYear(var_datetime.datetime)-2}}</option>
-      </select>
+      <div class="card">
+        <div class="card-body">
+          <div id="monthly_average" class="h-auto"></div>
+        </div>
+
+      </div>
     </div>
+  </div>
+</section>
+
+<section>
+  <div class="row">
     <div class="col">
-    </div>
-    <div class="col">
-      <select id="select_monitoring_location" class="form-select" name="location_id" dmx-bind:options="sc_all_noise_locations.data.noise_locations" optiontext="org_specific_monitoring_id+' '+description" optionvalue="location_id" dmx-bind:value="query.data.m_location" dmx-on:changed="sc_noise_data_chart.load({location: value});query.set('m_location',value)">
-        <option value="">Select Monitoring Location</option>
-      </select>
+      <div class="card">
+        <div class="card-body">
+          <div id="quarterly_average" class="h-auto"></div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -71,49 +79,17 @@
     <div class="col">
       <div class="card">
         <div class="card-body">
-          <div id="monthly_average" class="h-auto"></div>
-=======
-  </section>
-  <section>
-    <div class="row">
-      <div class="col">
-        <div class="card">
-          <div class="card-body">
-            <div id="monthly_average" class="h-auto"></div>
-          </div>
->>>>>>> d82856fa53c634f13851524071bcc1cf270ec72d
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <div class="row">
-      <div class="col">
-        <div class="card">
-          <div class="card-body">
-            <div id="quarterly_average" class="h-auto"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  <section>
-    <div class="row">
-      <div class="col">
-        <div class="card">
-          <div class="card-body">
-            <!-- <label for="orgSelect">Select Monitoring Location:</label>
+          <!-- <label for="orgSelect">Select Monitoring Location:</label>
           <select id="orgSelect">
 
           </select> -->
-            <div id="time_series_chart_all" class="h-auto"></div>
-          </div>
+          <div id="time_series_chart_all" class="h-auto"></div>
         </div>
       </div>
     </div>
-  </section>
-</div>
+  </div>
+</section>
+
 
 
 <script>
