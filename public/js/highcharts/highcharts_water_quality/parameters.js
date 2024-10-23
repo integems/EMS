@@ -409,62 +409,43 @@
 
 //with filtering
 
-// Function to show a loading indicator
-function showLoading() {
+// State to store the full dataset
+// State to store the full dataset
+let globalData = [];
+
+// Function to show loading state
+const showLoading = () => {
     const loader = document.getElementById('loading');
     if (loader) loader.style.display = 'block';
-}
+};
 
-// Function to hide the loading indicator
-function hideLoading() {
+// Function to hide loading state
+const hideLoading = () => {
     const loader = document.getElementById('loading');
     if (loader) loader.style.display = 'none';
-}
+};
 
-// Function to show an error message on the UI
-function showError(message) {
-    const errorContainer = document.getElementById('error-message');
-    if (errorContainer) {
-        errorContainer.textContent = message;
-        errorContainer.style.display = 'block';
-    }
-}
-
-// Function to hide the error message
-function hideError() {
-    const errorContainer = document.getElementById('error-message');
-    if (errorContainer) errorContainer.style.display = 'none';
-}
-
-// Fetch water quality data from the API
-async function fetchWaterQualityData() {
-    showLoading();
-    hideError();
+// Function to fetch data from API
+const fetchWaterQualityData = async () => {
     try {
         const response = await fetch('/api/water_quality/query_water_data');
         if (!response.ok) {
-            throw new Error(`API request failed with status: ${response.status}`);
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        hideLoading();
         return data.query_water || [];
     } catch (error) {
-        console.error("Error fetching data:", error);
-        showError("Failed to load water quality data. Please try again later.");
-        hideLoading();
+        console.error('Error fetching water quality data:', error);
         return [];
     }
-}
+};
 
-// Populate year and month filters based on the data
-function populateFilters(data) {
+// Function to populate year select options
+const populateYearSelect = (data) => {
     const yearSelect = document.getElementById('filterByYear');
-    const monthSelect = document.getElementById('filterByMonth');
+    const years = [...new Set(data.map(item => new Date(item.date).getFullYear()))];
+    years.sort((a, b) => b - a); // Sort years descending
 
-    // Extract unique years from the data
-    const years = Array.from(new Set(data.map(record => new Date(record.date).getFullYear())));
-
-    // Populate year options
     yearSelect.innerHTML = '<option value="">All Years</option>';
     years.forEach(year => {
         const option = document.createElement('option');
@@ -472,76 +453,146 @@ function populateFilters(data) {
         option.textContent = year;
         yearSelect.appendChild(option);
     });
+};
 
-    // Populate month options (all 12 months)
-    monthSelect.innerHTML = '<option value="">All Months</option>';
-    for (let month = 1; month <= 12; month++) {
-        const option = document.createElement('option');
-        option.value = month;
-        option.textContent = new Date(0, month - 1).toLocaleString('default', { month: 'long' });
-        monthSelect.appendChild(option);
-    }
-}
-
-// Filter data based on selected year and month
-function filterDataByYearAndMonth(data) {
-    const yearSelect = document.getElementById('filterByYear');
+// Function to populate month select options
+const populateMonthSelect = () => {
     const monthSelect = document.getElementById('filterByMonth');
-    const selectedYear = yearSelect.value;
-    const selectedMonth = monthSelect.value;
+    const months = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
 
-    return data.filter(record => {
-        const recordDate = new Date(record.date);
-        const recordYear = recordDate.getFullYear();
-        const recordMonth = recordDate.getMonth() + 1; // getMonth() returns 0-based index
-
-        return (
-            (!selectedYear || recordYear === parseInt(selectedYear)) &&
-            (!selectedMonth || recordMonth === parseInt(selectedMonth))
-        );
+    monthSelect.innerHTML = '<option value="">All Months</option>';
+    months.forEach((month, index) => {
+        const option = document.createElement('option');
+        option.value = index + 1;
+        option.textContent = month;
+        monthSelect.appendChild(option);
     });
-}
+};
 
-// Calculate average for each parameter per location
-function calculateAverages(data) {
-    const averages = {};
-    const parameters = ['temperature', 'pH', 'ORP_mV', 'EC', 'Resistivity', 'TDS_ppm', 'salinity_psu', 'pressure_psi', 'DO_percentage', 'turbidity_FNU'];
+// Function to get month name from number
+const getMonthName = (monthNumber) => {
+    const months = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+    return months[monthNumber - 1];
+};
+
+// Function to filter data based on selected year and month
+const filterData = (data) => {
+    const selectedYear = document.getElementById('filterByYear').value;
+    const selectedMonth = document.getElementById('filterByMonth').value;
+
+    return data.filter(item => {
+        const itemDate = new Date(item.date);
+        const yearMatch = !selectedYear || itemDate.getFullYear() === parseInt(selectedYear);
+        const monthMatch = !selectedMonth || (itemDate.getMonth() + 1) === parseInt(selectedMonth);
+        return yearMatch && monthMatch;
+    });
+};
+
+// Function to calculate averages per location
+const calculateAverages = (data) => {
+    const locationAverages = {};
+    const parameters = [
+        'temperature', 'pH', 'ORP_mV', 'EC', 'Resistivity',
+        'TDS_ppm', 'salinity_psu', 'pressure_psi', 'DO_percentage', 'turbidity_FNU'
+    ];
 
     data.forEach(record => {
         const location = record.org_specific_monitoring_id;
-
-        if (!averages[location]) {
-            averages[location] = {
-                count: 0
+        if (!locationAverages[location]) {
+            locationAverages[location] = {
+                count: 0,
+                description: record.description
             };
             parameters.forEach(param => {
-                averages[location][param] = 0;
+                locationAverages[location][param] = 0;
             });
         }
 
         parameters.forEach(param => {
             const value = parseFloat(record[param]);
             if (!isNaN(value)) {
-                averages[location][param] += value;
+                locationAverages[location][param] += value;
             }
         });
-
-        averages[location].count += 1;
+        locationAverages[location].count++;
     });
 
-    Object.keys(averages).forEach(location => {
+    // Calculate final averages
+    Object.keys(locationAverages).forEach(location => {
         parameters.forEach(param => {
-            averages[location][param] = averages[location][param] / averages[location].count || 0;
+            locationAverages[location][param] /= locationAverages[location].count;
         });
     });
 
-    return averages;
-}
+    return locationAverages;
+};
 
-// Render bar charts for each parameter
-function renderBarCharts(averages) {
-    const parameters = ['temperature', 'pH', 'ORP_mV', 'EC', 'Resistivity', 'TDS_ppm', 'salinity_psu', 'pressure_psi', 'DO_percentage', 'turbidity_FNU'];
-    const parameterNames = {
+// Function to get date range text
+const getDateRangeText = (data) => {
+    if (!data.length) return 'No data available';
+
+    const dates = data.map(item => new Date(item.date));
+    const minDate = new Date(Math.min(...dates));
+    const maxDate = new Date(Math.max(...dates));
+
+    if (minDate.getTime() === maxDate.getTime()) {
+        return minDate.toLocaleDateString();
+    }
+
+    return `${minDate.toLocaleDateString()} to ${maxDate.toLocaleDateString()}`;
+};
+
+// Function to update status message
+const updateStatus = (filteredData, averages) => {
+    const statusElement = document.getElementById('chartStatus');
+    const selectedYear = document.getElementById('filterByYear').value;
+    const selectedMonth = document.getElementById('filterByMonth').value;
+
+    const totalLocations = Object.keys(averages).length;
+    const totalReadings = filteredData.length;
+    const dateRange = getDateRangeText(filteredData);
+
+    let statusText = `Showing data for `;
+
+    // Add time period description
+    if (selectedYear && selectedMonth) {
+        statusText += `${getMonthName(parseInt(selectedMonth))} ${selectedYear}`;
+    } else if (selectedYear) {
+        statusText += `the year ${selectedYear}`;
+    } else if (selectedMonth) {
+        statusText += `${getMonthName(parseInt(selectedMonth))} across all years`;
+    } else {
+        statusText += `all available dates`;
+    }
+
+    // Add data summary
+    statusText += `<br><strong>Summary:</strong> `;
+    statusText += `${totalReadings} readings from ${totalLocations} locations`;
+
+    if (totalReadings > 0) {
+        statusText += `<br><strong>Date range:</strong> ${dateRange}`;
+    }
+
+    // Add locations if there aren't too many
+    if (totalLocations <= 5) {
+        const locationsList = Object.entries(averages)
+            .map(([id, values]) => `${id} (${values.description})`)
+            .join(', ');
+        statusText += `<br><strong>Locations:</strong> ${locationsList}`;
+    }
+
+    statusElement.innerHTML = statusText;
+};
+
+// Function to render charts
+const renderCharts = (averages) => {
+    const parameters = {
         temperature: 'Temperature (°C)',
         pH: 'pH',
         ORP_mV: 'ORP (mV)',
@@ -554,12 +605,10 @@ function renderBarCharts(averages) {
         turbidity_FNU: 'Turbidity (FNU)'
     };
 
-    const locations = Object.keys(averages);
-
-    parameters.forEach(param => {
-        const seriesData = locations.map(location => ({
-            name: location,
-            y: averages[location][param]
+    Object.entries(parameters).forEach(([param, label]) => {
+        const chartData = Object.entries(averages).map(([location, values]) => ({
+            name: `${location} - ${values.description}`,
+            y: values[param]
         }));
 
         Highcharts.chart(`chart_${param}`, {
@@ -567,55 +616,81 @@ function renderBarCharts(averages) {
                 type: 'column'
             },
             title: {
-                text: parameterNames[param]
+                text: label,
+                style: {
+                    fontSize: '16px'
+                }
             },
             xAxis: {
                 type: 'category',
-                title: {
-                    text: 'Monitoring Locations'
+                labels: {
+                    rotation: -45,
+                    style: {
+                        fontSize: '12px'
+                    }
                 }
             },
             yAxis: {
                 title: {
-                    text: parameterNames[param]
+                    text: label
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="padding:0"><b>{point.y:.2f}</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
                 }
             },
             series: [{
-                name: parameterNames[param],
-                data: seriesData,
+                name: label,
+                data: chartData,
                 colorByPoint: true
-            }],
-            tooltip: {
-                pointFormat: '{series.name}: <b>{point.y:.2f}</b>'
-            }
+            }]
         });
     });
-}
-
-// Main function to fetch data, process it, and render charts
-async function main() {
-    showLoading();
-    const data = await fetchWaterQualityData();
-    if (data.length > 0) {
-        populateFilters(data);
-
-        // Render initial charts with unfiltered data
-        const averages = calculateAverages(data);
-        renderBarCharts(averages);
-
-        // Add event listeners for filters
-        document.getElementById('filterByYear').addEventListener('change', () => updateCharts(data));
-        document.getElementById('filterByMonth').addEventListener('change', () => updateCharts(data));
-    }
-    hideLoading();
-}
+};
 
 // Function to update charts based on filters
-function updateCharts(data) {
-    const filteredData = filterDataByYearAndMonth(data);
+const updateCharts = () => {
+    const filteredData = filterData(globalData);
     const averages = calculateAverages(filteredData);
-    renderBarCharts(averages);
-}
+    updateStatus(filteredData, averages);
+    renderCharts(averages);
+};
 
-// Event listener for page load
-document.addEventListener('DOMContentLoaded', main);
+// Main initialization function
+const initializeCharts = async () => {
+    showLoading();
+
+    // Fetch data
+    globalData = await fetchWaterQualityData();
+
+    if (globalData.length > 0) {
+        // Populate filters
+        populateYearSelect(globalData);
+        populateMonthSelect();
+
+        // Add event listeners
+        document.getElementById('filterByYear').addEventListener('change', updateCharts);
+        document.getElementById('filterByMonth').addEventListener('change', updateCharts);
+
+        // Initial render
+        updateCharts();
+    } else {
+        console.error('No data received from API');
+        document.getElementById('chartStatus').innerHTML =
+            '<strong>Error:</strong> No data available. Please check your connection and try again.';
+    }
+
+    hideLoading();
+};
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', initializeCharts);

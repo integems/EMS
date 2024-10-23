@@ -1,0 +1,48 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "query",
+      "module": "dbconnector",
+      "action": "select",
+      "options": {
+        "connection": "conn_db",
+        "sql": {
+          "type": "select",
+          "columns": [
+            {
+              "table": "noise_monitoring_data",
+              "column": "start_date_time"
+            }
+          ],
+          "params": [],
+          "table": {
+            "name": "noise_monitoring_data"
+          },
+          "primary": "noise_id",
+          "joins": [],
+          "query": "select `start_date_time` from `noise_monitoring_data`"
+        }
+      },
+      "output": true,
+      "meta": [
+        {
+          "type": "datetime",
+          "name": "start_date_time"
+        }
+      ],
+      "outputType": "array"
+    }
+  }
+}

@@ -1,48 +1,202 @@
 // JavaScript Document
-function filterByYear() {
-    const selectedYear = document.getElementById('select_year').value;
-    renderNoiseChart(selectedYear);
+document.addEventListener('DOMContentLoaded', function () {
+    initializeFilters();
+});
+
+// Add a request tracking variable
+let currentRequest = null;
+let lastSuccessfulRequest = null;
+
+function initializeFilters() {
+    const yearSelect = document.getElementById('select_year');
+    const locationSelect = document.getElementById('select_monitoring_location');
+
+    fetch('/api/noise/get_noise_year')
+        .then(response => response.json())
+        .then(data => {
+            const noiseData = data?.query;
+            const years = new Set();
+
+            noiseData.forEach(record => {
+                const year = new Date(record.start_date_time).getFullYear();
+                years.add(year);
+            });
+
+            yearSelect.innerHTML = '<option value="">Select Year</option>';
+
+            Array.from(years)
+                .sort((a, b) => b - a)
+                .forEach(year => {
+                    const option = document.createElement('option');
+                    option.value = year;
+                    option.textContent = year;
+                    yearSelect.appendChild(option);
+                });
+
+            const currentYear = new Date().getFullYear();
+            if (years.has(currentYear)) {
+                yearSelect.value = currentYear;
+            } else {
+                yearSelect.value = Array.from(years).sort((a, b) => b - a)[0];
+            }
+
+            if (yearSelect.value && locationSelect.value) {
+                filterData();
+            }
+        })
+        .catch(error => console.error('Error fetching years:', error));
+
+    // Debounce the filter calls
+    const debouncedFilter = debounce(() => {
+        if (yearSelect.value && locationSelect.value) {
+            clearCharts();
+            filterData();
+        }
+    }, 250); // 250ms delay
+
+    yearSelect.addEventListener('change', debouncedFilter);
+
+    // Handle location changes with consideration for DMX
+    locationSelect.addEventListener('change', function (e) {
+        // Prevent immediate handling to let DMX complete its operations
+        setTimeout(() => {
+            if (yearSelect.value && locationSelect.value) {
+                clearCharts();
+                filterData();
+            }
+        }, 100);
+    });
 }
 
-function renderNoiseChart() {
-    const location_id = document.getElementById('select_monitoring_location').value;
-    const url = `api/noise/query_noise?location=${location_id}`;
-    const selectedYear = document.getElementById('select_year').value;
+// Debounce helper function
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
 
-    // Fetch data from the API endpoint and plot the chart
+function clearCharts() {
+    const chartContainers = ['time_series_chart_all', 'quarterly_average', 'monthly_average'];
+    chartContainers.forEach(containerId => {
+        const container = document.getElementById(containerId);
+        if (container) {
+            container.innerHTML = `
+                <div class="text-center p-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>`;
+        }
+    });
+}
+
+function filterData() {
+    const selectedYear = document.getElementById('select_year').value;
+    const selectedLocation = document.getElementById('select_monitoring_location').value;
+
+    if (!selectedYear || !selectedLocation) {
+        displayNoDataMessage('Please select both a year and a location');
+        return;
+    }
+
+    // Generate a unique request identifier
+    const requestId = Date.now();
+    currentRequest = requestId;
+
+    renderNoiseChart(selectedYear, selectedLocation, requestId);
+}
+
+function renderNoiseChart(selectedYear, selectedLocation, requestId) {
+    const url = `api/noise/query_noise?location=${selectedLocation}`;
+
+    // Cancel any ongoing fetch if it exists
+    if (lastSuccessfulRequest && lastSuccessfulRequest.abort) {
+        lastSuccessfulRequest.abort();
+    }
+
     fetch(url)
         .then(response => response.json())
         .then(data => {
+            // Check if this request is still relevant
+            if (currentRequest !== requestId) {
+                console.log('Discarding outdated request');
+                return;
+            }
 
             let noiseData = data?.query_noise;
 
-            // Filter data based on the selected year
-            if (selectedYear) {
-                noiseData = noiseData.filter(record => {
-                    const recordYear = new Date(record.start_date_time).getFullYear();
-                    return recordYear === parseInt(selectedYear);
-                });
+            if (!noiseData || noiseData.length === 0) {
+                displayNoDataMessage('No data available for the selected location');
+                return;
             }
 
+            noiseData = noiseData.filter(record => {
+                const recordYear = new Date(record.start_date_time).getFullYear();
+                return recordYear === parseInt(selectedYear);
+            });
+
+            if (noiseData.length === 0) {
+                displayNoDataMessage('No data available for the selected year at this location');
+                return;
+            }
 
             const selectedLocationName = noiseData[0]?.org_specific_monitoring_id || "N/A";
             const locationDescription = noiseData[0]?.description || "N/A";
+            const months = ['January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'];
+            const yearLabel = `(${selectedYear})`;
 
-            const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-            // render monthly chart
-            loadMonthlyNoiseChart(noiseData, selectedLocationName, months, locationDescription);
+            // Store the successful data for potential reuse
+            lastSuccessfulRequest = {
+                year: selectedYear,
+                location: selectedLocation,
+                data: noiseData
+            };
 
-            // render for time series chart        
-            loadTimeSeriesChart(noiseData, selectedLocationName, months, locationDescription);
-
-            // render chart for quarterly
-            loadQuarterlyNoiseChart(noiseData, selectedLocationName, months, locationDescription);
-
+            loadMonthlyNoiseChart(noiseData, `${selectedLocationName} ${yearLabel}`, months, locationDescription);
+            loadTimeSeriesChart(noiseData, `${selectedLocationName} ${yearLabel}`, months, locationDescription);
+            loadQuarterlyNoiseChart(noiseData, `${selectedLocationName} ${yearLabel}`, months, locationDescription);
         })
-        .catch(error => console.error('Error fetching data:', error));
-};
+        .catch(error => {
+            if (error.name === 'AbortError') {
+                return; // Ignore aborted requests
+            }
+            console.error('Error fetching data:', error);
+            displayErrorMessage();
+        });
+}
 
+function displayNoDataMessage(message = 'No data available for the selected filters') {
+    const chartContainers = ['time_series_chart_all', 'quarterly_average', 'monthly_average'];
+    chartContainers.forEach(containerId => {
+        const container = document.getElementById(containerId);
+        if (container) {
+            container.innerHTML = `
+                <div class="alert alert-info text-center m-3" role="alert">
+                    ${message}
+                </div>`;
+        }
+    });
+}
 
+function displayErrorMessage() {
+    const chartContainers = ['time_series_chart_all', 'quarterly_average', 'monthly_average'];
+    chartContainers.forEach(containerId => {
+        const container = document.getElementById(containerId);
+        if (container) {
+            container.innerHTML = `
+                <div class="alert alert-danger text-center m-3" role="alert">
+                    Error loading data. Please try again later.
+                </div>`;
+        }
+    });
+}
 
 function loadTimeSeriesChart(noiseData, selectedLocationName, months, locationDescription) {
     // Sort the data by start_date_time
@@ -106,9 +260,8 @@ function loadTimeSeriesChart(noiseData, selectedLocationName, months, locationDe
     });
 }
 
-
 function loadQuarterlyNoiseChart(noiseData, selectedLocationName, months, locationDescription) {
-    console.log("Q Data: ", noiseData)
+    // console.log("Q Data: ", noiseData)
     const quarterlyData = {}; // Object to store quarterly data
     noiseData.forEach(record => {
         const quarter = Math.floor(new Date(record.start_date_time).getMonth() / 3) + 1;
@@ -200,24 +353,24 @@ function loadQuarterlyNoiseChart(noiseData, selectedLocationName, months, locati
     });
 }
 
-
 function loadMonthlyNoiseChart(noiseData, selectedLocationName, months, locationDescription) {
-    const monthlyData = {};
+    const monthlyData = {}; // Object to store monthly data
+
+    // Initialize the monthlyData object for each month
+    months.forEach(month => {
+        monthlyData[month] = {
+            LAeq: [],
+            LA10: [],
+            LA90: [],
+            LAFMax: [],
+            LAFMin: []
+        };
+    });
+
+    // Populate monthly data
     noiseData.forEach(record => {
-        const monthIndex = new Date(record.start_date_time).getMonth();
-        const monthName = months[monthIndex];
-
-
-        if (!monthlyData[monthName]) {
-            monthlyData[monthName] = {
-                LAeq: [],
-                LA10: [],
-                LA90: [],
-                LAFMax: [],
-                LAFMin: []
-            };
-        }
-
+        const date = new Date(record.start_date_time);
+        const monthName = months[date.getMonth()];
 
         monthlyData[monthName].LAeq.push(record.LAeq);
         monthlyData[monthName].LA10.push(record.LA10);
@@ -226,40 +379,15 @@ function loadMonthlyNoiseChart(noiseData, selectedLocationName, months, location
         monthlyData[monthName].LAFMin.push(record.LAFMin);
     });
 
-
-    // Calculate monthly averages and extreme values
-    const monthlyAverages = [];
-    const maxLAFMax = [];
-    const minLAFMin = [];
-    months.forEach(monthName => {
-        if (monthlyData[monthName]) {
-            const LAeqAvg = calculateAverage(monthlyData[monthName].LAeq);
-            const LA10Avg = calculateAverage(monthlyData[monthName].LA10);
-            const LA90Avg = calculateAverage(monthlyData[monthName].LA90);
-
-            // Convert arrays of numbers to arrays of objects with the correct property
-            const LAFMaxObjects = monthlyData[monthName].LAFMax.map(value => ({ LAFMax: value }));
-            const LAFMinObjects = monthlyData[monthName].LAFMin.map(value => ({ LAFMin: value }));
-
-            // Find extreme values using the updated arrays of objects
-            const LAFMaxMax = findExtremeValues(LAFMaxObjects, 'LAFMax');
-            const LAFMinMax = findExtremeValues(LAFMinObjects, 'LAFMin');
-
-            monthlyAverages.push({
-                month: monthName,
-                LAeq: LAeqAvg,
-                LA10: LA10Avg,
-                LA90: LA90Avg
-            });
-            maxLAFMax.push({ month: monthName, value: LAFMaxMax });
-            minLAFMin.push({ month: monthName, value: LAFMinMax });
-        }
-        // console.log(maxLAFMax);
-        // console.log(minLAFMin);
-    });
-
-
-
+    // Calculate monthly averages
+    const monthlyAverages = months.map(month => ({
+        month: month,
+        LAeq: calculateAverage(monthlyData[month].LAeq),
+        LA10: calculateAverage(monthlyData[month].LA10),
+        LA90: calculateAverage(monthlyData[month].LA90),
+        LAFMax: calculateAverage(monthlyData[month].LAFMax),
+        LAFMin: calculateAverage(monthlyData[month].LAFMin)
+    }));
 
     // Plot the data using Highcharts
     Highcharts.chart('monthly_average', {
@@ -289,11 +417,11 @@ function loadMonthlyNoiseChart(noiseData, selectedLocationName, months, location
             data: monthlyAverages.map(item => item.LA90)
         }, {
             name: 'Max LAFMax',
-            data: maxLAFMax.map(item => [item.month, item.value]),
+            data: monthlyAverages.map(item => item.LAFMax),
             color: 'red'
         }, {
             name: 'Min LAFMin',
-            data: minLAFMin.map(item => [item.month, item.value]),
+            data: monthlyAverages.map(item => item.LAFMin),
             color: 'green'
         }]
     });

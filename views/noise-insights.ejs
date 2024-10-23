@@ -9,130 +9,135 @@
 <dmx-serverconnect id="sc_noise_data_chart" url="/api/noise/query_noise" dmx-param:monitoring_location="select_monitoring_location.value" dmx-param:location="select_monitoring_location.value" noload="true" onsuccess="renderNoiseChart()" dmx-param:year=""></dmx-serverconnect>
 <meta name="ac:route" content="/noise-insights">
 
-<div id="content">
-  <section class="mb-3 no-pdf">
-    <div class="row text-end">
 
-      <div class="col text-start">
-        <h1 class="fw-normal fs-2">Noise Data Insights&nbsp;</h1>
-        <div class="breadcrumb">
-          <a class="breadcrumb-item breadcrumb-link fs-5 fw-light" href="/dashboard">Dashboard</a>
-          <a class="breadcrumb-item breadcrumb-link fs-5 fw-light" href="/noise">Noise</a>
-          <a class="breadcrumb-item breadcrumb-link fs-5 fw-bold" href="/noise" dmx-bind:href="">{{var_datetime.datetime.getYear(var_datetime.datetime)}}</a>
-        </div>
+<section class="mb-3 no-pdf">
+  <div class="row text-end">
+
+    <div class="col text-start">
+      <h1 class="fw-normal fs-2">Noise Data Insights&nbsp;</h1>
+      <div class="breadcrumb">
+        <a class="breadcrumb-item breadcrumb-link fs-5 fw-light" href="/dashboard">Dashboard</a>
+        <a class="breadcrumb-item breadcrumb-link fs-5 fw-light" href="/noise">Noise</a>
+        <a class="breadcrumb-item breadcrumb-link fs-5 fw-bold" href="/noise" dmx-bind:href="">{{var_datetime.datetime.getYear(var_datetime.datetime)}}</a>
       </div>
+    </div>
+    <div class="col">
+    </div>
+  </div>
+</section>
+<section class="mb-3 no-pdf">
+  <div class="row">
+    <div class="col">
+      <select id="select_year" class="form-select" name="start_date_time">
+
+      </select>
+    </div>
+
+    <div class="col">
+      <select id="select_monitoring_location" class="form-select" name="location_id" dmx-bind:options="sc_all_noise_locations.data.noise_locations" optiontext="org_specific_monitoring_id+' '+description" optionvalue="location_id" dmx-bind:value="query.data.m_location" dmx-on:changed="sc_noise_data_chart.load({location: value});query.set('m_location',value)">
+        <option value="">Select Monitoring Location</option>
+      </select>
+    </div>
+
+    <div class="col">
+      <button id="exportPDF" class="btn btn-primary">
+        <i class="fas fa-file-pdf"></i> Export as PDF
+      </button>
+    </div>
+  </div>
+</section>
+
+
+
+<div class="exportPage">
+
+  <section>
+    <div class="row">
       <div class="col">
-        <button id="download" class="btn btn-primary" dmx-on:click="">Export as PDF</button>
+        <div class="card">
+          <div class="card-body">
+            <div id="monthly_average" class="h-auto"></div>
+          </div>
+
+        </div>
       </div>
     </div>
   </section>
-  <section class="mb-3 no-pdf">
+
+  <section>
     <div class="row">
       <div class="col">
-        <select id="select_year" class="form-select" name="start_date_time">
-          <option value="">All Years</option>
-          <option value="" dmx-bind:value="var_datetime.datetime.getYear()">{{var_datetime.datetime.getYear()}}</option>
-          <option value="var_datetime.datetime.getYear(var_datetime.datetime)-1">{{var_datetime.datetime.getYear(var_datetime.datetime)-1}}</option>
-          <option value="var_datetime.datetime.getYear(var_datetime.datetime)-2">{{var_datetime.datetime.getYear(var_datetime.datetime)-2}}</option>
-        </select>
+        <div class="card">
+          <div class="card-body">
+            <div id="quarterly_average" class="h-auto"></div>
+          </div>
+        </div>
       </div>
+    </div>
+  </section>
+  <section>
+    <div class="row">
       <div class="col">
-      </div>
-      <div class="col">
-        <select id="select_monitoring_location" class="form-select" name="location_id" dmx-bind:options="sc_all_noise_locations.data.noise_locations" optiontext="org_specific_monitoring_id+' '+description" optionvalue="location_id" dmx-bind:value="query.data.m_location" dmx-on:changed="sc_noise_data_chart.load({location: value});query.set('m_location',value)">
-          <option value="">Select Monitoring Location</option>
-        </select>
+        <div class="card">
+          <div class="card-body">
+            <!-- <label for="orgSelect">Select Monitoring Location:</label>
+          <select id="orgSelect">
+
+          </select> -->
+            <div id="time_series_chart_all" class="h-auto"></div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
 </div>
 
-
-
-<section>
-  <div class="row">
-    <div class="col">
-      <div class="card">
-        <div class="card-body">
-          <div id="monthly_average" class="h-auto"></div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="row">
-    <div class="col">
-      <div class="card">
-        <div class="card-body">
-          <div id="quarterly_average" class="h-auto"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<section>
-  <div class="row">
-    <div class="col">
-      <div class="card">
-        <div class="card-body">
-          <!-- <label for="orgSelect">Select Monitoring Location:</label>
-          <select id="orgSelect">
-
-          </select> -->
-          <div id="time_series_chart_all" class="h-auto"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-
 <script>
-  document.getElementById("download").addEventListener("click", function() {
-      // Hide the side menu and elements with the class 'no-pdf'
-      var sideMenu = document.querySelector('.side-menu');
-      var excludedElements = document.querySelectorAll('.no-pdf');
+  document.getElementById('exportPDF').addEventListener('click', function() {
+    // Show loading state
+    const button = this;
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating PDF...';
+    button.disabled = true;
 
-      if (sideMenu) sideMenu.style.display = 'none';
-      excludedElements.forEach(function(element) {
-          element.style.display = 'none';
-      });
+    // Get the content to export
+    const content = document.querySelector('.exportPage');
 
-      // Temporarily adjust content width to take full space
-      var contentElement = document.getElementById("content");
-      var originalWidth = contentElement.style.width;
-      contentElement.style.width = '100%';
+    // Configure PDF options
+    const opt = {
+        margin: [10, 10],
+        filename: 'noise-charts.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { 
+            scale: 1,
+            useCORS: true,
+            logging: false
+        },
+        jsPDF: { 
+            unit: 'mm', 
+            format: 'a4', 
+            orientation: 'portrait' 
+        }
+    };
 
-      // Temporarily remove overflow-x: hidden from the content element
-      var originalOverflow = contentElement.style.overflowX;
-      contentElement.style.overflowX = 'visible';
-
-      // Generate the PDF
-      html2pdf(contentElement, {
-          margin: 1,
-          filename: 'report.pdf',
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 3, windowWidth: document.documentElement.scrollWidth }, // Reduce the scale here to fit more content
-          jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' } // Use landscape orientation
-      }).then(function() {
-          // Restore the original styles
-          if (sideMenu) sideMenu.style.display = '';
-          contentElement.style.width = originalWidth;
-          contentElement.style.overflowX = originalOverflow;
-
-          // Show the excluded elements again after the PDF is generated
-          excludedElements.forEach(function(element) {
-              element.style.display = '';
-          });
-      });
-    });
-
-
+    // Generate PDF
+    html2pdf().set(opt)
+        .from(content)
+        .save()
+        .then(function() {
+            // Restore button state
+            button.innerHTML = originalText;
+            button.disabled = false;
+        })
+        .catch(function(error) {
+            // Handle errors
+            console.error('PDF generation failed:', error);
+            button.innerHTML = originalText;
+            button.disabled = false;
+            alert('Failed to generate PDF. Please try again.');
+        });
+});
 </script>
 
 <!-- 
@@ -141,3 +146,4 @@
 <script src="/js/highcharts/highcharts_noise/noise_time_series_chart-copy.js" async="true"></script> -->
 
 <script src="/js/highcharts/highcharts_noise/main.js" async="true"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>

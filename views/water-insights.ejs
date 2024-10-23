@@ -22,6 +22,10 @@
     </div>
 </section>
 
+<!-- Add these at the top of your body -->
+<div id="loading" style="display: none;">Loading...</div>
+<div id="error-message" style="display: none;" class="alert alert-danger"></div>
+
 <section class="mb-3">
     <div class="row">
         <div class="col">
@@ -36,87 +40,158 @@
             </select>
         </div>
 
-    </div>
-</section>
-<section>
-    <div class="row">
-        <!-- Bar charts container -->
-        <div class="col-6">
-            <div class="card">
-                <div class="card-body">
-                    <div id="chart_temperature" class="h-auto"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6">
-            <div class="card">
-                <div class="card-body">
-                    <div id="chart_pH" class="h-auto"></div>
-                </div>
-            </div>
+        <div class="col">
+            <button id="exportPDF" class="btn btn-primary">
+                <i class="fas fa-file-pdf"></i> Export as PDF
+            </button>
         </div>
 
-        <!-- Repeat this structure for the remaining charts -->
-        <div class="col-6">
-            <div class="card">
-                <div class="card-body">
-                    <div id="chart_ORP_mV" class="h-auto"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6">
-            <div class="card">
-                <div class="card-body">
-                    <div id="chart_EC" class="h-auto"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Continue for Resistivity, TDS_ppm, salinity_psu, pressure_psi, DO_percentage, turbidity_FNU -->
-        <div class="col-6">
-            <div class="card">
-                <div class="card-body">
-                    <div id="chart_Resistivity" class="h-auto"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6">
-            <div class="card">
-                <div class="card-body">
-                    <div id="chart_TDS_ppm" class="h-auto"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6">
-            <div class="card">
-                <div class="card-body">
-                    <div id="chart_salinity_psu" class="h-auto"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6">
-            <div class="card">
-                <div class="card-body">
-                    <div id="chart_pressure_psi" class="h-auto"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6">
-            <div class="card">
-                <div class="card-body">
-                    <div id="chart_DO_percentage" class="h-auto"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6">
-            <div class="card">
-                <div class="card-body">
-                    <div id="chart_turbidity_FNU" class="h-auto"></div>
-                </div>
-            </div>
-        </div>
     </div>
 </section>
+
+<div class="exportPage">
+
+    <section class="mb-3">
+        <div class="row">
+            <div class="col">
+                <div id="chartStatus" class="alert alert-info">
+                    <!-- Status will be populated dynamically -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="row">
+            <!-- Bar charts container -->
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div id="chart_temperature" class="h-auto"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div id="chart_pH" class="h-auto"></div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- Repeat this structure for the remaining charts -->
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div id="chart_ORP_mV" class="h-auto"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div id="chart_EC" class="h-auto"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Continue for Resistivity, TDS_ppm, salinity_psu, pressure_psi, DO_percentage, turbidity_FNU -->
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div id="chart_Resistivity" class="h-auto"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div id="chart_TDS_ppm" class="h-auto"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div id="chart_salinity_psu" class="h-auto"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div id="chart_pressure_psi" class="h-auto"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div id="chart_DO_percentage" class="h-auto"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div id="chart_turbidity_FNU" class="h-auto"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    document.getElementById('exportPDF').addEventListener('click', function() {
+    // Show loading state
+    const button = this;
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating PDF...';
+    button.disabled = true;
+
+    // Get the content to export
+    const content = document.querySelector('.exportPage');
+
+    // Configure PDF options
+    const opt = {
+        margin: [10, 10],
+        filename: 'water-quality-charts.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { 
+            scale: 2,
+            useCORS: true,
+            logging: false
+        },
+        jsPDF: { 
+            unit: 'mm', 
+            format: 'a4', 
+            orientation: 'portrait' 
+        }
+    };
+
+    // Generate PDF
+    html2pdf().set(opt)
+        .from(content)
+        .save()
+        .then(function() {
+            // Restore button state
+            button.innerHTML = originalText;
+            button.disabled = false;
+        })
+        .catch(function(error) {
+            // Handle errors
+            console.error('PDF generation failed:', error);
+            button.innerHTML = originalText;
+            button.disabled = false;
+            alert('Failed to generate PDF. Please try again.');
+        });
+});
+</script>
 
 
 <script src="/js/highcharts/highcharts_water_quality/parameters.js" async="true"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
