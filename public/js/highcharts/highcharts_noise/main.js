@@ -1,4 +1,13 @@
 // JavaScript Document
+function initializePage() {
+    initializeFilters();
+}
+
+// Add this Wappler-specific event listener
+document.addEventListener('dmx-app-rendered', function () {
+    initializePage();
+});
+
 document.addEventListener('DOMContentLoaded', function () {
     initializeFilters();
 });
@@ -6,10 +15,12 @@ document.addEventListener('DOMContentLoaded', function () {
 // Add a request tracking variable
 let currentRequest = null;
 let lastSuccessfulRequest = null;
-
 function initializeFilters() {
     const yearSelect = document.getElementById('select_year');
     const locationSelect = document.getElementById('select_monitoring_location');
+
+    // Restore previous state if exists
+    const previousState = dmx.app.pageState?.value;
 
     fetch('/api/noise/get_noise_year')
         .then(response => response.json())
@@ -40,8 +51,30 @@ function initializeFilters() {
                 yearSelect.value = Array.from(years).sort((a, b) => b - a)[0];
             }
 
+            // Auto-select first location if none is selected
+            if (!locationSelect.value && locationSelect.options.length > 0) {
+                // Skip the first option if it's a placeholder like "Select Location"
+                const firstRealOption = locationSelect.options[0].value === "" ? 1 : 0;
+                if (locationSelect.options.length > firstRealOption) {
+                    locationSelect.selectedIndex = firstRealOption;
+                }
+            }
+
+            // Trigger initial data load if both year and location are selected
             if (yearSelect.value && locationSelect.value) {
                 filterData();
+            }
+
+            // Restore previous selections if they exist
+            if (previousState) {
+                yearSelect.value = previousState.year || '';
+                locationSelect.value = previousState.location || '';
+
+                if (yearSelect.value && locationSelect.value) {
+                    filterData();
+                }
+            } else {
+                // Your existing default selection code...
             }
         })
         .catch(error => console.error('Error fetching years:', error));
@@ -113,7 +146,7 @@ function filterData() {
 }
 
 function renderNoiseChart(selectedYear, selectedLocation, requestId) {
-    const url = `api/noise/query_noise?location=${selectedLocation}`;
+    const url = `api/noise/query_noise_copy`;
 
     // Cancel any ongoing fetch if it exists
     if (lastSuccessfulRequest && lastSuccessfulRequest.abort) {
@@ -214,7 +247,7 @@ function loadTimeSeriesChart(noiseData, selectedLocationName, months, locationDe
 
     noiseData.forEach(record => {
         const date = new Date(record.start_date_time);
-        const formattedDate = `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+        const formattedDate = `${months[date.getMonth()]} ${date.getDate()}`;
 
         timeSeriesData.categories.push(formattedDate);
         timeSeriesData.LAeq.push(record.LAeq);
@@ -462,3 +495,22 @@ function populateSelectOptions(uniqueOrgs) {
         orgSelect.append(`<option value="${org}">${org}</option>`);
     });
 }
+
+
+function cleanupPage() {
+    // Clear any pending requests
+    if (currentRequest && currentRequest.abort) {
+        currentRequest.abort();
+    }
+
+    // Clear charts
+    ['time_series_chart_all', 'quarterly_average', 'monthly_average'].forEach(id => {
+        const chart = Highcharts.charts.find(c => c.renderTo.id === id);
+        if (chart) {
+            chart.destroy();
+        }
+    });
+}
+
+// Add to your event listeners
+document.addEventListener('dmx-app-beforeleave', cleanupPage);

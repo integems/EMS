@@ -23,7 +23,8 @@
           "columns": [
             {
               "table": "monitoring_location",
-              "column": "*"
+              "column": "*",
+              "recid": 1
             }
           ],
           "params": [],
@@ -97,6 +98,10 @@
         {
           "type": "number",
           "name": "monitoring_parameter_id"
+        },
+        {
+          "type": "number",
+          "name": "water_type_id"
         }
       ],
       "outputType": "array"

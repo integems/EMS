@@ -33,7 +33,11 @@ dmx.config({
         "type": "text",
         "name": "year"
       }
-    ]
+    ],
+    "pageState": {
+      "meta": null,
+      "outputType": "text"
+    }
   },
   "waterdata": {
     "query": [

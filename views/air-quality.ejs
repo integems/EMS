@@ -22,7 +22,7 @@
             <div class="modal-body">
                 <section id="input-file-browser">
                     <div class="row">
-                        <form action="/api/air_quality/validate_air_quality_data" method="post" is="dmx-serverconnect-form" id="sc_add_air_data" dmx-on:success="notifies1.success('Air Quality Data Added Successfully');sc_add_air_data.reset();modal_add_data.hide()" onsuccess="addMappedData()">
+                        <form action="/api/air_quality/validate_air_quality_data" method="post" is="dmx-serverconnect-form" id="sc_add_air_data" dmx-on:success="notifies1.success('Air Quality Data Added Successfully');sc_add_air_data.reset();modal_add_data.hide();browser.goto('/air-quality')" onsuccess="addMappedData()">
                             <div class="form-group mb-3 row">
                                 <label for="input1" class="col-sm-4 col-form-label">Select Monitoring Location</label>
                                 <div class="col-sm-8">
@@ -37,10 +37,10 @@
                             <div class="form-group mb-3 row">
                                 <label for="data_file" class="col-sm-4 col-form-label">Monitoring Data</label>
                                 <div class="col-sm-8">
-                                    <input class="form-control" type="file" id="data_file" accept=".csv" required="" dmx-on:change="onFileChange($event)" name="data_file">
-                                    <!-- <input class="form-control" type="file" id="data_file" accept=".csv" required="" name="data_file"> -->
+                                    <input class="form-control" type="file" id="data_file" accept=".csv" required="" name="data_file">
                                 </div>
                             </div>
+
                         </form>
                     </div>
                 </section>
@@ -104,9 +104,17 @@
 
 <section class="mb-3">
     <div class="row">
-        <div class="card">
+        <div class="card shadow">
             <div class="card-body">
-                <canvas id="air_quality_chart" width="400" height="200"></canvas>
+
+                <div class="col">
+                    <label for="orgSelect">Select Monitoring Location:</label>
+                    <select id="orgSelect"></select>
+                    <label for="yearSelect">Select Year</label>
+                    <select id="yearSelect"></select>
+
+                    <div id="container" style="height: 400px;"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -124,103 +132,3 @@
 
 <script src="/js/highcharts/highcharts_air_quality/air_quality_time_series.js" defer="true"></script>
 <script src="/js/Insert_Monitoring_Data/Air%20Quality/add_air_quality_data.js" async="true"></script>
-
-<script>
-    async function fetchAirQualityData() {
-    const response = await fetch('/api/air_quality/query_air_quality');
-    const data = await response.json();
-    return data.query;
-}
-
-function createChart(data) {
-    const ctx = document.getElementById('air_quality_chart').getContext('2d');
-
-    const chartData = {
-        labels: data.map(entry => new Date(entry.date).toLocaleString()), // Date and time labels
-        datasets: [
-            {
-                label: 'PM10 (ppm)',
-                data: data.map(entry => entry.PM10_ppm),
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1,
-                fill: false
-            },
-            {
-                label: 'PM2.5 (ppm)',
-                data: data.map(entry => entry.PM2_5_ppm),
-                borderColor: 'rgba(153, 102, 255, 1)',
-                borderWidth: 1,
-                fill: false
-            },
-            {
-                label: 'CO (ppm)',
-                data: data.map(entry => entry.CO_ppm),
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1,
-                fill: false
-            },
-            {
-                label: 'NO2 (ppm)',
-                data: data.map(entry => entry.NO2_ppm),
-                borderColor: 'rgba(255, 159, 64, 1)',
-                borderWidth: 1,
-                fill: false
-            },
-            {
-                label: 'RH (%)',
-                data: data.map(entry => entry.RH_percentage),
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1,
-                fill: false
-            },
-            {
-                label: 'SO2 (ppm)',
-                data: data.map(entry => entry.SO2_ppm),
-                borderColor: 'rgba(255, 206, 86, 1)',
-                borderWidth: 1,
-                fill: false
-            },
-            {
-                label: 'Temp (C)',
-                data: data.map(entry => entry.temp_C),
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1,
-                fill: false
-            }
-        ]
-    };
-
-    new Chart(ctx, {
-        type: 'line',
-        data: chartData,
-        options: {
-            scales: {
-                x: {
-                    type: 'time',
-                    time: {
-                        unit: 'minute'
-                    },
-                    title: {
-                        display: true,
-                        text: 'Date and Time'
-                    }
-                },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Concentration (ppm) / % / °C'
-                    }
-                }
-            }
-        }
-    });
-}
-
-async function init() {
-    const data = await fetchAirQualityData();
-    createChart(data);
-}
-
-init();
-
-</script>

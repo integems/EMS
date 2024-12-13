@@ -435,6 +435,196 @@
 // })();
 
 //------------------Version 5--------------------------------------------------------------------------
+// (async () => {
+//     const response = await fetch('/api/noise/query_noise_copy');
+//     const result = await response.json();
+
+//     // Extract unique locations for the select dropdown
+//     const locations = new Map();
+//     result.query_noise.forEach(item => {
+//         locations.set(item.location_id, item.description);
+//     });
+
+//     const orgSelect = document.getElementById('orgSelect');
+//     orgSelect.innerHTML = '<option value="all">All Locations</option>';
+//     locations.forEach((description, locationId) => {
+//         const option = document.createElement('option');
+//         option.value = locationId;
+//         option.text = description;
+//         orgSelect.appendChild(option);
+//     });
+
+//     // Extract unique years for the select dropdown
+//     const years = new Set();
+//     result.query_noise.forEach(item => {
+//         const timestamp = Date.parse(item.start_date_time);
+//         if (!isNaN(timestamp)) {
+//             const year = new Date(timestamp).getFullYear();
+//             if (year > 1970) {
+//                 years.add(year);
+//             }
+//         }
+//     });
+
+//     const yearSelect = document.getElementById('yearSelect');
+//     const currentYear = new Date().getFullYear();
+//     yearSelect.innerHTML = '<option value="all">All Years</option>';
+//     years.forEach(year => {
+//         const option = document.createElement('option');
+//         option.value = year;
+//         option.text = year;
+//         yearSelect.appendChild(option);
+//     });
+
+//     // Set current year as default selected option
+//     yearSelect.value = currentYear;
+
+//     const seriesData = {
+//         LAeq: [],
+//         LA90: [],
+//         LA10: [],
+//         LAFMax: [],
+//         LAFMin: []
+//     };
+
+//     function processData(locationId, year) {
+//         const filteredData = result.query_noise.filter(item => {
+//             const timestamp = Date.parse(item.start_date_time);
+//             if (isNaN(timestamp)) {
+//                 return false;
+//             }
+//             const itemYear = new Date(timestamp).getFullYear();
+//             const locationMatch = locationId === 'all' || item.location_id == locationId;
+//             const yearMatch = year === 'all' || itemYear == year;
+//             return locationMatch && yearMatch;
+//         });
+
+//         const data = {
+//             LAeq: [],
+//             LA90: [],
+//             LA10: [],
+//             LAFMax: [],
+//             LAFMin: []
+//         };
+
+//         filteredData.forEach(item => {
+//             const timestamp = Date.parse(item.start_date_time);
+//             data.LAeq.push([timestamp, item.LAeq]);
+//             data.LA90.push([timestamp, item.LA90]);
+//             data.LA10.push([timestamp, item.LA10]);
+//             data.LAFMax.push([timestamp, item.LAFMax]);
+//             data.LAFMin.push([timestamp, item.LAFMin]);
+//         });
+
+//         // Sort each data series by timestamp
+//         Object.keys(data).forEach(key => {
+//             data[key].sort((a, b) => a[0] - b[0]);
+//         });
+
+//         return data;
+//     }
+
+//     function createChart(data, locationName) {
+//         Highcharts.chart('container', {
+//             chart: {
+//                 zooming: {
+//                     type: 'x'
+//                 }
+//             },
+//             title: {
+//                 text: `Noise Level Trends - ${locationName}`,
+//                 align: 'center'
+//             },
+//             subtitle: {
+//                 text: document.ontouchstart === undefined ?
+//                     'Click and drag in the plot area to zoom in' :
+//                     'Pinch the chart to zoom in',
+//                 align: 'left'
+//             },
+//             xAxis: {
+//                 type: 'datetime'
+//             },
+//             yAxis: {
+//                 title: {
+//                     text: 'Noise Levels (dB)'
+//                 }
+//             },
+//             legend: {
+//                 enabled: true
+//             },
+//             plotOptions: {
+//                 line: {
+//                     marker: {
+//                         radius: 2
+//                     },
+//                     lineWidth: 2,
+//                     states: {
+//                         hover: {
+//                             lineWidth: 1
+//                         }
+//                     },
+//                     threshold: null
+//                 }
+//             },
+//             series: [
+//                 {
+//                     type: 'line',
+//                     name: 'LAeq',
+//                     data: data.LAeq,
+//                     color: Highcharts.getOptions().colors[0]
+//                 },
+//                 {
+//                     type: 'line',
+//                     name: 'LA90',
+//                     data: data.LA90,
+//                     color: Highcharts.getOptions().colors[1]
+//                 },
+//                 {
+//                     type: 'line',
+//                     name: 'LA10',
+//                     data: data.LA10,
+//                     color: Highcharts.getOptions().colors[2]
+//                 },
+//                 {
+//                     type: 'line',
+//                     name: 'LAFMax',
+//                     data: data.LAFMax,
+//                     color: Highcharts.getOptions().colors[3]
+//                 },
+//                 {
+//                     type: 'line',
+//                     name: 'LAFMin',
+//                     data: data.LAFMin,
+//                     color: Highcharts.getOptions().colors[4]
+//                 }
+//             ]
+//         });
+//     }
+
+//     orgSelect.addEventListener('change', () => {
+//         const selectedLocationId = orgSelect.value;
+//         const selectedYear = yearSelect.value;
+//         const locationName = selectedLocationId === 'all' ? 'All Locations' : locations.get(parseInt(selectedLocationId));
+//         const data = processData(selectedLocationId, selectedYear);
+//         createChart(data, locationName);
+//     });
+
+//     yearSelect.addEventListener('change', () => {
+//         const selectedLocationId = orgSelect.value;
+//         const selectedYear = yearSelect.value;
+//         const locationName = selectedLocationId === 'all' ? 'All Locations' : locations.get(parseInt(selectedLocationId));
+//         const data = processData(selectedLocationId, selectedYear);
+//         createChart(data, locationName);
+//     });
+
+//     // Initial chart with data from the current year
+//     const initialLocationName = 'All Locations';
+//     const initialData = processData('all', currentYear);
+//     createChart(initialData, initialLocationName);
+// })();
+
+//------------------------------Version 6 -------------------------------------------------------------
+
 (async () => {
     const response = await fetch('/api/noise/query_noise_copy');
     const result = await response.json();
@@ -442,7 +632,7 @@
     // Extract unique locations for the select dropdown
     const locations = new Map();
     result.query_noise.forEach(item => {
-        locations.set(item.location_id, item.description);
+        locations.set(item.location_id, `${item.org_specific_monitoring_id} - ${item.description}`);
     });
 
     const orgSelect = document.getElementById('orgSelect');

@@ -1,0 +1,103 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "query",
+      "module": "dbconnector",
+      "action": "select",
+      "options": {
+        "connection": "conn_db",
+        "sql": {
+          "type": "select",
+          "columns": [
+            {
+              "table": "monitoring_location",
+              "column": "location_id"
+            },
+            {
+              "table": "monitoring_location",
+              "column": "latitude"
+            },
+            {
+              "table": "monitoring_location",
+              "column": "longitude"
+            },
+            {
+              "table": "monitoring_location",
+              "column": "org_specific_monitoring_id"
+            },
+            {
+              "table": "monitoring_location",
+              "column": "description"
+            }
+          ],
+          "params": [],
+          "table": {
+            "name": "monitoring_location"
+          },
+          "primary": "location_id",
+          "joins": [
+            {
+              "table": "air_quality_monitoring_data",
+              "column": "*",
+              "alias": "air data",
+              "type": "INNER",
+              "clauses": {
+                "condition": "AND",
+                "rules": [
+                  {
+                    "table": "air data",
+                    "column": "location_id",
+                    "operator": "equal",
+                    "operation": "=",
+                    "value": {
+                      "table": "monitoring_location",
+                      "column": "location_id"
+                    }
+                  }
+                ]
+              },
+              "primary": "air_id"
+            }
+          ],
+          "query": "select `monitoring_location`.`location_id`, `monitoring_location`.`latitude`, `monitoring_location`.`longitude`, `monitoring_location`.`org_specific_monitoring_id`, `monitoring_location`.`description` from `monitoring_location` inner join `air_quality_monitoring_data` as `air data` on `air data`.`location_id` = `monitoring_location`.`location_id`"
+        }
+      },
+      "output": true,
+      "meta": [
+        {
+          "type": "number",
+          "name": "location_id"
+        },
+        {
+          "type": "number",
+          "name": "latitude"
+        },
+        {
+          "type": "number",
+          "name": "longitude"
+        },
+        {
+          "type": "text",
+          "name": "org_specific_monitoring_id"
+        },
+        {
+          "type": "text",
+          "name": "description"
+        }
+      ],
+      "outputType": "array"
+    }
+  }
+}

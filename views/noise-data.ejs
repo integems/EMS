@@ -2,7 +2,6 @@
 <dmx-query-manager id="query_sort"></dmx-query-manager>
 <dmx-serverconnect id="sc_all_noise_locations" url="/api/location/noise_locations"></dmx-serverconnect>
 <dmx-serverconnect id="sc_all_monitoring_locations" url="/api/location/all_locations"></dmx-serverconnect>
-<dmx-serverconnect id="sc_download_noise_data" url="/api/noise/download_noise_table"></dmx-serverconnect>
 <dmx-serverconnect id="sc_noise_data" url="/api/noise/query_noise_data" dmx-param:monitoring_location="select_monitoring_location.value" dmx-param:year="" dmx-param:limit="50" dmx-param:location_type="select_location_type.value" dmx-param:start_date="" dmx-param:end_date="" dmx-param:sort="query_sort.data.sort" dmx-param:dir="query_sort.data.dir"></dmx-serverconnect>
 <dmx-serverconnect id="sc_monitoring_locations" url="/api/location/monitoring_location_id"></dmx-serverconnect>
 <dmx-serverconnect id="sc_monitorin_location_type" url="/api/location/monitoring_location_type"></dmx-serverconnect>
@@ -29,23 +28,33 @@
 
 <section class="mb-3">
     <div class="container">
-        <div class="row">
+        <div class="row align-items-center">
             <!-- <div class="col-4">
                 <input id="date" name="date" is="dmx-date-range-picker" type="text" class="form-control">
             </div> -->
-            <div class="col-3">
+            <div class="col-md-3 mb-2 mb-md-0">
                 <select id="select_location_type" class="form-select" name="location_type_id" dmx-bind:options="sc_monitorin_location_type.data.location_type" optiontext="location_type" optionvalue="location_type">
                     <option value="">All Location Types</option>
                 </select>
             </div>
-            <div class="col-3">
-                <select id="select_monitoring_location" class="form-select" name="location_id" dmx-bind:options="sc_all_noise_locations.data.noise_locations" optiontext="org_specific_monitoring_id+' '+description" optionvalue="location_id">
+            <div class="col-md-3 mb-2 mb-md-0">
+                <select id="select_monitoring_location" class="form-select" name="location_id" dmx-bind:options="sc_all_noise_locations.data.noise_locations" optiontext="org_specific_monitoring_id+' - '+description" optionvalue="location_id">
                     <option value="">All Monitoring Locations</option>
                 </select>
             </div>
-            <div class="col-2">
-                <a href="#" class="btn btn-primary" id="exportButton" onclick="exportTableToCSV('table_export.csv');">Export</a>
+            <div class="col-md-3 mb-2 mb-md-0">
+                <button class="btn btn-primary" id="exportButton">
+
+                    <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                    <i class="bi bi-download"></i>Export
+                </button>
             </div>
+            <!-- <div class="col-md-2">
+                <button class="btn btn-secondary" id="exportAllButton">
+                    <span id="spinnerAll" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                    Export All Data
+                </button>
+            </div> -->
         </div>
     </div>
 
@@ -57,7 +66,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered">
+                            <table class="table table-striped table-bordered" id="noiseDataTable">
                                 <thead>
                                     <tr>
                                         <th class="sorting" dmx-on:click="query.set('sort','org_specific_monitoring_id');query.set('dir',query.data.dir == 'desc' ? 'asc' : 'desc')" dmx-class:sorting_asc="query.data.sort=='org_specific_monitoring_id' && query.data.dir == 'asc'" dmx-class:sorting_desc="query.data.sort=='org_specific_monitoring_id' && query.data.dir == 'desc'">Location</th>
@@ -113,106 +122,155 @@
 </section>
 
 <script>
-    // Export Current Page to CSV
-    document.getElementById("btnExportCSV").addEventListener("click", function () {
-        const spinner = document.getElementById("spinnerCurrentPage");
-        spinner.style.display = "inline-block"; // Show the spinner
+    document.getElementById('exportButton').addEventListener('click', function () {
+        const table = document.getElementById('noiseDataTable');
+        if (!table) {
+            console.error('Table element with ID "noiseDataTable" not found.');
+            return;
+        }
 
-        const table = document.getElementById("noiseDataTable");
-        const rows = table.querySelectorAll("tr");
-        let csvContent = "";
+        // Show spinner and disable button
+        exportButton.disabled = true;
+        spinner.classList.remove('d-none');
 
-        // Loop through table rows
-        rows.forEach(function (row) {
-            const cols = row.querySelectorAll("td, th");
-            const rowData = [];
+        const rows = Array.from(table.querySelectorAll('tr'));
+        const csvContent = rows.map(row => {
+            const cells = row.querySelectorAll('th, td');
+            return Array.from(cells).map(cell => '"' + cell.textContent.replace(/"/g, '""') + '"').join(',');
+        }).join('\n');
 
-            // Loop through each column in the row
-            cols.forEach(function (col) {
-                rowData.push('"' + col.innerText.replace(/"/g, '""') + '"'); // Escape quotes
-            });
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'table_export.csv';
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
 
-            csvContent += rowData.join(",") + "\n"; // Join columns with commas and add newline after each row
-        });
-
-        // Create a temporary link element for downloading the CSV
-        const downloadLink = document.createElement("a");
-        const blob = new Blob([csvContent], { type: "text/csv" });
-        const url = URL.createObjectURL(blob);
-
-        downloadLink.href = url;
-        downloadLink.download = "currentPage.csv"; // CSV file name
-        downloadLink.click(); // Trigger download
-
-        // Hide the spinner
-        spinner.style.display = "none";
+        // Hide spinner and enable button
+        setTimeout(() => {
+            spinner.classList.add('d-none');
+            exportButton.disabled = false;
+        }, 1000); // Add a slight delay to ensure download is complete
     });
 
-    // Export All Data to CSV
-    document.getElementById("btnExportFullCSV").addEventListener("click", async function () {
-        const spinner = document.getElementById("spinnerFullExport");
-        spinner.style.display = "inline-block"; // Show the spinner
-        const allLogs = [];
-        const limit = 25; // Records per page
+      // Initialize allTableData by reading from the table
+    const allTableData = [];
+    const tableRows = document.querySelectorAll('#noiseDataTable tbody tr');
 
-        // Function to fetch data from a specific page
-        const fetchData = (offset) => {
-            return fetch(`/api/noise/query_noise_data?offset=${offset}&limit=${limit}`)
-                .then(response => response.json())
-                .then(data => {
-                    allLogs.push(...data.query_noise.data);
-                    return data.query_noise.total; // Return total records
-                })
-                .catch(error => {
-                    console.error("Error fetching data:", error);
-                    alert("Error fetching data. Please try again.");
-                    throw error; // Rethrow the error to be handled in the calling code
-                });
-        };
-
-        // Fetch all pages dynamically
-        let totalRecords;
-        let offset = 0;
-        do {
-            totalRecords = await fetchData(offset);
-            offset += limit; // Increment the offset for the next page
-        } while (offset < totalRecords); // Continue until all records are fetched
-
-        // After fetching all data, generate CSV
-        generateCSV(allLogs);
-
-        // Hide the spinner
-        spinner.style.display = "none";
+    tableRows.forEach(row => {
+        const rowData = {};
+        const cells = row.querySelectorAll('td');
+        rowData.Location = cells[0]?.textContent || '';
+        rowData.Type = cells[1]?.textContent || '';
+        rowData.StartDate = cells[2]?.textContent || '';
+        rowData.EndDate = cells[3]?.textContent || '';
+        rowData.LAeq = cells[4]?.textContent || '';
+        rowData.LA90 = cells[5]?.textContent || '';
+        rowData.LA10 = cells[6]?.textContent || '';
+        rowData.LAFMax = cells[7]?.textContent || '';
+        rowData.LAFMin = cells[8]?.textContent || '';
+        allTableData.push(rowData);
     });
 
-    // Function to generate CSV and trigger download
-    function generateCSV(data) {
-        let csvContent = "Start Date,End Date,LAeq,LA90,LA10,LAFMax,LAFMin\n"; // CSV Header
+    // document.getElementById('exportButton').addEventListener('click', function () {
+    //     const exportButton = this;
+    //     const spinner = document.getElementById('spinner');
 
-        // Loop through each record and format it
-        data.forEach(record => {
-            const row = [
-                `"${record.start_date_time}"`,
-                `"${record.end_date_time}"`,
-                `"${record.LAeq}"`,
-                `"${record.LA90}"`,
-                `"${record.LA10}"`,
-                `"${record.LAFMax}"`,
-                `"${record.LAFMin}"`
-            ];
-            csvContent += row.join(",") + "\n"; // Add each record as a new line in the CSV
-        });
+    //     // Show spinner and disable button
+    //     exportButton.disabled = true;
+    //     spinner.classList.remove('d-none');
 
-        // Create a temporary link element for downloading the CSV
-        const downloadLink = document.createElement("a");
-        const blob = new Blob([csvContent], { type: "text/csv" });
-        const url = URL.createObjectURL(blob);
+    //     const table = document.getElementById('noiseDataTable');
+    //     const rows = Array.from(table.querySelectorAll('tr'));
+    //     const csvContent = rows.map(row => {
+    //         const cells = row.querySelectorAll('th, td');
+    //         return Array.from(cells).map(cell => '"' + cell.textContent.replace(/"/g, '""') + '"').join(',');
+    //     }).join('\n');
 
-        downloadLink.href = url;
-        downloadLink.download = "allData.csv"; // CSV file name
-        downloadLink.click(); // Trigger download
-    }
+    //     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    //     const link = document.createElement('a');
+    //     link.href = URL.createObjectURL(blob);
+    //     link.download = 'table_export.csv';
+    //     link.style.display = 'none';
+    //     document.body.appendChild(link);
+    //     link.click();
+    //     document.body.removeChild(link);
+
+    //     // Hide spinner and enable button
+    //     setTimeout(() => {
+    //         spinner.classList.add('d-none');
+    //         exportButton.disabled = false;
+    //     }, 1000); // Add a slight delay to ensure download is complete
+    // });
+
+    // document.getElementById('exportAllButton').addEventListener('click', function () {
+    //     const exportAllButton = this;
+    //     const spinnerAll = document.getElementById('spinnerAll');
+
+    //     // Show spinner and disable button
+    //     exportAllButton.disabled = true;
+    //     spinnerAll.classList.remove('d-none');
+
+    //     const csvContent = allTableData.map(row => {
+    //         return Object.values(row).map(value => '"' + String(value).replace(/"/g, '""') + '"').join(',');
+    //     }).join('\n');
+
+    //     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    //     const link = document.createElement('a');
+    //     link.href = URL.createObjectURL(blob);
+    //     link.download = 'all_data_export.csv';
+    //     link.style.display = 'none';
+    //     document.body.appendChild(link);
+    //     link.click();
+    //     document.body.removeChild(link);
+
+    //     // Hide spinner and enable button
+    //     setTimeout(() => {
+    //         spinnerAll.classList.add('d-none');
+    //         exportAllButton.disabled = false;
+    //     }, 1000); // Add a slight delay to ensure download is complete
+    // });
+
+//     document.getElementById('exportAllButton').addEventListener('click', async function () {
+//     const exportAllButton = this;
+//     const spinnerAll = document.getElementById('spinnerAll');
+
+//     // Show spinner and disable button
+//     exportAllButton.disabled = true;
+//     spinnerAll.classList.remove('d-none');
+
+//     try {
+//         // Fetch all data directly from the API endpoint
+//         const response = await fetch('/api/noise/query_noise_data');
+//         const data = await response.json();
+
+//         // Convert JSON data to CSV
+//         const csvContent = data.map(row => {
+//             return Object.values(row).map(value => `"${String(value).replace(/"/g, '""')}"`).join(',');
+//         }).join('\n');
+
+//         // Create and download the CSV
+//         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+//         const link = document.createElement('a');
+//         link.href = URL.createObjectURL(blob);
+//         link.download = 'all_data_export.csv';
+//         document.body.appendChild(link);
+//         link.click();
+//         document.body.removeChild(link);
+//     } catch (error) {
+//         console.error('Error exporting data:', error);
+//     } finally {
+//         // Hide spinner and enable button
+//         spinnerAll.classList.add('d-none');
+//         exportAllButton.disabled = false;
+//     }
+// });
+
+    
 </script>
+
 
 
 

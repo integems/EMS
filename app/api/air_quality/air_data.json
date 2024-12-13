@@ -1,0 +1,240 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "offset"
+      },
+      {
+        "type": "text",
+        "name": "limit"
+      },
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ]
+  },
+  "exec": {
+    "steps": [
+      "SecurityProviders/ems_security_provider",
+      {
+        "name": "",
+        "module": "auth",
+        "action": "restrict",
+        "options": {
+          "provider": "ems_security_provider",
+          "loginUrl": "/login",
+          "forbiddenUrl": "/forbidden"
+        },
+        "disabled": true
+      },
+      {
+        "name": "query",
+        "module": "dbconnector",
+        "action": "paged",
+        "options": {
+          "connection": "conn_db",
+          "sql": {
+            "type": "select",
+            "columns": [
+              {
+                "table": "air_quality_monitoring_data",
+                "column": "*"
+              },
+              {
+                "table": "monitoring_location",
+                "column": "org_specific_monitoring_id"
+              },
+              {
+                "table": "monitoring_location",
+                "column": "description"
+              },
+              {
+                "table": "location_type",
+                "column": "location_type"
+              },
+              {
+                "table": "location_type",
+                "column": "location_type_id"
+              }
+            ],
+            "params": [],
+            "table": {
+              "name": "air_quality_monitoring_data"
+            },
+            "primary": "air_id",
+            "joins": [
+              {
+                "table": "monitoring_location",
+                "column": "*",
+                "type": "INNER",
+                "clauses": {
+                  "condition": "AND",
+                  "rules": [
+                    {
+                      "table": "monitoring_location",
+                      "column": "location_id",
+                      "operation": "=",
+                      "operator": "equal",
+                      "value": {
+                        "table": "air_quality_monitoring_data",
+                        "column": "location_id",
+                        "type": "number"
+                      }
+                    }
+                  ]
+                },
+                "primary": "location_id"
+              },
+              {
+                "table": "location_type",
+                "column": "*",
+                "type": "LEFT",
+                "clauses": {
+                  "condition": "AND",
+                  "rules": [
+                    {
+                      "table": "location_type",
+                      "column": "location_type_id",
+                      "operator": "equal",
+                      "operation": "=",
+                      "value": {
+                        "table": "monitoring_location",
+                        "column": "location_type_id"
+                      }
+                    }
+                  ]
+                },
+                "primary": "location_type_id"
+              }
+            ],
+            "query": "select `air_quality_monitoring_data`.*, `monitoring_location`.`org_specific_monitoring_id`, `monitoring_location`.`description`, `location_type`.`location_type`, `location_type`.`location_type_id` from `air_quality_monitoring_data` inner join `monitoring_location` on `monitoring_location`.`location_id` = `air_quality_monitoring_data`.`location_id` left join `location_type` on `location_type`.`location_type_id` = `monitoring_location`.`location_type_id`"
+          }
+        },
+        "output": true,
+        "meta": [
+          {
+            "name": "offset",
+            "type": "number"
+          },
+          {
+            "name": "limit",
+            "type": "number"
+          },
+          {
+            "name": "total",
+            "type": "number"
+          },
+          {
+            "name": "page",
+            "type": "object",
+            "sub": [
+              {
+                "name": "offset",
+                "type": "object",
+                "sub": [
+                  {
+                    "name": "first",
+                    "type": "number"
+                  },
+                  {
+                    "name": "prev",
+                    "type": "number"
+                  },
+                  {
+                    "name": "next",
+                    "type": "number"
+                  },
+                  {
+                    "name": "last",
+                    "type": "number"
+                  }
+                ]
+              },
+              {
+                "name": "current",
+                "type": "number"
+              },
+              {
+                "name": "total",
+                "type": "number"
+              }
+            ]
+          },
+          {
+            "name": "data",
+            "type": "array",
+            "sub": [
+              {
+                "type": "number",
+                "name": "air_id"
+              },
+              {
+                "type": "datetime",
+                "name": "date"
+              },
+              {
+                "type": "number",
+                "name": "location_id"
+              },
+              {
+                "type": "number",
+                "name": "CO_ppm"
+              },
+              {
+                "type": "number",
+                "name": "NO2_ppm"
+              },
+              {
+                "type": "number",
+                "name": "PM10_ppm"
+              },
+              {
+                "type": "number",
+                "name": "PM2_5_ppm"
+              },
+              {
+                "type": "number",
+                "name": "RH_percentage"
+              },
+              {
+                "type": "number",
+                "name": "SO2_ppm"
+              },
+              {
+                "type": "number",
+                "name": "temp_C"
+              },
+              {
+                "type": "datetime",
+                "name": "date_created"
+              },
+              {
+                "type": "text",
+                "name": "org_specific_monitoring_id"
+              },
+              {
+                "type": "text",
+                "name": "description"
+              },
+              {
+                "type": "text",
+                "name": "location_type"
+              },
+              {
+                "type": "number",
+                "name": "location_type_id"
+              }
+            ]
+          }
+        ],
+        "outputType": "object"
+      }
+    ]
+  }
+}

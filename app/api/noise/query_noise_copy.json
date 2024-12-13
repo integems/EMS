@@ -70,22 +70,26 @@
               {
                 "table": "noise_monitoring_data",
                 "column": "*",
-                "field": "noise_monitoring_data.*"
+                "field": "noise_monitoring_data.*",
+                "recid": 1
               },
               {
                 "table": "monitoring_location",
                 "column": "org_specific_monitoring_id",
-                "field": "monitoring_location.org_specific_monitoring_id"
+                "field": "monitoring_location.org_specific_monitoring_id",
+                "recid": 2
               },
               {
                 "table": "location_type",
                 "column": "location_type",
-                "field": "location_type.location_type"
+                "field": "location_type.location_type",
+                "recid": 3
               },
               {
                 "table": "monitoring_location",
                 "column": "description",
-                "field": "monitoring_location.description"
+                "field": "monitoring_location.description",
+                "recid": 4
               }
             ],
             "table": {

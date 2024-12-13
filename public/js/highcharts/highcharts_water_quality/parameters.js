@@ -582,7 +582,7 @@ const updateStatus = (filteredData, averages) => {
     // Add locations if there aren't too many
     if (totalLocations <= 5) {
         const locationsList = Object.entries(averages)
-            .map(([id, values]) => `${id} (${values.description})`)
+            .map(([id]) => `${id}`)
             .join(', ');
         statusText += `<br><strong>Locations:</strong> ${locationsList}`;
     }
@@ -607,7 +607,7 @@ const renderCharts = (averages) => {
 
     Object.entries(parameters).forEach(([param, label]) => {
         const chartData = Object.entries(averages).map(([location, values]) => ({
-            name: `${location} - ${values.description}`,
+            name: `${location}`,
             y: values[param]
         }));
 

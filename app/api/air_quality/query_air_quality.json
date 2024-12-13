@@ -36,6 +36,14 @@
               {
                 "table": "air_quality_monitoring_data",
                 "column": "*"
+              },
+              {
+                "table": "monitoring_location",
+                "column": "org_specific_monitoring_id"
+              },
+              {
+                "table": "location_type",
+                "column": "location_type"
               }
             ],
             "params": [],
@@ -43,8 +51,53 @@
               "name": "air_quality_monitoring_data"
             },
             "primary": "air_id",
-            "joins": [],
-            "query": "select * from `air_quality_monitoring_data`"
+            "joins": [
+              {
+                "table": "monitoring_location",
+                "column": "*",
+                "type": "INNER",
+                "clauses": {
+                  "condition": "AND",
+                  "rules": [
+                    {
+                      "table": "monitoring_location",
+                      "column": "location_id",
+                      "operation": "=",
+                      "operator": "equal",
+                      "value": {
+                        "table": "air_quality_monitoring_data",
+                        "column": "location_id",
+                        "type": "number"
+                      }
+                    }
+                  ]
+                },
+                "primary": "location_id"
+              },
+              {
+                "table": "location_type",
+                "column": "*",
+                "type": "INNER",
+                "clauses": {
+                  "condition": "AND",
+                  "rules": [
+                    {
+                      "table": "location_type",
+                      "column": "location_type_id",
+                      "operation": "=",
+                      "operator": "equal",
+                      "value": {
+                        "table": "monitoring_location",
+                        "column": "location_type_id",
+                        "type": "number"
+                      }
+                    }
+                  ]
+                },
+                "primary": "location_type_id"
+              }
+            ],
+            "query": "select `air_quality_monitoring_data`.*, `monitoring_location`.`org_specific_monitoring_id`, `location_type`.`location_type` from `air_quality_monitoring_data` inner join `monitoring_location` on `monitoring_location`.`location_id` = `air_quality_monitoring_data`.`location_id` inner join `location_type` on `location_type`.`location_type_id` = `monitoring_location`.`location_type_id`"
           }
         },
         "output": true,
@@ -92,6 +145,14 @@
           {
             "type": "datetime",
             "name": "date_created"
+          },
+          {
+            "type": "text",
+            "name": "org_specific_monitoring_id"
+          },
+          {
+            "type": "text",
+            "name": "location_type"
           }
         ],
         "outputType": "array"
