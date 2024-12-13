@@ -74,5 +74,13 @@ dmx.config({
         "name": "m_location"
       }
     ]
+  },
+  "airdata": {
+    "query": [
+      {
+        "type": "text",
+        "name": "Offset"
+      }
+    ]
   }
 });

@@ -95,25 +95,26 @@
                                 </tbody>
                             </table>
                         </div>
+                        <ul class="pagination" dmx-populate="sc_noise_data.data.query_noise" dmx-state="query_noise" dmx-offset="Offset" dmx-generator="bs5paging">
+                            <li class="page-item" dmx-class:disabled="sc_noise_data.data.query_noise.page.current == 1" aria-label="First">
+                                <a href="javascript:void(0)" class="page-link" dmx-on:click="query_noise.set('Offset',sc_noise_data.data.query_noise.page.offset.first)"><span aria-hidden="true">&lsaquo;&lsaquo;</span></a>
+                            </li>
+                            <li class="page-item" dmx-class:disabled="sc_noise_data.data.query_noise.page.current == 1" aria-label="Previous">
+                                <a href="javascript:void(0)" class="page-link" dmx-on:click="query_noise.set('Offset',sc_noise_data.data.query_noise.page.offset.prev)"><span aria-hidden="true">&lsaquo;</span></a>
+                            </li>
+                            <li class="page-item" dmx-class:active="title == sc_noise_data.data.query_noise.page.current" dmx-class:disabled="!active" dmx-repeat="sc_noise_data.data.query_noise.getServerConnectPagination(2,1,'...')">
+                                <a href="javascript:void(0)" class="page-link" dmx-on:click="query_noise.set('Offset',(page-1)*sc_noise_data.data.query_noise.limit)">{{title}}</a>
+                            </li>
+                            <li class="page-item" dmx-class:disabled="sc_noise_data.data.query_noise.page.current ==  sc_noise_data.data.query_noise.page.total" aria-label="Next">
+                                <a href="javascript:void(0)" class="page-link" dmx-on:click="query_noise.set('Offset',sc_noise_data.data.query_noise.page.offset.next)"><span aria-hidden="true">&rsaquo;</span></a>
+                            </li>
+                            <li class="page-item" dmx-class:disabled="sc_noise_data.data.query_noise.page.current ==  sc_noise_data.data.query_noise.page.total" aria-label="Last">
+                                <a href="javascript:void(0)" class="page-link" dmx-on:click="query_noise.set('Offset',sc_noise_data.data.query_noise.page.offset.last)"><span aria-hidden="true">&rsaquo;&rsaquo;</span></a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-                <ul class="pagination" dmx-populate="sc_noise_data.data.query_noise" dmx-state="query_noise" dmx-offset="Offset" dmx-generator="bs5paging">
-                    <li class="page-item" dmx-class:disabled="sc_noise_data.data.query_noise.page.current == 1" aria-label="First">
-                        <a href="javascript:void(0)" class="page-link" dmx-on:click="query_noise.set('Offset',sc_noise_data.data.query_noise.page.offset.first)"><span aria-hidden="true">&lsaquo;&lsaquo;</span></a>
-                    </li>
-                    <li class="page-item" dmx-class:disabled="sc_noise_data.data.query_noise.page.current == 1" aria-label="Previous">
-                        <a href="javascript:void(0)" class="page-link" dmx-on:click="query_noise.set('Offset',sc_noise_data.data.query_noise.page.offset.prev)"><span aria-hidden="true">&lsaquo;</span></a>
-                    </li>
-                    <li class="page-item" dmx-class:active="title == sc_noise_data.data.query_noise.page.current" dmx-class:disabled="!active" dmx-repeat="sc_noise_data.data.query_noise.getServerConnectPagination(2,1,'...')">
-                        <a href="javascript:void(0)" class="page-link" dmx-on:click="query_noise.set('Offset',(page-1)*sc_noise_data.data.query_noise.limit)">{{title}}</a>
-                    </li>
-                    <li class="page-item" dmx-class:disabled="sc_noise_data.data.query_noise.page.current ==  sc_noise_data.data.query_noise.page.total" aria-label="Next">
-                        <a href="javascript:void(0)" class="page-link" dmx-on:click="query_noise.set('Offset',sc_noise_data.data.query_noise.page.offset.next)"><span aria-hidden="true">&rsaquo;</span></a>
-                    </li>
-                    <li class="page-item" dmx-class:disabled="sc_noise_data.data.query_noise.page.current ==  sc_noise_data.data.query_noise.page.total" aria-label="Last">
-                        <a href="javascript:void(0)" class="page-link" dmx-on:click="query_noise.set('Offset',sc_noise_data.data.query_noise.page.offset.last)"><span aria-hidden="true">&rsaquo;&rsaquo;</span></a>
-                    </li>
-                </ul>
+
 
             </div>
         </div>

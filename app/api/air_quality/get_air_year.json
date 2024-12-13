@@ -1,0 +1,33 @@
+{
+  "name": "query",
+  "module": "dbconnector",
+  "action": "select",
+  "options": {
+    "connection": "conn_db",
+    "sql": {
+      "type": "select",
+      "columns": [
+        {
+          "table": "air_quality_monitoring_data",
+          "column": "date"
+        }
+      ],
+      "params": [],
+      "table": {
+        "name": "air_quality_monitoring_data"
+      },
+      "primary": "air_id",
+      "joins": [],
+      "query": "select `date` from `air_quality_monitoring_data`"
+    }
+  },
+  "output": true,
+  "meta": [
+    {
+      "type": "datetime",
+      "name": "date"
+    }
+  ],
+  "outputType": "array",
+  "type": "dbconnector_select"
+}

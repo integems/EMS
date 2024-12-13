@@ -103,6 +103,21 @@
       "path": "/air-insights",
       "page": "air-insights",
       "layout": "portal_layout"
+    },
+    {
+      "path": "/air-details",
+      "page": "air-details",
+      "layout": "main"
+    },
+    {
+      "path": "/noise-details",
+      "page": "noise-details",
+      "layout": "main"
+    },
+    {
+      "path": "/water-details",
+      "page": "water-details",
+      "layout": "main"
     }
   ],
   "layouts": {

@@ -90,5 +90,17 @@
   "air-insights.ejs": {
     "layoutPage": "portal_layout",
     "description": ""
+  },
+  "air-details.ejs": {
+    "layoutPage": "main",
+    "description": ""
+  },
+  "noise-details.ejs": {
+    "layoutPage": "main",
+    "description": ""
+  },
+  "water-details.ejs": {
+    "layoutPage": "main",
+    "description": ""
   }
 }

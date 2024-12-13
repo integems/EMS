@@ -16,6 +16,14 @@
       {
         "type": "text",
         "name": "dir"
+      },
+      {
+        "type": "text",
+        "name": "type"
+      },
+      {
+        "type": "text",
+        "name": "location"
       }
     ]
   },
@@ -63,7 +71,22 @@
                 "column": "location_type_id"
               }
             ],
-            "params": [],
+            "params": [
+              {
+                "operator": "contains",
+                "type": "expression",
+                "name": ":P1",
+                "value": "{{$_GET.location}}",
+                "test": ""
+              },
+              {
+                "operator": "contains",
+                "type": "expression",
+                "name": ":P2",
+                "value": "{{$_GET.type}}",
+                "test": ""
+              }
+            ],
             "table": {
               "name": "air_quality_monitoring_data"
             },
@@ -113,7 +136,62 @@
                 "primary": "location_type_id"
               }
             ],
-            "query": "select `air_quality_monitoring_data`.*, `monitoring_location`.`org_specific_monitoring_id`, `monitoring_location`.`description`, `location_type`.`location_type`, `location_type`.`location_type_id` from `air_quality_monitoring_data` inner join `monitoring_location` on `monitoring_location`.`location_id` = `air_quality_monitoring_data`.`location_id` left join `location_type` on `location_type`.`location_type_id` = `monitoring_location`.`location_type_id`"
+            "query": "select `air_quality_monitoring_data`.*, `monitoring_location`.`org_specific_monitoring_id`, `monitoring_location`.`description`, `location_type`.`location_type`, `location_type`.`location_type_id` from `air_quality_monitoring_data` inner join `monitoring_location` on `monitoring_location`.`location_id` = `air_quality_monitoring_data`.`location_id` left join `location_type` on `location_type`.`location_type_id` = `monitoring_location`.`location_type_id` where (`monitoring_location`.`org_specific_monitoring_id` like ? and `location_type`.`location_type` like ?)",
+            "wheres": {
+              "condition": "AND",
+              "rules": [
+                {
+                  "condition": "AND",
+                  "rules": [
+                    {
+                      "id": "monitoring_location.org_specific_monitoring_id",
+                      "field": "monitoring_location.org_specific_monitoring_id",
+                      "type": "string",
+                      "operator": "contains",
+                      "value": "{{$_GET.location}}",
+                      "data": {
+                        "table": "monitoring_location",
+                        "column": "org_specific_monitoring_id",
+                        "type": "text",
+                        "columnObj": {
+                          "type": "string",
+                          "default": "",
+                          "maxLength": 255,
+                          "primary": false,
+                          "nullable": true,
+                          "name": "org_specific_monitoring_id"
+                        }
+                      },
+                      "operation": "LIKE"
+                    },
+                    {
+                      "id": "location_type.location_type",
+                      "field": "location_type.location_type",
+                      "type": "string",
+                      "operator": "contains",
+                      "value": "{{$_GET.type}}",
+                      "data": {
+                        "table": "location_type",
+                        "column": "location_type",
+                        "type": "text",
+                        "columnObj": {
+                          "type": "string",
+                          "default": "",
+                          "maxLength": 255,
+                          "primary": false,
+                          "nullable": true,
+                          "name": "location_type"
+                        }
+                      },
+                      "operation": "LIKE"
+                    }
+                  ],
+                  "conditional": null
+                }
+              ],
+              "conditional": null,
+              "valid": true
+            }
           }
         },
         "output": true,

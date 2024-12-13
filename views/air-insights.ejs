@@ -1,2 +1,137 @@
-<!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="airinsights" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" -->
+<!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="airinsights" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Navigation:{}}" -->
+
+<dmx-serverconnect id="sc_all_noise_locations" url="/api/location/noise_locations" dmx-on:page-load="true"></dmx-serverconnect>
 <meta name="ac:route" content="/air-insights">
+
+<section class="mb-3 no-pdf">
+    <div class="row text-end">
+
+        <div class="col text-start">
+            <h1 class="fw-normal fs-2">Noise Data Insights&nbsp;</h1>
+            <div class="breadcrumb">
+                <a class="breadcrumb-item breadcrumb-link fs-5 fw-light" href="/dashboard">Dashboard</a>
+                <a class="breadcrumb-item breadcrumb-link fs-5 fw-light" href="/noise">Noise</a>
+                <a class="breadcrumb-item breadcrumb-link fs-5 fw-bold" href="/noise" dmx-bind:href="">{{var_datetime.datetime.getYear(var_datetime.datetime)}}</a>
+            </div>
+        </div>
+        <div class="col">
+        </div>
+    </div>
+</section>
+<section class="mb-3 no-pdf">
+    <div class="row">
+        <div class="col">
+            <select id="select_year" class="form-select" name="start_date_time">
+
+            </select>
+        </div>
+
+        <div class="col">
+            <select id="select_monitoring_location" class="form-select" name="location_id" dmx-bind:options="sc_all_noise_locations.data.noise_locations" optiontext="org_specific_monitoring_id+' - '+description" optionvalue="location_id" dmx-on:changed="">
+                <option value="">Select Monitoring Location</option>
+            </select>
+
+        </div>
+
+        <div class="col">
+            <button id="exportPDF" class="btn btn-primary">
+                <i class="fas fa-file-pdf"></i> Export as PDF
+            </button>
+        </div>
+    </div>
+</section>
+
+
+
+<div class="exportPage">
+
+    <section>
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <div id="monthly_column_chart" class="h-auto"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <div id="quarterly_column_chart" class="h-auto"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <!-- <label for="orgSelect">Select Monitoring Location:</label>
+          <select id="orgSelect">
+
+          </select> -->
+                        <div id="time_series_chart_all" class="h-auto"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<script src="/js/highcharts/highcharts_air_quality/main.js"></script>
+
+<script>
+    document.getElementById('exportPDF').addEventListener('click', function() {
+    // Show loading state
+    const button = this;
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating PDF...';
+    button.disabled = true;
+
+    // Get the content to export
+    const content = document.querySelector('.exportPage');
+
+    // Configure PDF options
+    const opt = {
+        margin: [10, 10],
+        filename: 'noise-charts.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { 
+            scale: 1,
+            useCORS: true,
+            logging: false
+        },
+        jsPDF: { 
+            unit: 'mm', 
+            format: 'a4', 
+            orientation: 'portrait' 
+        }
+    };
+
+    // Generate PDF
+    html2pdf().set(opt)
+        .from(content)
+        .save()
+        .then(function() {
+            // Restore button state
+            button.innerHTML = originalText;
+            button.disabled = false;
+        })
+        .catch(function(error) {
+            // Handle errors
+            console.error('PDF generation failed:', error);
+            button.innerHTML = originalText;
+            button.disabled = false;
+            alert('Failed to generate PDF. Please try again.');
+        });
+});
+</script>

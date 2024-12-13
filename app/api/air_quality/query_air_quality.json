@@ -42,6 +42,10 @@
                 "column": "org_specific_monitoring_id"
               },
               {
+                "table": "monitoring_location",
+                "column": "description"
+              },
+              {
                 "table": "location_type",
                 "column": "location_type"
               }
@@ -97,7 +101,7 @@
                 "primary": "location_type_id"
               }
             ],
-            "query": "select `air_quality_monitoring_data`.*, `monitoring_location`.`org_specific_monitoring_id`, `location_type`.`location_type` from `air_quality_monitoring_data` inner join `monitoring_location` on `monitoring_location`.`location_id` = `air_quality_monitoring_data`.`location_id` inner join `location_type` on `location_type`.`location_type_id` = `monitoring_location`.`location_type_id`"
+            "query": "select `air_quality_monitoring_data`.*, `monitoring_location`.`org_specific_monitoring_id`, `monitoring_location`.`description`, `location_type`.`location_type` from `air_quality_monitoring_data` inner join `monitoring_location` on `monitoring_location`.`location_id` = `air_quality_monitoring_data`.`location_id` inner join `location_type` on `location_type`.`location_type_id` = `monitoring_location`.`location_type_id`"
           }
         },
         "output": true,
@@ -149,6 +153,10 @@
           {
             "type": "text",
             "name": "org_specific_monitoring_id"
+          },
+          {
+            "type": "text",
+            "name": "description"
           },
           {
             "type": "text",
