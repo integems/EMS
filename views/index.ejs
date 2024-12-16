@@ -180,27 +180,25 @@
             </div>
         </div>
         <!-- Footert -->
-        <footer class="py-1 my-2">
-            <ul class="nav justify-content-center border-bottom pb-3 mb-3">
-                <!-- <li class="nav-item">
-            <a href="#" class="nav-link px-2 text-body-secondary">Home</a>
-          </li> -->
-            </ul>
-            <p class="text-center text-muted">
+        <footer class="py-4 border-top">
+            <p class="text-center text-muted mb-0">
                 &copy; <span id="currentYear"></span> Environmental Monitoring System.
-                Developed by
-                <a href="https://www.integemsgroup.com" class="text-decoration-none">INTEGEMS</a>
+                Developed with care by
+                <a href="https://www.integemsgroup.com" class="text-decoration-none">INTEGEMS</a>.
             </p>
         </footer>
     </div>
+    <script>
+        // Update the footer year dynamically
+        document.getElementById("currentYear").textContent = new Date().getFullYear();
+        </script>
+        
+        <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> -->
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
+        <script src="assets/js/bootstrap.js"></script>
 </body>
 
-
-
-<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> -->
-<!-- Core theme JS-->
-<script src="js/scripts.js"></script>
-<script src="assets/js/bootstrap.js"></script>
 <!-- <script src="assets/js/app.js"></script> -->
 
 <meta name="ac:route" content="/">
