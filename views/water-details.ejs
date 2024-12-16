@@ -5,8 +5,8 @@
     <!-- Header -->
     <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
         <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-            <img src="/assets/images/index_photos/gold-lion-logo-removebg-preview.png" alt="Gold Lion Logo" class="me-2" width="35" height="35">
-            <span class="fs-4">INTEGEMS</span>
+            <img alt="Gold Lion Logo" class="me-2" width="35" height="35" dmx-bind:src="sc_security_app_data.data.query.where(`field_name`, 'logo', '==')[0].field_value">
+            <span class="fs-4" dmx-text="sc_security_app_data.data.query.where('field_name', '==', 'organisation_name')[0].field_value"></span>
         </a>
 
         <ul class="nav nav-pills">

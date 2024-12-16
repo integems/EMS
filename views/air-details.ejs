@@ -5,8 +5,8 @@
     <!-- Header -->
     <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom ">
         <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-            <img src="/assets/images/index_photos/gold-lion-logo-removebg-preview.png" alt="Gold Lion Logo" class="me-2" width="35" height="35">
-            <span class="fs-4">INTEGEMS</span>
+            <img alt="Gold Lion Logo" class="me-2" width="35" height="35" dmx-bind:src="sc_security_app_data.data.query.where(`field_name`, 'logo', '==')[0].field_value">
+            <span class="fs-4" dmx-text="sc_security_app_data.data.query.where('field_name', '==', 'organisation_name')[0].field_value"></span>
         </a>
 
         <ul class="nav nav-pills">
@@ -32,11 +32,11 @@
         <div class="col-md-6">
             <h1 class="display-5 fw-bold mt-3 mb-3 text-primary">Air Quality Monitoring</h1>
             <p class="lead">
-                Air quality is a critical aspect of environmental health. INTEGEMS employs advanced methods to monitor 
+                Air quality is a critical aspect of environmental health. INTEGEMS employs advanced methods to monitor
                 and analyze pollutants such as particulate matter (PM10, PM2.5, PM1), ozone, nitrogen dioxide, and sulfur dioxide.
                 By understanding air conditions, we help mitigate pollution and foster healthier ecosystems and communities.
             </p>
-          
+
         </div>
     </div>
 
@@ -44,68 +44,68 @@
     <div class="row my-5">
         <div class="col-12">
             <p class="lead">
-                Our comprehensive monitoring and mitigation strategies aim to improve air quality and reduce the burden of 
+                Our comprehensive monitoring and mitigation strategies aim to improve air quality and reduce the burden of
                 pollution on public health and the environment.
             </p>
             <div class="row gx-2">
                 <div class="col-md-6">
-                    <div class="card p-4">      
+                    <div class="card p-4">
                         <h2 class="text-center fw-bold text-primary">
                             Real-Time Data Collection
                         </h2>
                         <p class="lead">
-                            Using high-tech sensors to measure pollutants such as particulate 
+                            Using high-tech sensors to measure pollutants such as particulate
                             matter (PM10, PM2.5, PM1), aerosols, and gaseous substances in real-time.
                         </p>
                     </div>
                 </div>
-            
+
                 <div class="col-md-6">
-                    <div class="card p-4">      
+                    <div class="card p-4">
                         <h2 class="text-center fw-bold text-primary">
                             Source Identification
                         </h2>
                         <p class="lead">
-                            Analyzing pollution sources like vehicular emissions, industrial 
+                            Analyzing pollution sources like vehicular emissions, industrial
                             discharges, and natural contributors such as wildfires.
                         </p>
                     </div>
                 </div>
-            
+
                 <div class="col-md-6">
-                    <div class="card p-4">      
+                    <div class="card p-4">
                         <h2 class="text-center fw-bold text-primary">
                             GIS Integration
                         </h2>
                         <p class="lead">
-                            Employing Geographic Information Systems (GIS) and remote sensing for 
+                            Employing Geographic Information Systems (GIS) and remote sensing for
                             mapping pollution trends and hotspots.
                         </p>
                     </div>
                 </div>
-            
+
                 <div class="col-md-6">
-                    <div class="card p-4">      
+                    <div class="card p-4">
                         <h2 class="text-center fw-bold text-primary">
                             Impact Assessment
                         </h2>
                         <p class="lead">
-                            Evaluating the short- and long-term effects of poor air quality on health, 
+                            Evaluating the short- and long-term effects of poor air quality on health,
                             agriculture, and biodiversity.
                         </p>
                     </div>
                 </div>
             </div>
-    
+
             <h2 class="text-center fw-bold text-primary">Our Mission for Cleaner Air</h2>
             <p class="lead">
-                INTEGEMS is committed to creating cleaner, healthier living spaces through precise air quality monitoring and data-driven solutions. 
-                Leveraging advanced tools like satellite imagery and drone-based surveys, we provide actionable insights to help 
+                INTEGEMS is committed to creating cleaner, healthier living spaces through precise air quality monitoring and data-driven solutions.
+                Leveraging advanced tools like satellite imagery and drone-based surveys, we provide actionable insights to help
                 industries, governments, and communities address air pollution effectively.
             </p>
             <p class="mt-2 lead">
-                Poor air quality is linked to respiratory and cardiovascular diseases, reduced crop yields, and ecosystem disruptions. 
-                With our innovative approach, we aim to balance economic development with environmental sustainability, ensuring 
+                Poor air quality is linked to respiratory and cardiovascular diseases, reduced crop yields, and ecosystem disruptions.
+                With our innovative approach, we aim to balance economic development with environmental sustainability, ensuring
                 everyone breathes cleaner air.
             </p>
         </div>
