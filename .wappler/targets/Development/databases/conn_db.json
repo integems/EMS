@@ -757,7 +757,12 @@
             }
           }
         },
-        "db": {}
+        "db": {
+          "engine": "InnoDB",
+          "schema": "emsdb",
+          "collation": "utf8mb4_general_ci",
+          "system_versioned": false
+        }
       }
     },
     "views": {},

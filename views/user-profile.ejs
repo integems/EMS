@@ -1,2 +1,23 @@
-<!-- Wappler include head-page="layouts/main" is="dmx-app" id="userprofile" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" -->
+<!-- Wappler include head-page="layouts/main" is="dmx-app" id="userprofile" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" components="{dmxFormRepeat:{}}" -->
+<dmx-serverconnect id="serverconnect_list_users" url="/api/users/sf_list_users"></dmx-serverconnect>
+<div class="mt-4 container-fluid">
+    <div class="row row-cols-6 mt-3 mb-3 ms-2 me-2" is="dmx-repeat" id="formRepeat1" dmx-bind:items="1" dmx-bind:repeat="serverconnect_list_users.data.query">
+        <div class="pt-3 pb-3 col-2">
+            <div class="card border-1 border-primary text-center h-100 w-auto">
+
+                <div class="card-body w-auto">
+                    <img class="card-img-top h-50 img-thumbnail rounded-0 w-75" alt="Card image cap" src="/assets/profile.png">
+                    <p class="card-title fw-bold">First Name: {{firstname}}</p>
+                    <p class="card-text fw-bold">Last Name:&nbsp; {{lastname}}</p>
+                    <p class="card-text fw-bold">
+                        <font color="#7c8db5"><span style="font-size: 14px;">Email: {{email}}</span></font>
+                    </p>
+                    <p class="card-text fw-bold">
+                        <font color="#7c8db5"><span style="font-size: 14px;">Role: {{role}}</span></font>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <meta name="ac:route" content="/user-profile">

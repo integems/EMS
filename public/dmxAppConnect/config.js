@@ -82,5 +82,28 @@ dmx.config({
         "name": "Offset"
       }
     ]
+  },
+  "userprofile": {
+    "formRepeat1": {
+      "meta": [
+        {
+          "type": "text",
+          "name": "firstname"
+        },
+        {
+          "type": "text",
+          "name": "lastname"
+        },
+        {
+          "type": "text",
+          "name": "email"
+        },
+        {
+          "type": "text",
+          "name": "role"
+        }
+      ],
+      "outputType": "array"
+    }
   }
 });
