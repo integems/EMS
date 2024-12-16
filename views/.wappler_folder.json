@@ -102,5 +102,9 @@
   "water-details.ejs": {
     "layoutPage": "main",
     "description": ""
+  },
+  "add-user.ejs": {
+    "layoutPage": "portal_layout",
+    "description": ""
   }
 }

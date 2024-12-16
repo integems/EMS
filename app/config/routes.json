@@ -118,6 +118,11 @@
       "path": "/water-details",
       "page": "water-details",
       "layout": "main"
+    },
+    {
+      "path": "/add-user",
+      "page": "add-user",
+      "layout": "portal_layout"
     }
   ],
   "layouts": {
