@@ -2,22 +2,120 @@
 <meta name="ac:route" content="/noise-details">
 
 <div class="container">
-    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+    <!-- Header -->
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom ">
         <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-            <img src="/assets/images/index_photos/gold-lion-logo-removebg-preview.png" alt="Gold Lion Logo" class="bi me-2" width="35" height="35">
-            <span class="fs-4">Gold Lion REMA Environmental Database </span>
+            <img src="/assets/images/index_photos/gold-lion-logo-removebg-preview.png" alt="Gold Lion Logo" class="me-2" width="35" height="35">
+            <span class="fs-4">INTEGEMS</span>
         </a>
 
         <ul class="nav nav-pills">
             <li class="nav-item">
-                <a href="#" class="nav-link active" aria-current="page">Home</a>
+                <a href="/" class="nav-link">Home</a>
             </li>
             <li class="nav-item">
                 <a href="#" class="nav-link">Environmental Data</a>
             </li>
             <li class="nav-item">
-                <a href="#" class="btn btn-outline-primary">Login</a>
+                <a href="/login" class="btn btn-outline-primary">Login</a>
             </li>
         </ul>
     </header>
+
+    <!-- Main Content -->
+    <div class="row my-5 align-items-center">
+        <!-- Image -->
+        <div class="col-md-6 text-center">
+            <img src="/assets/images/index_photos/noise.jpg" class="img-fluid rounded shadow" style="max-height: 350px; width: 100%; object-fit: cover;" alt="Noise Pollution">
+        </div>
+        <!-- Paragraph -->
+        <div class="col-md-6">
+            <h1 class="display-5 fw-bold mt-3 mb-3 text-primary">Noise Pollution Monitoring</h1>
+            <p class="lead">
+                Noise pollution affects both human health and the environment. INTEGEMS uses advanced tools and methodologies 
+                to monitor noise levels, analyze data, and develop effective strategies to minimize the adverse impacts 
+                of noise pollution in urban and rural areas.
+            </p>
+        </div>
+    </div>
+
+    <!-- Detailed Section -->
+    <div class="row my-5">
+        <div class="col-12">
+            <p class="lead">
+                Our comprehensive noise monitoring solutions aim to create quieter and healthier environments by addressing 
+                the root causes of noise pollution.
+            </p>
+            <div class="row gx-2">
+                <div class="col-md-6">
+                    <div class="card p-4">      
+                        <h2 class="text-center fw-bold text-primary">Real-Time Monitoring</h2>
+                        <p class="lead">
+                            Continuous measurement of noise levels using advanced sound level meters to track decibel levels 
+                            across various locations.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card p-4">      
+                        <h2 class="text-center fw-bold text-primary">Source Identification</h2>
+                        <p class="lead">
+                            Pinpointing major contributors such as traffic, industrial activities, and construction noise 
+                            through detailed analysis.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card p-4">      
+                        <h2 class="text-center fw-bold text-primary">Impact Assessment</h2>
+                        <p class="lead">
+                            Conducting Environmental and Social Impact Assessments (ESIA) to evaluate the effects of noise 
+                            on communities and ecosystems.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card p-4">      
+                        <h2 class="text-center fw-bold text-primary">Mitigation Strategies</h2>
+                        <p class="lead">
+                            Collaborating with stakeholders to implement noise barriers, zoning regulations, and quieter 
+                            technologies to reduce noise pollution.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="text-center  fw-bold mt-5 text-primary">Our Approach to Reducing Noise Pollution</h2>
+            <p class="lead mt-4">
+                INTEGEMS combines cutting-edge technology with comprehensive environmental assessments to monitor and 
+                mitigate noise pollution. By leveraging Geographic Information Systems (GIS), drone surveys, and 
+                real-time monitoring, we provide actionable insights to reduce noise exposure for communities and 
+                preserve natural habitats.
+            </p>
+            <p class="lead">
+                Noise pollution has far-reaching consequences, including health risks such as hearing loss, stress, 
+                and cardiovascular issues, as well as disrupting wildlife. INTEGEMS is dedicated to creating innovative 
+                solutions that balance development with environmental protection. Learn more about our projects aimed 
+                at fostering peaceful, noise-controlled spaces for a better quality of life.
+            </p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-4 border-top">
+        <p class="text-center text-muted mb-0">
+            &copy; <span id="currentYear"></span> Environmental Monitoring System.
+            Developed with care by
+            <a href="https://www.integemsgroup.com" class="text-decoration-none text-primary">INTEGEMS</a>.
+        </p>
+   
+    </footer>
 </div>
+
+<script>
+    // Update the footer year dynamically
+    document.getElementById("currentYear").textContent = new Date().getFullYear();
+</script>
