@@ -2,22 +2,108 @@
 <meta name="ac:route" content="/water-details">
 
 <div class="container">
+    <!-- Header -->
     <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
         <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-            <img src="/assets/images/index_photos/gold-lion-logo-removebg-preview.png" alt="Gold Lion Logo" class="bi me-2" width="35" height="35">
-            <span class="fs-4">Gold Lion REMA Environmental Database </span>
+            <img src="/assets/images/index_photos/gold-lion-logo-removebg-preview.png" alt="Gold Lion Logo" class="me-2" width="35" height="35">
+            <span class="fs-4">INTEGEMS</span>
         </a>
 
         <ul class="nav nav-pills">
             <li class="nav-item">
-                <a href="#" class="nav-link active" aria-current="page">Home</a>
+                <a href="/" class="nav-link">Home</a>
             </li>
             <li class="nav-item">
                 <a href="#" class="nav-link">Environmental Data</a>
             </li>
             <li class="nav-item">
-                <a href="#" class="btn btn-outline-primary">Login</a>
+                <a href="/login" class="btn btn-outline-primary">Login</a>
             </li>
         </ul>
     </header>
+
+    <!-- Main Content -->
+    <div class="row my-5 align-items-center">
+        <!-- Image -->
+        <div class="col-md-6 text-center">
+            <img src="/assets/images/index_photos/water-body.JPG" class="img-fluid rounded shadow" style="max-height: 350px; width: 100%; object-fit: cover;" alt="Water Quality">
+        </div>
+        <!-- Paragraph -->
+        <div class="col-md-6">
+            <h1 class="display-5 fw-bold mt-3 mb-3 text-primary">Water Quality Monitoring</h1>
+            <p class="lead">
+                Water quality is essential for sustaining life, ecosystems, and human health. INTEGEMS employs innovative
+                methodologies and cutting-edge technologies to safeguard water resources, providing accurate and actionable
+                data to address critical water quality challenges.
+            </p>
+        </div>
+    </div>
+
+    <!-- Detailed Section -->
+    <div class="row my-5">
+        <div class="col-md-6">
+            <div class="card p-4">
+                <h2 class="text-center fw-bold text-primary">Real-Time Monitoring</h2>
+                <p class="lead">
+                    Utilizing multiparameter probes, INTEGEMS continuously measures critical indicators such as pH,
+                    dissolved oxygen, turbidity, and nutrient levels.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card p-4">
+                <h2 class="text-center fw-bold text-primary">Hydrological Insights</h2>
+                <p class="lead">
+                    Tracking streamflow and water depth to manage flood risks and ensure ecosystem health.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card p-4">
+                <h2 class="text-center fw-bold text-primary">Advanced Analysis</h2>
+                <p class="lead">
+                    Combining Geographic Information Systems (GIS) with drone surveys for detailed 2D and 3D water body mapping.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card p-4">
+                <h2 class="text-center fw-bold text-primary">Pollution Solutions</h2>
+                <p class="lead">
+                    Detecting and mitigating contaminants like heavy metals, agricultural runoff, and urban wastewater to restore
+                    clean water access.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="text-center fw-bold text-primary">Our Commitment to Clean Water</h2>
+    <p class="lead mt-4">
+        INTEGEMS recognizes the growing challenges in water resource management due to pollution, climate change, and overexploitation.
+        Our efforts focus on combining science, technology, and innovation to deliver customized solutions for water quality monitoring
+        and restoration. With real-time data collection and advanced analytics, we enable communities, industries, and regulators
+        to make informed decisions and promote sustainable practices.
+    </p>
+    <p class="lead">
+        From pollution detection to habitat restoration, our team works tirelessly to ensure that every drop counts. Learn more about how
+        we’re transforming water monitoring through cutting-edge techniques, empowering a healthier future for everyone.
+    </p>
+
+    <!-- Footer -->
+    <footer class="py-4 border-top">
+        <p class="text-center text-muted mb-0">
+            &copy; <span id="currentYear"></span> Environmental Monitoring System.
+            Developed with care by
+            <a href="https://www.integemsgroup.com" class="text-decoration-none text-primary">INTEGEMS</a>.
+        </p>
+        <p class="text-center text-muted">
+            <a href="/privacy" class="text-decoration-none text-muted">Privacy Policy</a> |
+            <a href="/terms" class="text-decoration-none text-muted">Terms of Use</a>
+        </p>
+    </footer>
 </div>
+
+<script>
+    // Update the footer year dynamically
+    document.getElementById("currentYear").textContent = new Date().getFullYear();
+</script>

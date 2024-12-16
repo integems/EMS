@@ -2,22 +2,130 @@
 <meta name="ac:route" content="/air-details">
 
 <div class="container">
-    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+    <!-- Header -->
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom ">
         <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-            <img src="/assets/images/index_photos/gold-lion-logo-removebg-preview.png" alt="Gold Lion Logo" class="bi me-2" width="35" height="35">
-            <span class="fs-4">Gold Lion REMA Environmental Database </span>
+            <img src="/assets/images/index_photos/gold-lion-logo-removebg-preview.png" alt="Gold Lion Logo" class="me-2" width="35" height="35">
+            <span class="fs-4">INTEGEMS</span>
         </a>
 
         <ul class="nav nav-pills">
             <li class="nav-item">
-                <a href="#" class="nav-link active" aria-current="page">Home</a>
+                <a href="/" class="nav-link">Home</a>
             </li>
             <li class="nav-item">
                 <a href="#" class="nav-link">Environmental Data</a>
             </li>
             <li class="nav-item">
-                <a href="#" class="btn btn-outline-primary">Login</a>
+                <a href="/login" class="btn btn-outline-primary">Login</a>
             </li>
         </ul>
     </header>
+
+    <!-- Main Content -->
+    <div class="row my-5 align-items-center">
+        <!-- Image -->
+        <div class="col-md-6 text-center">
+            <img src="/assets/images/index_photos/air-quality.jpg" class="img-fluid rounded shadow" style="max-height: 350px; width: 100%; object-fit:cover;" alt="Air Quality">
+        </div>
+        <!-- Paragraph -->
+        <div class="col-md-6">
+            <h1 class="display-5 fw-bold mt-3 mb-3">Air Quality Monitoring</h1>
+            <p class="lead">
+                Air quality is a critical aspect of environmental health. INTEGEMS employs advanced methods to monitor 
+                and analyze pollutants such as particulate matter (PM10, PM2.5, PM1), ozone, nitrogen dioxide, and sulfur dioxide.
+                By understanding air conditions, we help mitigate pollution and foster healthier ecosystems and communities.
+            </p>
+          
+        </div>
+    </div>
+
+    <!-- Detailed Section -->
+    <div class="row my-5">
+        <div class="col-12">
+            <p class="lead">
+                Our comprehensive monitoring and mitigation strategies aim to improve air quality and reduce the burden of 
+                pollution on public health and the environment.
+            </p>
+            <div class="row gx-2">
+                <div class="col-md-6">
+                    <div class="card p-4">      
+                        <h2 class="text-center fw-bold text-primary">
+                            Real-Time Data Collection
+                        </h2>
+                        <p class="lead">
+                            Using high-tech sensors to measure pollutants such as particulate 
+                            matter (PM10, PM2.5, PM1), aerosols, and gaseous substances in real-time.
+                        </p>
+                    </div>
+                </div>
+            
+                <div class="col-md-6">
+                    <div class="card p-4">      
+                        <h2 class="text-center fw-bold text-primary">
+                            Source Identification
+                        </h2>
+                        <p class="lead">
+                            Analyzing pollution sources like vehicular emissions, industrial 
+                            discharges, and natural contributors such as wildfires.
+                        </p>
+                    </div>
+                </div>
+            
+                <div class="col-md-6">
+                    <div class="card p-4">      
+                        <h2 class="text-center fw-bold text-primary">
+                            GIS Integration
+                        </h2>
+                        <p class="lead">
+                            Employing Geographic Information Systems (GIS) and remote sensing for 
+                            mapping pollution trends and hotspots.
+                        </p>
+                    </div>
+                </div>
+            
+                <div class="col-md-6">
+                    <div class="card p-4">      
+                        <h2 class="text-center fw-bold text-primary">
+                            Impact Assessment
+                        </h2>
+                        <p class="lead">
+                            Evaluating the short- and long-term effects of poor air quality on health, 
+                            agriculture, and biodiversity.
+                        </p>
+                    </div>
+                </div>
+            </div>
+    
+            <h2 class="text-center fw-bold text-primary">Our Mission for Cleaner Air</h2>
+            <p class="lead">
+                INTEGEMS is committed to creating cleaner, healthier living spaces through precise air quality monitoring and data-driven solutions. 
+                Leveraging advanced tools like satellite imagery and drone-based surveys, we provide actionable insights to help 
+                industries, governments, and communities address air pollution effectively.
+            </p>
+            <p class="mt-2 lead">
+                Poor air quality is linked to respiratory and cardiovascular diseases, reduced crop yields, and ecosystem disruptions. 
+                With our innovative approach, we aim to balance economic development with environmental sustainability, ensuring 
+                everyone breathes cleaner air.
+            </p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-4 border-top">
+        <p class="text-center text-muted mb-0">
+            &copy; <span id="currentYear"></span> Environmental Monitoring System.
+            Developed with care by
+            <a href="https://www.integemsgroup.com" class="text-decoration-none">INTEGEMS</a>.
+        </p>
+        <p class="text-center text-muted">
+            <a href="/privacy" class="text-decoration-none text-muted">Privacy Policy</a> | 
+            <a href="/terms" class="text-decoration-none text-muted">Terms of Use</a>
+        </p>
+    </footer>
 </div>
+
+<script>
+    // Update the footer year dynamically
+    document.getElementById("currentYear").textContent = new Date().getFullYear();
+</script>
