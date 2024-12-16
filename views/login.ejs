@@ -28,10 +28,9 @@
                 <form id="scfLogin" method="post" is="dmx-serverconnect-form" action="/api/security/login" dmx-on:success="browser.goto('/noise')" dmx-on:unauthorized="alertmessage.setTextContent(lastError.response);alertmessage.show()">
                     <div class="row">
                         <div class="col">
-                            <div class="row">
+                            <div class="row mb-4">
                                 <div class="col text-center">
-                                    <a href="/"><img class="img-fluid" width="80px" dmx-bind:src="sc_security_app_data.data.query.where(`field_name`, 'logo', '==')[0].field_value"></a>
-
+                                    <a href="/"><img class="img-fluid" width="70px" dmx-bind:src="sc_security_app_data.data.query.where(`field_name`, 'logo', '==')[0].field_value"></a>
                                 </div>
                             </div>
                             <div class="row mt-2">
@@ -53,22 +52,19 @@
                             </div>
                             <div class="row">
                                 <div class="col ">
-                                    <label for="inp_email" class="col-form-label col-form-label-lg">Email</label>
+                                    <label for="inp_email" class="col-form-label col-form-label-md">Email</label>
                                     <input type="email" id="inp_email" name="email" class="form-control form-control-lg" placeholder="name@domain.com" required="" data-msg-required="email is required.">
                                 </div>
                             </div>
                             <div class="row mt-4">
                                 <div class="col">
-                                    <label for="inp_password" class="col-form-label col-form-label-lg">Password</label>
-
-
+                                    <label for="inp_password" class="col-form-label col-form-label-md">Password</label>
                                     <div class="input-group mb-3">
 
                                         <input type="password" id="inp_password" name="password" class="form-control form-control-lg" placeholder="*************" aria-describedby="basic-addon-password" aria-label="password" required="" data-msg-required="password is required.">
                                         <span class="input-group-text hide-show-password" id="basic-addon-password">
                                             <i class="fas fa-eye-slash"></i>
                                         </span>
-
                                     </div>
                                 </div>
                             </div>
@@ -77,6 +73,7 @@
                                     <small class="text-muted"><a id="forgot_password" href="/forgot-password" internal="true" class="text-decoration-none">Forgot Password?</a></small>
                                 </div>
                             </div>
+                       
                             <div class="row mt-3">
                                 <div class="col">
                                     <button id="login_submit" class="btn btn-primary w-100 text-light btn-lg" type="submit">Login&nbsp;<span class="spinner-border spinner-border-sm" role="status" dmx-show="state.executing"></span></button>

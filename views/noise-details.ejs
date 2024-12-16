@@ -2,22 +2,54 @@
 <meta name="ac:route" content="/noise-details">
 
 <div class="container">
+    <!-- Header -->
     <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
         <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-            <img src="/assets/images/index_photos/gold-lion-logo-removebg-preview.png" alt="Gold Lion Logo" class="bi me-2" width="35" height="35">
-            <span class="fs-4">Gold Lion REMA Environmental Database </span>
+            <img src="/assets/images/index_photos/gold-lion-logo-removebg-preview.png" alt="Gold Lion Logo" class="me-2" width="35" height="35">
+            <span class="fs-4">INTEGEMS</span>
         </a>
 
         <ul class="nav nav-pills">
             <li class="nav-item">
-                <a href="#" class="nav-link active" aria-current="page">Home</a>
+                <a href="/" class="nav-link">Home</a>
             </li>
             <li class="nav-item">
                 <a href="#" class="nav-link">Environmental Data</a>
             </li>
             <li class="nav-item">
-                <a href="#" class="btn btn-outline-primary">Login</a>
+                <a href="/login" class="btn btn-outline-primary">Login</a>
             </li>
         </ul>
     </header>
+
+    <!-- Main Content -->
+    <div class="row my-5 align-items-center">
+        <!-- Image -->
+        <div class="col-md-6 text-center">
+            <img src="/assets/images/index_photos/noise.jpg" class="img-fluid rounded shadow" style="max-height: 350px; width: 100%; object-fit:cover;" alt="Noise Pollution">
+        </div>
+        <!-- Paragraph -->
+        <div class="col-md-6">
+            <h1 class="display-5 fw-bold mt-3 mb-3">Noise Pollution</h1>
+            <p class="lead">
+                Noise pollution affects both human health and the environment. Prolonged exposure to excessive noise can
+                lead to hearing loss, stress, and reduced productivity. Learn about the key sources of noise pollution,
+                monitoring data, and strategies to mitigate its impact on urban and rural areas alike.
+            </p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-3 border-top">
+        <p class="text-center text-muted">
+            &copy; <span id="currentYear"></span> Environmental Monitoring System.
+            Developed by
+            <a href="https://www.integemsgroup.com" class="text-decoration-none text-primary">INTEGEMS</a>
+        </p>
+    </footer>
 </div>
+
+<script>
+    // Update the footer year dynamically
+    document.getElementById("currentYear").textContent = new Date().getFullYear();
+</script>
