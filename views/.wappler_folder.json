@@ -106,5 +106,9 @@
   "add-user.ejs": {
     "layoutPage": "portal_layout",
     "description": ""
+  },
+  "users.ejs": {
+    "layoutPage": "portal_layout",
+    "description": ""
   }
 }

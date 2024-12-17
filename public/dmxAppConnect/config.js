@@ -105,5 +105,71 @@ dmx.config({
       ],
       "outputType": "array"
     }
+  },
+  "users": {
+    "repeat1": {
+      "meta": [
+        {
+          "name": "query",
+          "type": "array",
+          "sub": [
+            {
+              "type": "text",
+              "name": "firstname"
+            },
+            {
+              "type": "text",
+              "name": "lastname"
+            },
+            {
+              "type": "text",
+              "name": "email"
+            },
+            {
+              "type": "text",
+              "name": "role"
+            },
+            {
+              "type": "text",
+              "name": "status"
+            },
+            {
+              "type": "text",
+              "name": "phone"
+            }
+          ]
+        }
+      ],
+      "outputType": "object"
+    },
+    "repeat_users": {
+      "meta": [
+        {
+          "type": "text",
+          "name": "firstname"
+        },
+        {
+          "type": "text",
+          "name": "lastname"
+        },
+        {
+          "type": "text",
+          "name": "email"
+        },
+        {
+          "type": "text",
+          "name": "role"
+        },
+        {
+          "type": "text",
+          "name": "status"
+        },
+        {
+          "type": "text",
+          "name": "phone"
+        }
+      ],
+      "outputType": "array"
+    }
   }
 });

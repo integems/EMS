@@ -123,6 +123,11 @@
       "path": "/add-user",
       "page": "add-user",
       "layout": "portal_layout"
+    },
+    {
+      "path": "/users",
+      "page": "users",
+      "layout": "portal_layout"
     }
   ],
   "layouts": {

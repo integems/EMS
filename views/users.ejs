@@ -1,0 +1,112 @@
+<!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="users" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Navigation:{},dmxFormRepeat:{},dmxBootstrap5Modal:{}}" -->
+<div class="modal" id="modal_create_user" is="dmx-bs5-modal" tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <section id="multiple-column-form">
+                    <div class="row match-height">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <form class="form" novalidate="" method="post" dmx-on:success="scf_add_monitoring_location.reset();notifies1.success('Monitoring location successfully added.')" is="dmx-serverconnect-form" id="scf_add_user" action="/api/location/add_monitoring_location">
+                                            <div class="row">
+                                                <div class="col-md-6 col-12">
+                                                    <div class="form-group">
+                                                        <label for="latitude" class="col-form-label">Firstname</label>
+                                                        <input id="latitude" class="form-control" name="firstname" is="dmx-input" value="">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-12">
+                                                    <div class="form-group">
+                                                        <label for="longitude" class="col-form-label">Lastname</label>
+                                                        <input id="longitude" class="form-control" name="lastname" is="dmx-input" value="">
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="form-group mb-3"> <label for="email" class="form-label">Email</label>
+                                                        <input type="email" class="form-control" id="email" name="email" aria-describedby="input1_help">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+
+                                                <div class="col">
+                                                    <div class="form-group mb-3"> <label for="phone" class="form-label">Phone Number</label>
+                                                        <input class="form-control" id="phone" name="phone" aria-describedby="input1_help" placeholder="e.g. 078000000" type="tel">
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="form-group mb-3"> <label for="add_em" class="form-label">Role</label>
+                                                        <select id="select_role" class="form-select">
+                                                            <option value="">Select user role</option>
+                                                            <option value="Admin">Admin</option>
+                                                            <option value="User">User</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                    <div class="card-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary" dmx-on:click="scf_add_monitoring_location.submit()"><i class="fa fa-user-plus"></i>&nbsp Create User &nbsp;<span class="spinner-border spinner-border-sm" role="status" dmx-show="scf_add_monitoring_location.state.executing"></span></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+<dmx-serverconnect id="sC_allUsers" url="/api/users/sf_list_users"></dmx-serverconnect>
+<meta name="ac:route" content="/users">
+
+<section class="mb-3">
+    <div class="row text-end">
+
+        <div class="col text-start">
+            <h1 class="fw-normal fs-2">Users</h1>
+            <div class="breadcrumb">
+                <a class="breadcrumb-item breadcrumb-link fs-5 fw-light" href="/dashboard">Dashboard</a>
+                <a class="breadcrumb-item breadcrumb-link fw-bold" href="#">Add User</a>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="mb-3">
+    <div class="row">
+        <div class="col">
+            <button id="btn_AddUser" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_create_user"><i class="fa fa-user-plus"></i>
+                &nbsp;Create User</button>
+        </div>
+    </div>
+</section>
+<section>
+    <div class="row">
+
+        <div class="col-lg-4" dmx-repeat:repeat_users="sC_allUsers.data.query">
+            <div class="card shadow">
+                <!-- <img class="card-img-top" alt="Card image cap"> -->
+                <div class="card-body">
+                    <h4 class="card-title" dmx-text="firstname+' '+lastname"></h4>
+                    <p class="card-text">Email: {{email}}</p>
+                    <p class="card-text">Phone: {{phone}}</p>
+                    <p class="card-text">Role: {{role}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

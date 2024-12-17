@@ -36,6 +36,14 @@
             {
               "table": "users",
               "column": "role"
+            },
+            {
+              "table": "users",
+              "column": "status"
+            },
+            {
+              "table": "users",
+              "column": "phone"
             }
           ],
           "params": [],
@@ -44,7 +52,7 @@
           },
           "primary": "user_id",
           "joins": [],
-          "query": "select `firstname`, `lastname`, `email`, `role` from `users`"
+          "query": "select `firstname`, `lastname`, `email`, `role`, `status`, `phone` from `users`"
         }
       },
       "meta": [
@@ -63,6 +71,14 @@
         {
           "type": "text",
           "name": "role"
+        },
+        {
+          "type": "text",
+          "name": "status"
+        },
+        {
+          "type": "text",
+          "name": "phone"
         }
       ],
       "output": true,
