@@ -764,6 +764,15 @@
               "primary": false,
               "nullable": true
             }
+          },
+          "verify": {
+            "db": {
+              "type": "string",
+              "default": "",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
           }
         },
         "db": {}

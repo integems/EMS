@@ -1,6 +1,6 @@
 <!-- Wappler include head-page="layouts/portal_layout" is="dmx-app" id="users" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" components="{dmxBootstrap5Navigation:{},dmxFormRepeat:{},dmxBootstrap5Modal:{}}" -->
-<div class="modal" id="modal_create_user" is="dmx-bs5-modal" tabindex="-1">
-    <div class="modal-dialog" role="document">
+<div class="modal" id="modal_create_user" is="dmx-bs5-modal" tabindex="-1" nocloseonclick="true">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Create User</h5>
@@ -13,18 +13,18 @@
                             <div class="card">
                                 <div class="card-content">
                                     <div class="card-body">
-                                        <form class="form" novalidate="" method="post" dmx-on:success="scf_add_monitoring_location.reset();notifies1.success('Monitoring location successfully added.')" is="dmx-serverconnect-form" id="scf_add_user" action="/api/location/add_monitoring_location">
+                                        <form class="form" novalidate="" method="post" dmx-on:success="scf_add_user.reset();modal_create_user.hide();notifies1.success('User created')" is="dmx-serverconnect-form" id="scf_add_user" action="/api/users/add_user" dmx-on:error="notifies1.danger(lastError.message)">
                                             <div class="row">
                                                 <div class="col-md-6 col-12">
                                                     <div class="form-group">
-                                                        <label for="latitude" class="col-form-label">Firstname</label>
-                                                        <input id="latitude" class="form-control" name="firstname" is="dmx-input" value="">
+                                                        <label for="firstname" class="col-form-label">Firstname</label>
+                                                        <input id="firstname" class="form-control" name="firstname" is="dmx-input" value="">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 col-12">
                                                     <div class="form-group">
-                                                        <label for="longitude" class="col-form-label">Lastname</label>
-                                                        <input id="longitude" class="form-control" name="lastname" is="dmx-input" value="">
+                                                        <label for="lastname" class="col-form-label">Lastname</label>
+                                                        <input id="lastname" class="form-control" name="lastname" is="dmx-input" value="">
                                                     </div>
                                                 </div>
 
@@ -47,7 +47,7 @@
                                                 </div>
                                                 <div class="col">
                                                     <div class="form-group mb-3"> <label for="add_em" class="form-label">Role</label>
-                                                        <select id="select_role" class="form-select">
+                                                        <select id="role" class="form-select" name="role">
                                                             <option value="">Select user role</option>
                                                             <option value="Admin">Admin</option>
                                                             <option value="User">User</option>
@@ -60,7 +60,7 @@
                                     </div>
                                     <div class="card-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-primary" dmx-on:click="scf_add_monitoring_location.submit()"><i class="fa fa-user-plus"></i>&nbsp Create User &nbsp;<span class="spinner-border spinner-border-sm" role="status" dmx-show="scf_add_monitoring_location.state.executing"></span></button>
+                                        <button type="button" class="btn btn-primary" dmx-on:click="scf_add_user.submit()"><i class="fa fa-user-plus"></i>&nbsp Create User &nbsp;<span class="spinner-border spinner-border-sm" role="status" dmx-show="scf_add_user.state.executing"></span></button>
                                     </div>
                                 </div>
                             </div>

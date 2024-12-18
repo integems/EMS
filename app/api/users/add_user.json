@@ -1,0 +1,304 @@
+{
+  "meta": {
+    "options": {
+      "linkedFile": "/views/users.ejs",
+      "linkedForm": "scf_add_user"
+    },
+    "$_POST": [
+      {
+        "type": "text",
+        "fieldName": "firstname",
+        "options": {
+          "rules": {
+            "core:required": {}
+          }
+        },
+        "name": "firstname"
+      },
+      {
+        "type": "text",
+        "fieldName": "lastname",
+        "options": {
+          "rules": {
+            "core:required": {}
+          }
+        },
+        "name": "lastname"
+      },
+      {
+        "type": "text",
+        "fieldName": "email",
+        "options": {
+          "rules": {
+            "core:email": {},
+            "core:required": {}
+          }
+        },
+        "name": "email"
+      },
+      {
+        "type": "text",
+        "fieldName": "phone",
+        "options": {
+          "rules": {
+            "core:required": {}
+          }
+        },
+        "name": "phone"
+      },
+      {
+        "type": "text",
+        "fieldName": "role",
+        "options": {
+          "rules": {
+            "core:required": {}
+          }
+        },
+        "name": "role"
+      }
+    ]
+  },
+  "exec": {
+    "steps": [
+      {
+        "name": "",
+        "module": "auth",
+        "action": "restrict",
+        "options": {
+          "provider": "ems_security_provider",
+          "loginUrl": "/login",
+          "forbiddenUrl": "/forbidden"
+        }
+      },
+      {
+        "name": "validate",
+        "module": "validator",
+        "action": "validate",
+        "options": {
+          "data": [
+            {
+              "name": "validate_email",
+              "value": "{{$_POST.email}}",
+              "rules": {
+                "db:notexists": {
+                  "param": {
+                    "connection": "conn_db",
+                    "table": "users",
+                    "column": "email"
+                  },
+                  "message": "Email already exists"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "insert_user",
+        "module": "dbupdater",
+        "action": "insert",
+        "options": {
+          "connection": "conn_db",
+          "sql": {
+            "type": "insert",
+            "values": [
+              {
+                "table": "users",
+                "column": "email",
+                "type": "text",
+                "value": "{{$_POST.email}}"
+              },
+              {
+                "table": "users",
+                "column": "password",
+                "type": "text",
+                "value": "{{NOW_UTC.sha512('user')}}"
+              },
+              {
+                "table": "users",
+                "column": "role",
+                "type": "text",
+                "value": "{{$_POST.select_role}}"
+              },
+              {
+                "table": "users",
+                "column": "date_created",
+                "type": "datetime",
+                "value": "{{NOW_UTC}}"
+              },
+              {
+                "table": "users",
+                "column": "firstname",
+                "type": "text",
+                "value": "{{$_POST.firstname}}"
+              },
+              {
+                "table": "users",
+                "column": "lastname",
+                "type": "text",
+                "value": "{{$_POST.lastname}}"
+              },
+              {
+                "table": "users",
+                "column": "phone",
+                "type": "text",
+                "value": "{{$_POST.phone}}"
+              },
+              {
+                "table": "users",
+                "column": "verify",
+                "type": "text",
+                "value": "{{NOW_UTC.sha256('verify')}}"
+              }
+            ],
+            "table": "users",
+            "returning": "user_id",
+            "query": "insert into `users` (`date_created`, `email`, `firstname`, `lastname`, `password`, `phone`, `role`, `verify`) values (?, ?, ?, ?, ?, ?, ?, ?)",
+            "params": [
+              {
+                "name": ":P1",
+                "type": "expression",
+                "value": "{{$_POST.email}}",
+                "test": ""
+              },
+              {
+                "name": ":P2",
+                "type": "expression",
+                "value": "{{NOW_UTC.sha512('user')}}",
+                "test": ""
+              },
+              {
+                "name": ":P3",
+                "type": "expression",
+                "value": "{{$_POST.select_role}}",
+                "test": ""
+              },
+              {
+                "name": ":P4",
+                "type": "expression",
+                "value": "{{NOW_UTC}}",
+                "test": ""
+              },
+              {
+                "name": ":P5",
+                "type": "expression",
+                "value": "{{$_POST.firstname}}",
+                "test": ""
+              },
+              {
+                "name": ":P6",
+                "type": "expression",
+                "value": "{{$_POST.lastname}}",
+                "test": ""
+              },
+              {
+                "name": ":P7",
+                "type": "expression",
+                "value": "{{$_POST.phone}}",
+                "test": ""
+              },
+              {
+                "name": ":P8",
+                "type": "expression",
+                "value": "{{NOW_UTC.sha256('verify')}}",
+                "test": ""
+              }
+            ]
+          }
+        },
+        "meta": [
+          {
+            "name": "identity",
+            "type": "text"
+          },
+          {
+            "name": "affected",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "query_verify_key",
+        "module": "dbconnector",
+        "action": "single",
+        "options": {
+          "connection": "conn_db",
+          "sql": {
+            "type": "select",
+            "columns": [
+              {
+                "table": "users",
+                "column": "verify"
+              }
+            ],
+            "params": [
+              {
+                "operator": "equal",
+                "type": "expression",
+                "name": ":P1",
+                "value": "{{insert_user.identity}}",
+                "test": ""
+              }
+            ],
+            "table": {
+              "name": "users"
+            },
+            "primary": "user_id",
+            "joins": [],
+            "wheres": {
+              "condition": "AND",
+              "rules": [
+                {
+                  "id": "users.user_id",
+                  "field": "users.user_id",
+                  "type": "double",
+                  "operator": "equal",
+                  "value": "{{insert_user.identity}}",
+                  "data": {
+                    "table": "users",
+                    "column": "user_id",
+                    "type": "number",
+                    "columnObj": {
+                      "type": "increments",
+                      "primary": true,
+                      "nullable": false,
+                      "name": "user_id"
+                    }
+                  },
+                  "operation": "="
+                }
+              ],
+              "conditional": null,
+              "valid": true
+            },
+            "query": "select `verify` from `users` where `users`.`user_id` = ?"
+          }
+        },
+        "meta": [
+          {
+            "type": "text",
+            "name": "verify"
+          }
+        ],
+        "outputType": "object",
+        "disabled": true
+      },
+      {
+        "name": "",
+        "module": "mail",
+        "action": "send",
+        "options": {
+          "instance": "ems_mail",
+          "toName": "{{$_POST.firstname+' '}}",
+          "toEmail": "{{$_POST.email}}",
+          "subject": "Activate Account",
+          "fromName": "Environmental Monitoring System",
+          "fromEmail": "ictsupport@integems.com",
+          "contentType": "html",
+          "body": "<div class=\"row\">\n        <div class=\"col\"></div>\n\n        <div class=\"col-7\">\n            <div class=\"card\">\n                <div class=\"card-body text-center\">\n\n                    <h1 class=\"card-title text-center\">Welcome to the Integems Environmental Monitoring System!</h1>\n                   \n                    <p class=\"card-text\">Dear {{$_POST.firstname+' '+$_POST.lastname}},</p><p class=\"card-text\">You have been invited to join The Integems Environmental Monitoring System and we're excited to have you get started. First, you need to confirm your account and set a new login password to become an active member. Just click the button below.</p>\n                    <div class=\"row\">\n                        <div class=\"col\">\n                           <a href=\"/verify-account/{{$_POST.firstname}}/{{query_verify_key.verify}}\" target=\"_blank\"><button style=\" border: none;color: white; padding: 16px 32px;\n  text-align: center;text-decoration: none; display: inline-block;\n  font-size: 16px; margin: 4px 2px;transition-duration: 0.4s;\n  cursor: pointer; background-color: white; color: black; border: 2px solid #007BFF;\">Activate Account</button></a>\n                        </div>\n                    </div>\n                    <div class=\"row mt-4\">\n                        <div class=\"col text-left\">\n                            <p>If that doesn't work, copy and paste the following link in your browser: <a href=\"/verify-account/{{$_POST.firstname}}/{{query_verify_key.verify}}\">/verify-account/{{$_POST.firstname}}/{{query_verify_key.verify}}</a></p>\n                        </div>\n                    </div>\n                    <div class=\"row mt-4\">\n                        <div class=\"col text-left\">\n                            <p>Once you have activated your account, you can then use your username and password you will set to start using EMS.</p><p>Email: <b>{{$_POST.email}}</b></p><p>If you have any questions, just reply to this email—we're always happy to help out.</p>\n                        </div>\n                    </div>\n                    <div class=\"row\">\n                        <div class=\"col text-left\">\n                            <div>The EMS Team.</div><p>© {{NOW_UTC.formatDate('yyyy')}} Integems EMS. All rights reserved.</p>\n                            <p></p>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"col\"></div>\n    </div>"
+        },
+        "disabled": true
+      }
+    ]
+  }
+}

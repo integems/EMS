@@ -110,5 +110,9 @@
   "users.ejs": {
     "layoutPage": "portal_layout",
     "description": ""
+  },
+  "verify-account.ejs": {
+    "layoutPage": "securityLayout",
+    "description": ""
   }
 }
