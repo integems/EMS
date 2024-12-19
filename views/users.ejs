@@ -13,7 +13,7 @@
                             <div class="card">
                                 <div class="card-content">
                                     <div class="card-body">
-                                        <form class="form" novalidate="" method="post" dmx-on:success="scf_add_user.reset();modal_create_user.hide();notifies1.success('User created')" is="dmx-serverconnect-form" id="scf_add_user" action="/api/users/add_user" dmx-on:error="notifies1.danger(lastError.message)">
+                                        <form class="form" novalidate="" method="post" dmx-on:success="scf_add_user.reset();modal_create_user.hide();notifies1.success('User created');browser.goto('/users')" is="dmx-serverconnect-form" id="scf_add_user" action="/api/users/add_user" dmx-on:error="notifies1.danger('Email already exists')">
                                             <div class="row">
                                                 <div class="col-md-6 col-12">
                                                     <div class="form-group">

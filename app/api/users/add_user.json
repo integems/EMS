@@ -55,6 +55,10 @@
           }
         },
         "name": "role"
+      },
+      {
+        "type": "text",
+        "name": "select_role"
       }
     ]
   },
@@ -118,13 +122,13 @@
                 "table": "users",
                 "column": "role",
                 "type": "text",
-                "value": "{{$_POST.select_role}}"
+                "value": "{{$_POST.role}}"
               },
               {
                 "table": "users",
                 "column": "date_created",
                 "type": "datetime",
-                "value": "{{NOW_UTC}}"
+                "value": "{{NOW}}"
               },
               {
                 "table": "users",
@@ -149,11 +153,17 @@
                 "column": "verify",
                 "type": "text",
                 "value": "{{NOW_UTC.sha256('verify')}}"
+              },
+              {
+                "table": "users",
+                "column": "status",
+                "type": "text",
+                "value": "Unverified"
               }
             ],
             "table": "users",
             "returning": "user_id",
-            "query": "insert into `users` (`date_created`, `email`, `firstname`, `lastname`, `password`, `phone`, `role`, `verify`) values (?, ?, ?, ?, ?, ?, ?, ?)",
+            "query": "insert into `users` (`date_created`, `email`, `firstname`, `lastname`, `password`, `phone`, `role`, `status`, `verify`) values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
             "params": [
               {
                 "name": ":P1",
@@ -170,13 +180,13 @@
               {
                 "name": ":P3",
                 "type": "expression",
-                "value": "{{$_POST.select_role}}",
+                "value": "{{$_POST.role}}",
                 "test": ""
               },
               {
                 "name": ":P4",
                 "type": "expression",
-                "value": "{{NOW_UTC}}",
+                "value": "{{NOW}}",
                 "test": ""
               },
               {
@@ -280,8 +290,7 @@
             "name": "verify"
           }
         ],
-        "outputType": "object",
-        "disabled": true
+        "outputType": "object"
       },
       {
         "name": "",
@@ -296,8 +305,7 @@
           "fromEmail": "ictsupport@integems.com",
           "contentType": "html",
           "body": "<div class=\"row\">\n        <div class=\"col\"></div>\n\n        <div class=\"col-7\">\n            <div class=\"card\">\n                <div class=\"card-body text-center\">\n\n                    <h1 class=\"card-title text-center\">Welcome to the Integems Environmental Monitoring System!</h1>\n                   \n                    <p class=\"card-text\">Dear {{$_POST.firstname+' '+$_POST.lastname}},</p><p class=\"card-text\">You have been invited to join The Integems Environmental Monitoring System and we're excited to have you get started. First, you need to confirm your account and set a new login password to become an active member. Just click the button below.</p>\n                    <div class=\"row\">\n                        <div class=\"col\">\n                           <a href=\"/verify-account/{{$_POST.firstname}}/{{query_verify_key.verify}}\" target=\"_blank\"><button style=\" border: none;color: white; padding: 16px 32px;\n  text-align: center;text-decoration: none; display: inline-block;\n  font-size: 16px; margin: 4px 2px;transition-duration: 0.4s;\n  cursor: pointer; background-color: white; color: black; border: 2px solid #007BFF;\">Activate Account</button></a>\n                        </div>\n                    </div>\n                    <div class=\"row mt-4\">\n                        <div class=\"col text-left\">\n                            <p>If that doesn't work, copy and paste the following link in your browser: <a href=\"/verify-account/{{$_POST.firstname}}/{{query_verify_key.verify}}\">/verify-account/{{$_POST.firstname}}/{{query_verify_key.verify}}</a></p>\n                        </div>\n                    </div>\n                    <div class=\"row mt-4\">\n                        <div class=\"col text-left\">\n                            <p>Once you have activated your account, you can then use your username and password you will set to start using EMS.</p><p>Email: <b>{{$_POST.email}}</b></p><p>If you have any questions, just reply to this email—we're always happy to help out.</p>\n                        </div>\n                    </div>\n                    <div class=\"row\">\n                        <div class=\"col text-left\">\n                            <div>The EMS Team.</div><p>© {{NOW_UTC.formatDate('yyyy')}} Integems EMS. All rights reserved.</p>\n                            <p></p>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"col\"></div>\n    </div>"
-        },
-        "disabled": true
+        }
       }
     ]
   }

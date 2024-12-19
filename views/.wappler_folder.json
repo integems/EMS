@@ -114,5 +114,9 @@
   "verify-account.ejs": {
     "layoutPage": "securityLayout",
     "description": ""
+  },
+  "forbidden.ejs": {
+    "layoutPage": "main",
+    "description": ""
   }
 }

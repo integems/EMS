@@ -1,0 +1,76 @@
+<!-- Wappler include head-page="layouts/main" is="dmx-app" id="forbidden" appConnect="local" bootstrap5="local" fontawesome_6="local" bootstrap_icons="local" jquery_slim_35="cdn" -->
+<meta name="ac:route" content="/forbidden">
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body {
+        background-color: #f8f9fa;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .error-container {
+        text-align: center;
+        padding: 2rem;
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        max-width: 600px;
+    }
+
+    .error-code {
+        font-size: 6rem;
+        font-weight: bold;
+        color: #dc3545;
+        margin-bottom: 1rem;
+    }
+
+    .error-icon {
+        font-size: 4rem;
+        color: #dc3545;
+        margin-bottom: 1.5rem;
+    }
+
+    .error-message {
+        font-size: 1.5rem;
+        color: #6c757d;
+        margin-bottom: 2rem;
+    }
+
+    a {
+        text-decoration: none;
+        color: white;
+    }
+
+    a:mousehover {
+        color: none;
+    }
+
+    .container {
+        margin-top: 150px;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <div class="error-container">
+            <div class="error-code">403</div>
+            <div class="error-icon">
+                <i class="fas fa-lock"></i>
+            </div>
+            <h1 class="error-message">Access Forbidden</h1>
+            <p class="lead text-muted mb-4">
+                Sorry, you don't have permission to access this page. Please check your credentials or contact the administrator.
+            </p>
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                <button type="button" class="btn btn-danger btn-lg px-4 me-sm-3"><a href="/">Home</a></button>
+                <button type="button" class="btn btn-outline-secondary btn-lg px-4"><a href="/login" style="color: #dc3545">Login</a></button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+</body>

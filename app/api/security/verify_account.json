@@ -1,0 +1,160 @@
+{
+  "meta": {
+    "options": {
+      "linkedFile": "/views/verify-account.ejs",
+      "linkedForm": "scf_verify_account"
+    },
+    "$_POST": [
+      {
+        "type": "text",
+        "fieldName": "password",
+        "multiple": true,
+        "options": {
+          "rules": {
+            "core:required": {
+              "param": ""
+            },
+            "core:minlength": {
+              "param": "8",
+              "message": "Please enter at least eight (8) characters."
+            },
+            "core:nowhitespace": {
+              "param": ""
+            }
+          }
+        },
+        "name": "password"
+      },
+      {
+        "type": "text",
+        "fieldName": "verify",
+        "name": "verify"
+      },
+      {
+        "type": "text",
+        "fieldName": "firstname",
+        "name": "firstname"
+      },
+      {
+        "type": "number",
+        "name": "user_id"
+      }
+    ]
+  },
+  "exec": {
+    "steps": [
+      {
+        "name": "query_verify",
+        "module": "dbconnector",
+        "action": "single",
+        "options": {
+          "connection": "conn_db",
+          "sql": {
+            "type": "select",
+            "columns": [
+              {
+                "table": "users",
+                "column": "status"
+              },
+              {
+                "table": "users",
+                "column": "verify"
+              },
+              {
+                "table": "users",
+                "column": "firstname"
+              }
+            ],
+            "params": [],
+            "table": {
+              "name": "users"
+            },
+            "primary": "user_id",
+            "joins": [],
+            "query": "select `status`, `verify`, `firstname` from `users`"
+          }
+        },
+        "output": true,
+        "meta": [
+          {
+            "type": "text",
+            "name": "status"
+          },
+          {
+            "type": "text",
+            "name": "verify"
+          },
+          {
+            "type": "text",
+            "name": "firstname"
+          }
+        ],
+        "outputType": "object"
+      },
+      {
+        "name": "update_password",
+        "module": "dbupdater",
+        "action": "update",
+        "options": {
+          "connection": "conn_db",
+          "sql": {
+            "type": "update",
+            "values": [
+              {
+                "table": "users",
+                "column": "password",
+                "type": "text",
+                "value": "{{$_POST.password}}"
+              },
+              {
+                "table": "users",
+                "column": "status",
+                "type": "text",
+                "value": "Active"
+              }
+            ],
+            "table": "users",
+            "wheres": {
+              "condition": "AND",
+              "rules": [
+                {
+                  "id": "user_id",
+                  "type": "double",
+                  "operator": "equal",
+                  "value": "{{$_POST.user_id}}",
+                  "data": {
+                    "column": "user_id"
+                  },
+                  "operation": "="
+                }
+              ]
+            },
+            "returning": "user_id",
+            "query": "update `users` set `password` = ?, `status` = ? where `user_id` = ?",
+            "params": [
+              {
+                "name": ":P1",
+                "type": "expression",
+                "value": "{{$_POST.password}}",
+                "test": ""
+              },
+              {
+                "operator": "equal",
+                "type": "expression",
+                "name": ":P2",
+                "value": "{{$_POST.user_id}}",
+                "test": ""
+              }
+            ]
+          }
+        },
+        "meta": [
+          {
+            "name": "affected",
+            "type": "number"
+          }
+        ]
+      }
+    ]
+  }
+}

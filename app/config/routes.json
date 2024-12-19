@@ -133,6 +133,11 @@
       "path": "/verify-account",
       "page": "verify-account",
       "layout": "securityLayout"
+    },
+    {
+      "path": "/forbidden",
+      "page": "forbidden",
+      "layout": "main"
     }
   ],
   "layouts": {
